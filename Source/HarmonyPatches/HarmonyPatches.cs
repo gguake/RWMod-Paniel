@@ -18,6 +18,9 @@ namespace AutomataRace.HarmonyPatches
         {
             Harmony harmony = new Harmony("gguake.automatarace");
 
+            harmony.Patch(AccessTools.Method(typeof(PawnGenerator), "GenerateSkills"),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(PawnGenerator_GenerateSkills_Postfix)));
+
             harmony.Patch(AccessTools.Method(typeof(Pawn_NeedsTracker), "ShouldHaveNeed"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(Pawn_NeedsTracker_ShouldHaveNeed_Postfix)));
 
@@ -38,6 +41,31 @@ namespace AutomataRace.HarmonyPatches
 
             harmony.Patch(AccessTools.Method(typeof(HealthAIUtility), "FindBestMedicine"),
                 prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HealthAIUtility_FindBestMedicine_Prefix)));
+        }
+
+        public static void PawnGenerator_GenerateSkills_Postfix(Pawn pawn)
+        {
+            var raceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(pawn.def.defName, errorOnFail: false);
+            if (raceSettings == null)
+            {
+                return;
+            }
+
+            foreach (var skillDef in raceSettings.conflictingPassions)
+            {
+                if (pawn.skills == null)
+                {
+                    continue;
+                }
+
+                var skillRecord = pawn.skills.GetSkill(skillDef);
+                if (skillRecord == null)
+                {
+                    continue;
+                }
+
+                skillRecord.passion = Passion.None;
+            }
         }
 
         public static void PawnDiedOrDownedThoughtsUtility_GetThoughts_Postfix(Pawn victim, ref DamageInfo? dinfo, PawnDiedOrDownedThoughtsKind thoughtsKind, List<IndividualThoughtToAdd> outIndividualThoughts, List<ThoughtToAddToAll> outAllColonistsThoughts)

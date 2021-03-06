@@ -20,5 +20,6 @@ namespace AutomataRace
         public bool medicineTendable = true;
 
         public List<DeadThoughtOverride> deadThoughtOverrides = new List<DeadThoughtOverride>();
+        public List<SkillDef> conflictingPassions = new List<SkillDef>();
     }
 }

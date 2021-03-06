@@ -73,6 +73,7 @@
     <Compile Include="HarmonyPatches\Patch_Pawn_NeedsTracker.cs" />
     <Compile Include="HediffGiver_Joy.cs" />
     <Compile Include="Hediff_Maintenance.cs" />
+    <Compile Include="Logic\RepairService.cs" />
     <Compile Include="Need_Maintenance.cs" />
     <Compile Include="Recipe_Disassemble.cs" />
     <Compile Include="Recipe_Maintenance.cs" />

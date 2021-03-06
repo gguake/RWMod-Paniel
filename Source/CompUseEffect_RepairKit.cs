@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Verse;
 using RimWorld;
+using AutomataRace.Logic;
 
 namespace AutomataRace
 {
@@ -14,19 +15,7 @@ namespace AutomataRace
         
         public override void DoEffect(Pawn usedBy)
         {
-            foreach (Hediff_MissingPart hediff in usedBy.health.hediffSet.GetMissingPartsCommonAncestors())
-            {
-                if (!usedBy.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(hediff.Part))
-                {
-                    usedBy.health.RestorePart(hediff.Part);
-                }
-            }
-
-            List<Hediff> injuries = usedBy.health.hediffSet.hediffs.Where(x => x is Hediff_Injury && x.Visible && x.def.everCurableByItem).ToList();
-            foreach (Hediff hediff in injuries)
-            {
-                HealthUtility.CureHediff(hediff);
-            }
+            RepairService.Repair(usedBy);
         }
 
         public override bool CanBeUsedBy(Pawn p, out string failReason)

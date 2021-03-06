@@ -12,5 +12,7 @@ namespace AutomataRace
     public static class AutomataRaceDefOf
     {
         public static NeedDef PN_Need_Maintenance;
+
+        public static HediffDef PN_OilLoss;
     }
 }

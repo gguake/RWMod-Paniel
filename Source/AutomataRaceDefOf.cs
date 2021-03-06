@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RimWorld;
 using Verse;
-using RimWorld;
 
 namespace AutomataRace
 {
@@ -14,5 +9,7 @@ namespace AutomataRace
         public static NeedDef PN_Need_Maintenance;
 
         public static HediffDef PN_OilLoss;
+
+        public static ThingDef PN_Brain;
     }
 }

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
 using Verse;
-using RimWorld;
 
 namespace AutomataRace
 {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutomataRace.Logic;
+﻿using AutomataRace.Logic;
 using RimWorld;
+using System.Collections.Generic;
 using Verse;
 
 namespace AutomataRace

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-
 using Verse;
-using RimWorld;
-using HarmonyLib;
 
 namespace AutomataRace
 {

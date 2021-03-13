@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.852
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomataRace", "AutomataRace.csproj", "{2B0C31E4-745F-4631-85CA-D99C984EF8A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomataRace", "AutomataRace\AutomataRace.csproj", "{2B0C31E4-745F-4631-85CA-D99C984EF8A1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A5A4BE9C-886A-4380-9974-937160169329} = {A5A4BE9C-886A-4380-9974-937160169329}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizableRecipe", "CustomizableRecipe\CustomizableRecipe.csproj", "{A5A4BE9C-886A-4380-9974-937160169329}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{2B0C31E4-745F-4631-85CA-D99C984EF8A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B0C31E4-745F-4631-85CA-D99C984EF8A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B0C31E4-745F-4631-85CA-D99C984EF8A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5A4BE9C-886A-4380-9974-937160169329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5A4BE9C-886A-4380-9974-937160169329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5A4BE9C-886A-4380-9974-937160169329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5A4BE9C-886A-4380-9974-937160169329}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

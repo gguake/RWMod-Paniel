@@ -12,5 +12,6 @@
 *.opendb
 *.VC.db
 
-Source/obj
+Source/AutomataRace/obj
+Source/CustomizableRecipe/obj
 Source/.vs

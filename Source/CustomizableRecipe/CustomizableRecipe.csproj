@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2B0C31E4-745F-4631-85CA-D99C984EF8A1}</ProjectGuid>
+    <ProjectGuid>{A5A4BE9C-886A-4380-9974-937160169329}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutomataRace</RootNamespace>
-    <AssemblyName>AutomataRace</AssemblyName>
+    <RootNamespace>CustomizableRecipe</RootNamespace>
+    <AssemblyName>CustomizableRecipe</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -17,25 +17,27 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Mod\1.2\Assemblies\</OutputPath>
+    <OutputPath>..\..\Mod\1.2\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Mod\1.2\Assemblies\</OutputPath>
+    <OutputPath>..\..\Mod\1.2\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <Reference Include="0Harmony, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="Assembly-CSharp, Version=1.2.7705.25110, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -47,43 +49,24 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.CoreModule">
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutomataRaceDefOf.cs" />
-    <Compile Include="AutomataRaceSettings.cs" />
-    <Compile Include="Extensions\HediffSetExtension.cs" />
-    <Compile Include="RimWorld\CompAddCompHediffConditional.cs" />
-    <Compile Include="RimWorld\CompExplosiveInstant.cs" />
-    <Compile Include="RimWorld\CompProperties_AddCompHediffConditional.cs" />
-    <Compile Include="RimWorld\CompProperties_SelfResurrect.cs" />
-    <Compile Include="RimWorld\CompProperties_UseEffectGeneratePawn.cs" />
-    <Compile Include="RimWorld\CompProperties_UseEffectRepairKit.cs" />
-    <Compile Include="RimWorld\CompSelfResurrect.cs" />
-    <Compile Include="RimWorld\CompUseEffect_GeneratePawn.cs" />
-    <Compile Include="RimWorld\CompUseEffect_RepairKit.cs" />
-    <Compile Include="HarmonyPatches\HarmonyPatches.cs" />
-    <Compile Include="HarmonyPatches\Patch_InteractionUtility.cs" />
-    <Compile Include="HarmonyPatches\Patch_Pawn_NeedsTracker.cs" />
-    <Compile Include="RimWorld\HediffGiver_Joy.cs" />
-    <Compile Include="RimWorld\Hediff_Maintenance.cs" />
-    <Compile Include="Logic\RepairService.cs" />
-    <Compile Include="RimWorld\Need_Maintenance.cs" />
-    <Compile Include="RimWorld\Recipe_Disassemble.cs" />
-    <Compile Include="RimWorld\Recipe_Maintenance.cs" />
-    <Compile Include="RimWorld\Recipe_RemoveBrain.cs" />
-    <Compile Include="RimWorld\Recipe_Repair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ThingDefInject\ThingDefInjectConditions.cs" />
-    <Compile Include="ThingDefInject\ThingDefInjectDef.cs" />
-    <Compile Include="ThingDefInject\ThingDefInjectService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

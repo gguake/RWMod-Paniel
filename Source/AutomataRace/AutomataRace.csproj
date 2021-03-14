@@ -55,6 +55,7 @@
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SharedInternalsModule">
       <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
@@ -62,6 +63,7 @@
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

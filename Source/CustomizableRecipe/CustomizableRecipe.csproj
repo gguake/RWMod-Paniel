@@ -69,12 +69,14 @@
     <Compile Include="HarmonyPatches\HarmonyPatches.cs" />
     <Compile Include="RecipeDefCloneMaker.cs" />
     <Compile Include="RimWorld\Bill_CustomizedProduction.cs" />
+    <Compile Include="RimWorld\Bill_CustomizedProductionWithUft.cs" />
     <Compile Include="RimWorld\CustomizableBillEventhandler.cs" />
     <Compile Include="Logic\CustomRecipeBillService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimWorld\CustomizeBillWindow.cs" />
     <Compile Include="RimWorld\Bill_Customizer.cs" />
     <Compile Include="RimWorld\CustomizableRecipeDef.cs" />
+    <Compile Include="RimWorld\CustomizableBillParameter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

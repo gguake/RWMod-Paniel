@@ -12,6 +12,6 @@ namespace CustomizableRecipe
     /// </summary>
     public class CustomizableRecipeDef : RecipeDef
     {
-        public Type _billEventHandlerClass;
+        public Type billEventHandlerClass;
     }
 }

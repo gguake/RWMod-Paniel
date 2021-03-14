@@ -61,7 +61,7 @@
   <ItemGroup>
     <Compile Include="AutomataRaceDefOf.cs" />
     <Compile Include="AutomataRaceSettings.cs" />
-    <Compile Include="CustomizableRecipe\CustomizableBillWorker_MakeAutomata.cs" />
+    <Compile Include="CustomizableRecipe\CustomizableBillEventHandler_MakeAutomata.cs" />
     <Compile Include="Extensions\HediffSetExtension.cs" />
     <Compile Include="RimWorld\CompAddCompHediffConditional.cs" />
     <Compile Include="RimWorld\CompExplosiveInstant.cs" />

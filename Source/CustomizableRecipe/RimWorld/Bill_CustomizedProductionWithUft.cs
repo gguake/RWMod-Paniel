@@ -1,5 +1,4 @@
-﻿using HarmonyLib;
-using RimWorld;
+﻿using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ using Verse;
 
 namespace CustomizableRecipe
 {
-    public class Bill_CustomizedProduction : Bill_Production
+    public class Bill_CustomizedProductionWithUft : Bill_ProductionWithUft
     {
         private RecipeDef _originalRecipe;
         private CustomizableBillParameter _billParameter;
@@ -17,11 +16,11 @@ namespace CustomizableRecipe
         /// <summary>
         /// do not use default constructor without parameters.
         /// </summary>
-        public Bill_CustomizedProduction()
+        public Bill_CustomizedProductionWithUft()
         {
         }
 
-        public Bill_CustomizedProduction(RecipeDef originalRecipe)
+        public Bill_CustomizedProductionWithUft(RecipeDef originalRecipe)
             : base(originalRecipe.MakeClone())
         {
             _originalRecipe = originalRecipe;

@@ -22,7 +22,7 @@ namespace CustomizableRecipe
         public Bill_Customizer(RecipeDef recipe) : 
             base(recipe)
         {
-            EventHandler = Activator.CreateInstance(CustomizableRecipe._billEventHandlerClass) as CustomizableBillEventhandler;
+            EventHandler = Activator.CreateInstance(CustomizableRecipe.billEventHandlerClass) as CustomizableBillEventhandler;
             EventHandler.recipe = CustomizableRecipe;
         }
     }

@@ -32,12 +32,12 @@ namespace CustomizableRecipe
             return null;
         }
 
-        public static RecipeDef MakeClone(this RecipeDef recipe)
+        public static RecipeDef MakeClone(this RecipeDef recipe, string defName = null)
         {
             int i = 0;
             RecipeDef ret = new RecipeDef();
 
-            ret.defName = recipe.defName + $"_{DateTime.Now.Ticks}_{GenTicks.TicksGame}";
+            ret.defName = defName ?? recipe.defName + $"_{DateTime.Now.Ticks}_{GenTicks.TicksGame}";
             ret.label = recipe.label;
             ret.description = recipe.description;
             ret.descriptionHyperlinks = recipe.descriptionHyperlinks.MakeListClone();
@@ -96,6 +96,7 @@ namespace CustomizableRecipe
             ret.dontShowIfAnyIngredientMissing = recipe.dontShowIfAnyIngredientMissing;
             // _field_RecipeDef_isSurgeryCached.SetValue(ret, _field_RecipeDef_isSurgeryCached.GetValue(recipe));
 
+            DefDatabase<RecipeDef>.Add(ret);
             return ret;
         }
     }

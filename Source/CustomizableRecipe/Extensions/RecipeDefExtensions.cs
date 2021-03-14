@@ -9,27 +9,17 @@ using Verse;
 namespace CustomizableRecipe
 {
     [StaticConstructorOnStartup]
-    public static class RecipeDefCloneMaker
+    public static class RecipeDefExtensions
     {
         private static FieldInfo _field_RecipeDef_ingredientValueGetterClass;
         private static FieldInfo _field_RecipeDef_uiIconThing;
         private static FieldInfo _field_RecipeDef_isSurgeryCached;
 
-        static RecipeDefCloneMaker()
+        static RecipeDefExtensions()
         {
             _field_RecipeDef_ingredientValueGetterClass = AccessTools.Field(typeof(RecipeDef), "ingredientValueGetterClass");
             _field_RecipeDef_uiIconThing = AccessTools.Field(typeof(RecipeDef), "uiIconThing");
             _field_RecipeDef_isSurgeryCached = AccessTools.Field(typeof(bool?), "isSurgeryCached");
-        }
-
-        private static List<T> MakeListClone<T>(this List<T> list)
-        {
-            if (list != null)
-            {
-                return new List<T>(list);
-            }
-
-            return null;
         }
 
         public static RecipeDef MakeClone(this RecipeDef recipe, string defName = null)
@@ -37,6 +27,7 @@ namespace CustomizableRecipe
             int i = 0;
             RecipeDef ret = new RecipeDef();
 
+            // Def
             ret.defName = defName ?? recipe.defName + $"_{DateTime.Now.Ticks}_{GenTicks.TicksGame}";
             ret.label = recipe.label;
             ret.description = recipe.description;
@@ -44,6 +35,8 @@ namespace CustomizableRecipe
             ret.ignoreConfigErrors = recipe.ignoreConfigErrors;
             ret.modExtensions = recipe.modExtensions.MakeListClone();
             recipe.modContentPack?.AddDef(ret, "ImpliedDefs");
+
+            // RecipeDef
             ret.workerClass = recipe.workerClass;
             ret.workerCounterClass = recipe.workerCounterClass;
             ret.jobString = recipe.jobString;
@@ -53,7 +46,7 @@ namespace CustomizableRecipe
             ret.efficiencyStat = recipe.efficiencyStat;
             ret.workTableEfficiencyStat = recipe.workTableEfficiencyStat;
             ret.workTableSpeedStat = recipe.workTableSpeedStat;
-            ret.ingredients = recipe.ingredients .MakeListClone();
+            ret.ingredients = recipe.ingredients.MakeListClone();
             ret.fixedIngredientFilter = recipe.fixedIngredientFilter;
             ret.defaultIngredientFilter = recipe.defaultIngredientFilter;
             ret.allowMixingIngredients = recipe.allowMixingIngredients;

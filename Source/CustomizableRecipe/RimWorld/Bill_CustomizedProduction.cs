@@ -50,7 +50,7 @@ namespace CustomizableRecipe
 
                 if (!DefDatabase<RecipeDef>.AllDefsListForReading.Any(x => x.defName == defName))
                 {
-                    var recipeClone = RecipeDefCloneMaker.MakeClone(_originalRecipe, defName);
+                    var recipeClone = _originalRecipe.MakeClone(defName);
                 }
             }
 

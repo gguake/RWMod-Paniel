@@ -15,6 +15,9 @@ namespace CustomizableRecipe
 
         public CustomizeBillWindow()
         {
+            forcePause = true;
+            absorbInputAroundWindow = true;
+            onlyOneOfTypeAllowed = true;
         }
 
         public virtual void Initialize(CustomizableRecipeDef recipeDef, BillStack billStack)

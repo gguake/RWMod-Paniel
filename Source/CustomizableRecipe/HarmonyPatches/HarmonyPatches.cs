@@ -25,9 +25,9 @@ namespace CustomizableRecipe.HarmonyPatches
             harmony.Patch(AccessTools.Method(typeof(BillStack), "AddBill"),
                 prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(BillStack_AddBill_Prefix)));
 
-            harmony.Patch(AccessTools.Method(typeof(Bill), "ExposeData"),
-                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(Bill_ExposeData_Prefix)));
-            
+            harmony.Patch(AccessTools.Method(typeof(RecipeDef), "PawnSatisfiesSkillRequirements"),
+                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(RecipeDef_PawnSatisfiesSkillRequirements_Prefix)));
+
             Log.Message($"[CustomizableRecipe] Harmony patch completed.");
         }
 
@@ -60,8 +60,14 @@ namespace CustomizableRecipe.HarmonyPatches
             return true;
         }
 
-        public static bool Bill_ExposeData_Prefix(Bill __instance)
+        public static bool RecipeDef_PawnSatisfiesSkillRequirements_Prefix(RecipeDef __instance, ref bool __result)
         {
+            if (__instance is CustomizableRecipeDef)
+            {
+                __result = true;
+                return false;
+            }
+
             return true;
         }
     }

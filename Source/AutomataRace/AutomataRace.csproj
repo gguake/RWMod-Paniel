@@ -7,7 +7,7 @@
     <ProjectGuid>{2B0C31E4-745F-4631-85CA-D99C984EF8A1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>AutomataRace</AssemblyName>
+    <AssemblyName>2_AutomataRace</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="AutomataRaceDefOf.cs" />
     <Compile Include="AutomataRaceSettings.cs" />
+    <Compile Include="CustomizableRecipe\CustomizableBillWorker_MakeAutomata.cs" />
     <Compile Include="Extensions\HediffSetExtension.cs" />
     <Compile Include="RimWorld\CompAddCompHediffConditional.cs" />
     <Compile Include="RimWorld\CompExplosiveInstant.cs" />
@@ -86,6 +87,12 @@
     <Compile Include="ThingDefInject\ThingDefInjectConditions.cs" />
     <Compile Include="ThingDefInject\ThingDefInjectDef.cs" />
     <Compile Include="ThingDefInject\ThingDefInjectService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomizableRecipe\CustomizableRecipe.csproj">
+      <Project>{a5a4be9c-886a-4380-9974-937160169329}</Project>
+      <Name>CustomizableRecipe</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

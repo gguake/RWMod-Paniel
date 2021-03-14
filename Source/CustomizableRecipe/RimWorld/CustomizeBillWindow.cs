@@ -29,6 +29,7 @@ namespace CustomizableRecipe
         public void ConfirmBill(Bill bill)
         {
             billStack.AddBill(bill);
+            Close(true);
         }
     }
 }

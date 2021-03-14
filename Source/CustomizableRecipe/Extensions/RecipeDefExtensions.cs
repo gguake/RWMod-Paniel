@@ -8,19 +8,11 @@ using Verse;
 
 namespace CustomizableRecipe
 {
-    [StaticConstructorOnStartup]
     public static class RecipeDefExtensions
     {
-        private static FieldInfo _field_RecipeDef_ingredientValueGetterClass;
-        private static FieldInfo _field_RecipeDef_uiIconThing;
-        private static FieldInfo _field_RecipeDef_isSurgeryCached;
-
-        static RecipeDefExtensions()
-        {
-            _field_RecipeDef_ingredientValueGetterClass = AccessTools.Field(typeof(RecipeDef), "ingredientValueGetterClass");
-            _field_RecipeDef_uiIconThing = AccessTools.Field(typeof(RecipeDef), "uiIconThing");
-            _field_RecipeDef_isSurgeryCached = AccessTools.Field(typeof(bool?), "isSurgeryCached");
-        }
+        static FieldInfo _field_RecipeDef_ingredientValueGetterClass = AccessTools.Field(typeof(RecipeDef), "ingredientValueGetterClass");
+        static FieldInfo _field_RecipeDef_uiIconThing = AccessTools.Field(typeof(RecipeDef), "uiIconThing");
+        static FieldInfo _field_RecipeDef_isSurgeryCached = AccessTools.Field(typeof(bool?), "isSurgeryCached");
 
         public static RecipeDef MakeClone(this RecipeDef recipe, string defName = null)
         {

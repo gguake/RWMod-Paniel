@@ -16,7 +16,6 @@ namespace AutomataRace
 
             if (respawningAfterLoad)
             {
-                Log.Message("a");
                 return;
             }
 
@@ -45,14 +44,12 @@ namespace AutomataRace
             var Props = props as CompProperties_AddCompHediffSelector;
             if (Props == null)
             {
-                Log.Message("0");
                 return null;
             }
 
             Pawn pawn = parent as Pawn ?? (parent as Corpse)?.InnerPawn ?? null;
             if (pawn == null || pawn.health == null || pawn.health.hediffSet == null)
             {
-                Log.Message($"1, {pawn}");
                 return null;
             }
 
@@ -60,12 +57,10 @@ namespace AutomataRace
             {
                 if (hediffCondition.hediff == null || pawn.health.hediffSet.HasHediff(hediffCondition.hediff))
                 {
-                    Log.Message("!");
                     return hediffCondition.comp;
                 }
             }
 
-            Log.Message("2");
             return null;
         }
     }

@@ -13,20 +13,6 @@ namespace AutomataRace
         public override bool OnAddBill()
         {
             Find.WindowStack.Add(new CustomizeBillWindow_MakeAutomata(recipe, billStack));
-
-            /*
-
-            Bill_CustomizedProductionWithUft bill = new Bill_CustomizedProductionWithUft(this.recipe);
-            CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
-            {
-                workAmount = Rand.Range(10, 10000),
-                materialCount = Rand.Range(1, 100),
-            };
-
-            bill.SetParameter(parameter);
-            billStack.AddBill(bill);
-
-            */
             return false;
         }
     }

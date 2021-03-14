@@ -59,7 +59,7 @@ namespace CustomizableRecipe
             ret.effectWorking = recipe.effectWorking;
             ret.soundWorking = recipe.soundWorking;
             _field_RecipeDef_uiIconThing.SetValue(ret, _field_RecipeDef_uiIconThing.GetValue(recipe));
-            ret.recipeUsers = recipe.recipeUsers.MakeListClone();
+            ret.recipeUsers = new List<ThingDef>(); // recipe.recipeUsers.MakeListClone();
             ret.appliedOnFixedBodyParts = recipe.appliedOnFixedBodyParts.MakeListClone();
             ret.appliedOnFixedBodyPartGroups = recipe.appliedOnFixedBodyPartGroups;
             ret.addsHediff = recipe.addsHediff;

@@ -48,7 +48,7 @@ namespace CustomizableRecipe.HarmonyPatches
             var customizableBill = bill as Bill_Customizer;
             if (customizableBill != null)
             {
-                var worker = customizableBill.EventHandler;
+                var worker = customizableBill.Worker;
                 worker.billStack = __instance;
 
                 if (!worker.OnAddBill())

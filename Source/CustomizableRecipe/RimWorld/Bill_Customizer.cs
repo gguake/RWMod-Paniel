@@ -17,13 +17,14 @@ namespace CustomizableRecipe
     {
         public CustomizableRecipeDef CustomizableRecipe => (CustomizableRecipeDef)recipe;
 
-        public CustomizableBillEventhandler EventHandler { get; private set; }
+        public CustomizableBillWorker Worker { get; private set; }
 
         public Bill_Customizer(RecipeDef recipe) : 
             base(recipe)
         {
-            EventHandler = Activator.CreateInstance(CustomizableRecipe.billEventHandlerClass) as CustomizableBillEventhandler;
-            EventHandler.recipe = CustomizableRecipe;
+            Worker = Activator.CreateInstance(CustomizableRecipe.billWorker?.GetType()) as CustomizableBillWorker;
+            Worker.CopyFrom(CustomizableRecipe.billWorker);
+            Worker.recipe = CustomizableRecipe;
         }
     }
 }

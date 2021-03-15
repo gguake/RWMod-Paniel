@@ -13,6 +13,7 @@ namespace AutomataRace
     {
         public float workAmount;
         public Dictionary<ThingDef, int> ingredients;
+        public int craftingSkillLevel;
 
         public override void ExposeData()
         {
@@ -26,6 +27,16 @@ namespace AutomataRace
 
             var newIngredients = new List<IngredientCount>();
             bill.recipe.ingredients = MakeIngredientCountList(ingredients);
+
+            bill.recipe.skillRequirements = new List<SkillRequirement>();
+            if (craftingSkillLevel > 0)
+            {
+                bill.recipe.skillRequirements.Add(new SkillRequirement()
+                {
+                    skill = SkillDefOf.Crafting,
+                    minLevel = craftingSkillLevel
+                });
+            }
         }
     }
 

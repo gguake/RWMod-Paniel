@@ -8,8 +8,9 @@ using Verse;
 
 namespace CustomizableRecipe
 {
-    public abstract class CustomizeBillWindow : Window
+    public abstract class CustomizeBillWindow<T> : Window
     {
+        protected T billWorker;
         protected CustomizableRecipeDef originalRecipeDef;
         protected BillStack billStack;
 
@@ -20,8 +21,9 @@ namespace CustomizableRecipe
             onlyOneOfTypeAllowed = true;
         }
 
-        public virtual void Initialize(CustomizableRecipeDef recipeDef, BillStack billStack)
+        public virtual void Initialize(T billWorker, CustomizableRecipeDef recipeDef, BillStack billStack)
         {
+            this.billWorker = billWorker;
             this.originalRecipeDef = recipeDef;
             this.billStack = billStack;
         }

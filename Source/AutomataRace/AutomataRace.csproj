@@ -69,7 +69,7 @@
   <ItemGroup>
     <Compile Include="AutomataRaceDefOf.cs" />
     <Compile Include="AutomataRaceSettings.cs" />
-    <Compile Include="CustomizableRecipe\CustomizableBillEventHandler_MakeAutomata.cs" />
+    <Compile Include="CustomizableRecipe\CustomizableBillWorker_MakeAutomata.cs" />
     <Compile Include="CustomizableRecipe\CustomizableBillParameter_MakeAutomata.cs" />
     <Compile Include="CustomizableRecipe\CustomizeBillWindow_MakeAutomata.cs" />
     <Compile Include="Extensions\HediffSetExtension.cs" />

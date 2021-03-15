@@ -10,82 +10,46 @@ using Verse;
 
 namespace AutomataRace
 {
-    public class CustomizeBillWindow_MakeAutomata : CustomizeBillWindow
+    public class CustomizeBillWindow_MakeAutomata : CustomizeBillWindow<CustomizableBillWorker_MakeAutomata>
     {
         public override Vector2 InitialSize => new Vector2(600f, 600f);
 
-        int _workCount = 10000;
-        string _workCountBuffer;
+        List<ThingDef> _baseMaterialThings;
 
-        ThingDef _materialThing = ThingDefOf.Steel;
-        int _materialCount = 100;
-        string _materialCountBuffer;
 
-        ThingDef _componentThing = ThingDefOf.ComponentIndustrial;
-        int _componentCount = 20;
-        string _componentCountBuffer;
-
-        ThingDef[] _materialThings = new ThingDef[]
+        public CustomizeBillWindow_MakeAutomata(CustomizableBillWorker_MakeAutomata billWorker, CustomizableRecipeDef recipe, BillStack billStack)
         {
-            ThingDefOf.Steel,
-            ThingDefOf.Uranium,
-            ThingDefOf.Plasteel,
-        };
+            Initialize(billWorker, recipe, billStack);
 
-        ThingDef[] _componentThings = new ThingDef[]
-        {
-            ThingDefOf.ComponentIndustrial,
-            ThingDefOf.ComponentSpacer,
-            ThingDefOf.AIPersonaCore,
-        };
-
-
-        public CustomizeBillWindow_MakeAutomata(CustomizableRecipeDef recipe, BillStack billStack)
-        {
-            Initialize(recipe, billStack);
+            _baseMaterialThings = DefDatabase<ThingDef>.AllDefs.Where(x => x.IsMetal).ToList();
         }
 
         public override void DoWindowContents(Rect inRect)
         {
             GUI.BeginGroup(inRect);
 
-            Widgets.TextFieldNumericLabeled(new Rect(0, 0, 200, 30f), "WorkCount", ref _workCount, ref _workCountBuffer);
 
             Widgets.Dropdown(new Rect(0f, 50f, 40f, 30f),
-                target: _materialThing,
+                target: billWorker.baseMaterial,
                 getPayload: (ThingDef thingDef) => thingDef,
                 menuGenerator: Button_MaterialMenu,
-                buttonLabel: _materialThing.LabelCap,
-                buttonIcon: _materialThing.uiIcon,
-                dragLabel: _materialThing.LabelCap,
-                dragIcon: _materialThing.uiIcon,
+                buttonLabel: billWorker.baseMaterial.LabelCap,
+                buttonIcon: billWorker.baseMaterial.uiIcon,
+                dragLabel: billWorker.baseMaterial.LabelCap,
+                dragIcon: billWorker.baseMaterial.uiIcon,
                 paintable: true);
-
-            Widgets.TextFieldNumeric(new Rect(0f, 85f, 40f, 30f), ref _materialCount, ref _materialCountBuffer);
-
-            Widgets.Dropdown(new Rect(50f, 50f, 40f, 30f),
-                target: _componentThing,
-                getPayload: (ThingDef thingDef) => thingDef,
-                menuGenerator: Button_ComponentMenu,
-                buttonLabel: _componentThing.LabelCap,
-                buttonIcon: _componentThing.uiIcon,
-                dragLabel: _componentThing.LabelCap,
-                dragIcon: _componentThing.uiIcon,
-                paintable: true);
-            
-            Widgets.TextFieldNumeric(new Rect(50f, 85f, 40f, 30f), ref _componentCount, ref _componentCountBuffer);
 
             if (Widgets.ButtonText(new Rect(0, 450, 100, 40), "OK"))
             {
                 Bill_CustomizedProductionWithUft bill = new Bill_CustomizedProductionWithUft(originalRecipeDef);
                 CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
                 {
-                    workAmount = _workCount,
+                    workAmount = billWorker.WorkAmount,
                     ingredients = new Dictionary<ThingDef, int>()
                     {
-                        { _materialThing, _materialCount },
-                        { _componentThing, _componentCount },
+                        { billWorker.baseMaterial, billWorker.baseMaterialCount },
                     },
+                    craftingSkillLevel = billWorker.SkillLevelRequirement,
                 };
 
                 bill.SetParameter(parameter);
@@ -102,28 +66,14 @@ namespace AutomataRace
 
         private IEnumerable<Widgets.DropdownMenuElement<ThingDef>> Button_MaterialMenu(ThingDef td)
         {
-            foreach (var thingDef in _materialThings)
-            {
-                yield return new Widgets.DropdownMenuElement<ThingDef>
-                {
-                    option = new FloatMenuOption(thingDef.LabelCap, delegate
-                    {
-                        _materialThing = thingDef;
-                    }),
-                    payload = thingDef
-                };
-            }
-        }
 
-        private IEnumerable<Widgets.DropdownMenuElement<ThingDef>> Button_ComponentMenu(ThingDef td)
-        {
-            foreach (var thingDef in _componentThings)
+            foreach (var thingDef in _baseMaterialThings)
             {
                 yield return new Widgets.DropdownMenuElement<ThingDef>
                 {
                     option = new FloatMenuOption(thingDef.LabelCap, delegate
                     {
-                        _componentThing = thingDef;
+                        billWorker.baseMaterial = thingDef;
                     }),
                     payload = thingDef
                 };

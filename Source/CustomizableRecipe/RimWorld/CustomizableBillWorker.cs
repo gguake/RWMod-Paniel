@@ -4,16 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Verse;
 
 namespace CustomizableRecipe
 {
     /// <summary>
     /// abstract class for handling event of customizable bill.
     /// </summary>
-    public abstract class CustomizableBillEventhandler
+    public abstract class CustomizableBillWorker
     {
+        [Unsaved(false)]
         public CustomizableRecipeDef recipe;
+
+        [Unsaved(false)]
         public BillStack billStack;
+
+        public abstract void CopyFrom(CustomizableBillWorker worker);
 
         /// <summary>
         /// Called before bill is added to bill stack.

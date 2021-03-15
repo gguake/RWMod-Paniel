@@ -71,7 +71,7 @@
     <Compile Include="Extensions\RecipeDefExtensions.cs" />
     <Compile Include="RimWorld\Bill_CustomizedProduction.cs" />
     <Compile Include="RimWorld\Bill_CustomizedProductionWithUft.cs" />
-    <Compile Include="RimWorld\CustomizableBillEventhandler.cs" />
+    <Compile Include="RimWorld\CustomizableBillWorker.cs" />
     <Compile Include="Logic\CustomRecipeBillService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimWorld\CustomizeBillWindow.cs" />

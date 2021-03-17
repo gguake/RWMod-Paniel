@@ -28,7 +28,7 @@ namespace CustomizableRecipe
             this.billStack = billStack;
         }
 
-        public void ConfirmBill(Bill bill)
+        public virtual void ConfirmBill(Bill bill)
         {
             billStack.AddBill(bill);
             Close(true);

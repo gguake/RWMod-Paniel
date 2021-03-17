@@ -19,14 +19,24 @@ namespace AutomataRace
         {
             Scribe_Values.Look(ref workAmount, "workAmount");
             Scribe_Collections.Look(ref ingredients, "ingredients");
+            Scribe_Values.Look(ref craftingSkillLevel, "craftingSkillLevel");
         }
 
         public override void Apply(Bill bill)
         {
+            var customizedBill = bill as Bill_CustomizedProductionWithUft;
+            var customizableRecipe = customizedBill?.OriginalRecipe as CustomizableRecipeDef;
+            var billWorker = customizableRecipe?.billWorker as CustomizableBillWorker_MakeAutomata;
+
             bill.recipe.workAmount = workAmount;
 
             var newIngredients = new List<IngredientCount>();
             bill.recipe.ingredients = MakeIngredientCountList(ingredients);
+
+            if (!billWorker.fixedIngredients.NullOrEmpty())
+            {
+                bill.recipe.ingredients.AddRange(billWorker.fixedIngredients);
+            }
 
             bill.recipe.skillRequirements = new List<SkillRequirement>();
             if (craftingSkillLevel > 0)

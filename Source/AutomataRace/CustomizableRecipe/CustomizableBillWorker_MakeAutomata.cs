@@ -25,6 +25,8 @@ namespace AutomataRace
         public int componentSpacerCount;
         public bool useAIPersonaCore;
 
+        public List<IngredientCount> fixedIngredients;
+
         public float WorkAmount
         {
             get
@@ -106,6 +108,8 @@ namespace AutomataRace
             componentIndustrialCount = other.componentIndustrialCount;
             componentSpacerCount = other.componentSpacerCount;
             useAIPersonaCore = other.useAIPersonaCore;
+
+            fixedIngredients = other.fixedIngredients;
         }
 
         public override bool OnAddBill()

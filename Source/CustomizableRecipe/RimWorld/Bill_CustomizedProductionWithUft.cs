@@ -10,6 +10,8 @@ namespace CustomizableRecipe
 {
     public class Bill_CustomizedProductionWithUft : Bill_ProductionWithUft
     {
+        public RecipeDef OriginalRecipe => _originalRecipe;
+
         private RecipeDef _originalRecipe;
         private CustomizableBillParameter _billParameter;
 

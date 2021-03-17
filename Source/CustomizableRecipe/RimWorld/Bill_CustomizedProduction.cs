@@ -11,6 +11,8 @@ namespace CustomizableRecipe
 {
     public class Bill_CustomizedProduction : Bill_Production
     {
+        public RecipeDef OriginalRecipe => _originalRecipe;
+
         private RecipeDef _originalRecipe;
         private CustomizableBillParameter _billParameter;
 
@@ -50,7 +52,7 @@ namespace CustomizableRecipe
 
                 if (!DefDatabase<RecipeDef>.AllDefsListForReading.Any(x => x.defName == defName))
                 {
-                    var recipeClone = _originalRecipe.MakeClone(defName);
+                    _originalRecipe.MakeClone(defName);
                 }
             }
 

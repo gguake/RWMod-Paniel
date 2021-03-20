@@ -265,11 +265,15 @@ namespace AutomataRace
             if (_tempPawn != null)
             {
                 _tempPawn.Destroy();
+                Find.WorldPawns.RemovePawn(_tempPawn);
+                Find.WorldPawns.PassToWorld(_tempPawn, RimWorld.Planet.PawnDiscardDecideMode.Discard);
                 _tempPawn = null;
             }
 
             _tempPawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: null);
             _tempPawnCachedTexture = PortraitsCache.Get(_tempPawn, UIConstants.pawnPortraitSize);
+
+            Log.Message($"AllPawns: {Find.WorldPawns.AllPawnsAliveOrDead.Count}");
         }
 
         private void DrawQualityProbabilitySection(Dictionary<QualityCategory, float> probability, QualityCategory quality, Rect rect)
@@ -302,7 +306,6 @@ namespace AutomataRace
 
         private IEnumerable<Widgets.DropdownMenuElement<ThingDef>> Button_MaterialMenu()
         {
-
             foreach (var thingDef in _baseMaterialThings)
             {
                 yield return new Widgets.DropdownMenuElement<ThingDef>

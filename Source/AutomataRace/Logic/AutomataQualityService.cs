@@ -39,23 +39,23 @@ namespace AutomataRace.Logic
             }
         }
 
-        public static Dictionary<QualityCategory, int> GetProductProbabilityWeights(CustomizableBillWorker_MakeAutomata billWorker)
+        public static Dictionary<QualityCategory, int> GetProductProbabilityWeights(int score)
         {
             var result = new Dictionary<QualityCategory, int>();
-            result[QualityCategory.Awful] = GetProbabilityWeightFromComponentScore(QualityCategory.Awful, billWorker.Score);
-            result[QualityCategory.Poor] = GetProbabilityWeightFromComponentScore(QualityCategory.Poor, billWorker.Score);
-            result[QualityCategory.Normal] = GetProbabilityWeightFromComponentScore(QualityCategory.Normal, billWorker.Score);
-            result[QualityCategory.Good] = GetProbabilityWeightFromComponentScore(QualityCategory.Good, billWorker.Score);
-            result[QualityCategory.Excellent] = GetProbabilityWeightFromComponentScore(QualityCategory.Excellent, billWorker.Score);
-            result[QualityCategory.Masterwork] = GetProbabilityWeightFromComponentScore(QualityCategory.Masterwork, billWorker.Score);
-            result[QualityCategory.Legendary] = GetProbabilityWeightFromComponentScore(QualityCategory.Legendary, billWorker.Score);
+            result[QualityCategory.Awful] = GetProbabilityWeightFromComponentScore(QualityCategory.Awful, score);
+            result[QualityCategory.Poor] = GetProbabilityWeightFromComponentScore(QualityCategory.Poor, score);
+            result[QualityCategory.Normal] = GetProbabilityWeightFromComponentScore(QualityCategory.Normal, score);
+            result[QualityCategory.Good] = GetProbabilityWeightFromComponentScore(QualityCategory.Good, score);
+            result[QualityCategory.Excellent] = GetProbabilityWeightFromComponentScore(QualityCategory.Excellent, score);
+            result[QualityCategory.Masterwork] = GetProbabilityWeightFromComponentScore(QualityCategory.Masterwork, score);
+            result[QualityCategory.Legendary] = GetProbabilityWeightFromComponentScore(QualityCategory.Legendary, score);
 
             return result;
         }
 
         public static Dictionary<QualityCategory, float> GetProductProbability(CustomizableBillWorker_MakeAutomata billWorker)
         {
-            var weights = GetProductProbabilityWeights(billWorker);
+            var weights = GetProductProbabilityWeights(billWorker.Score);
             Dictionary<QualityCategory, float> result = new Dictionary<QualityCategory, float>();
 
             int weightSum = weights.Sum(x => x.Value);

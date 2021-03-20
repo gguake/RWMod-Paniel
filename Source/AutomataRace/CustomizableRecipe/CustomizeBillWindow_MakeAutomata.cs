@@ -16,11 +16,11 @@ namespace AutomataRace
     {
         static class UIConstants
         {
-            [TweakValue("AutomataUI", min = 0f, max = 100f)] public static float groupMargin = 10f;
-            [TweakValue("AutomataUI", min = 0f, max = 300f)] public static float baseMaterialY = 38f;
-            [TweakValue("AutomataUI", min = 0f, max = 300f)] public static float componentIndustrialY = 88f;
-            [TweakValue("AutomataUI", min = 0f, max = 300f)] public static float componentSpacerY = 130f;
-            [TweakValue("AutomataUI", min = 0f, max = 300f)] public static float aiPersonaCoreY = 175f;
+            public static float groupMargin = 10f;
+            public static float baseMaterialY = 38f;
+            public static float componentIndustrialY = 88f;
+            public static float componentSpacerY = 130f;
+            public static float aiPersonaCoreY = 175f;
 
             public static Rect rtAppearanceTab = new Rect(0f, 0f, 270f, 380f);
             public static Rect rtSpecializationTab = new Rect(280f, 0f, 292f, 140f);
@@ -170,6 +170,11 @@ namespace AutomataRace
                 Text.Font = GameFont.Small;
 
                 //Widgets.DrawLineHorizontal(0f, 45f, 572f);
+                Text.Font = GameFont.Tiny;
+                Text.Anchor = TextAnchor.MiddleRight;
+                Widgets.Label(new Rect(UIConstants.rtExpectedTab.width - 200f, 0f, 200f, 40f), $"Required Crafting Skill: {billWorker.SkillLevelRequirement}");
+                Text.Anchor = TextAnchor.UpperLeft;
+                Text.Font = GameFont.Small;
 
                 Rect innerRect = new Rect(5f, 45f, UIConstants.rtExpectedTab.width - 10f, UIConstants.rtExpectedTab.height - 45f);
                 GUI.BeginGroup(innerRect);
@@ -250,6 +255,7 @@ namespace AutomataRace
             CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
             {
                 workAmount = billWorker.WorkAmount,
+                componentScore = billWorker.Score,
                 specialization = billWorker.selectedSpecialization,
                 ingredients = ingredients,
                 craftingSkillLevel = billWorker.SkillLevelRequirement,

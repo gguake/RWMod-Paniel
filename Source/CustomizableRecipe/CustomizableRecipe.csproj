@@ -69,6 +69,7 @@
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="HarmonyPatches\HarmonyPatches.cs" />
     <Compile Include="Extensions\RecipeDefExtensions.cs" />
+    <Compile Include="RimWorld\IBill_Customized.cs" />
     <Compile Include="RimWorld\Bill_CustomizedProduction.cs" />
     <Compile Include="RimWorld\Bill_CustomizedProductionWithUft.cs" />
     <Compile Include="RimWorld\CustomizableBillWorker.cs" />

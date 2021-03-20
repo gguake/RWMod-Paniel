@@ -12,7 +12,8 @@ namespace CustomizableRecipe
     {
         public abstract void ExposeData();
 
-        public abstract void Apply(Bill bill);
+        public abstract void OnAttachBill(Bill bill);
+        public abstract void OnComplete(Thing product, Pawn worker);
 
         protected List<IngredientCount> MakeIngredientCountList(Dictionary<ThingDef, int> thingDefDict)
         {

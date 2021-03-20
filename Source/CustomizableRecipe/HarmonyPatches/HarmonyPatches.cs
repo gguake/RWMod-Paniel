@@ -29,7 +29,7 @@ namespace CustomizableRecipe.HarmonyPatches
                 prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(RecipeDef_PawnSatisfiesSkillRequirements_Prefix)));
 
             harmony.Patch(AccessTools.Method(typeof(GenRecipe), "PostProcessProduct"),
-                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(GenRecipe_PostProcessProduct_Postfix)));
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(GenRecipe_PostProcessProduct_Postfix)));
 
             Log.Message($"[CustomizableRecipe] Harmony patch completed.");
         }
@@ -74,14 +74,13 @@ namespace CustomizableRecipe.HarmonyPatches
             return true;
         }
 
-        public static bool GenRecipe_PostProcessProduct_Postfix(Thing product, RecipeDef recipeDef, Pawn worker)
+        public static void GenRecipe_PostProcessProduct_Postfix(Thing product, RecipeDef recipeDef, Pawn worker)
         {
-            var bill = worker.CurJob?.bill;
-            if (bill is Bill_CustomizedProduction || bill is Bill_CustomizedProductionWithUft)
+            var bill = worker.CurJob?.bill as IBill_Customized;
+            if (bill != null)
             {
+                bill.BillParameter?.OnComplete(product, worker);
             }
-
-            return true;
         }
     }
 }

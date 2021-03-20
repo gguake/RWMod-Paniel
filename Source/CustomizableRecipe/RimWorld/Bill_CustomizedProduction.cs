@@ -9,9 +9,10 @@ using Verse;
 
 namespace CustomizableRecipe
 {
-    public class Bill_CustomizedProduction : Bill_Production
+    public class Bill_CustomizedProduction : Bill_Production, IBill_Customized
     {
         public RecipeDef OriginalRecipe => _originalRecipe;
+        public CustomizableBillParameter BillParameter => _billParameter;
 
         private RecipeDef _originalRecipe;
         private CustomizableBillParameter _billParameter;
@@ -37,7 +38,7 @@ namespace CustomizableRecipe
             }
 
             _billParameter = parameter;
-            _billParameter.Apply(this);
+            _billParameter.OnAttachBill(this);
         }
 
         public override void ExposeData()
@@ -57,7 +58,7 @@ namespace CustomizableRecipe
             }
 
             base.ExposeData();
-            _billParameter.Apply(this);
+            _billParameter.OnAttachBill(this);
         }
     }
 }

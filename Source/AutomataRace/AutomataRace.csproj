@@ -75,6 +75,7 @@
     <Compile Include="Extensions\HediffSetExtension.cs" />
     <Compile Include="AutomataSpecializationDef.cs" />
     <Compile Include="Logic\AutomataQualityService.cs" />
+    <Compile Include="PseudoRandomGenerator\PseudoRandom.cs" />
     <Compile Include="RimWorld\CompAddCompHediffConditional.cs" />
     <Compile Include="RimWorld\CompExplosiveInstant.cs" />
     <Compile Include="RimWorld\CompProperties_AddCompHediffConditional.cs" />

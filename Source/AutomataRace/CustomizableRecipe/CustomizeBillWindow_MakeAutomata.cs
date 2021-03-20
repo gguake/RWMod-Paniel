@@ -309,24 +309,6 @@ namespace AutomataRace
             Text.Font = GameFont.Small;
 
             GUI.EndGroup();
-
-
         }
-
-        private IEnumerable<Widgets.DropdownMenuElement<ThingDef>> Button_MaterialMenu()
-        {
-            foreach (var thingDef in _baseMaterialThings)
-            {
-                yield return new Widgets.DropdownMenuElement<ThingDef>
-                {
-                    option = new FloatMenuOption(thingDef.LabelCap, delegate
-                    {
-                        billWorker.baseMaterial = thingDef;
-                    }),
-                    payload = thingDef
-                };
-            }
-        }
-
     }
 }

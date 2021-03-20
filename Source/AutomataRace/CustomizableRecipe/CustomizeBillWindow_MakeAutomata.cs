@@ -262,19 +262,12 @@ namespace AutomataRace
             };
 
             bill.SetParameter(parameter);
-
-            if (_tempPawn != null)
-            {
-                _tempPawn.Destroy();
-                Find.WorldPawns.RemovePawn(_tempPawn);
-                Find.WorldPawns.PassToWorld(_tempPawn, RimWorld.Planet.PawnDiscardDecideMode.Discard);
-                _tempPawn = null;
-            }
-
             ConfirmBill(bill);
+
+            DestroySamplePawn();
         }
 
-        private void RecreateSamplePawn()
+        private void DestroySamplePawn()
         {
             if (_tempPawn != null)
             {
@@ -283,7 +276,11 @@ namespace AutomataRace
                 Find.WorldPawns.PassToWorld(_tempPawn, RimWorld.Planet.PawnDiscardDecideMode.Discard);
                 _tempPawn = null;
             }
+        }
 
+        private void RecreateSamplePawn()
+        {
+            DestroySamplePawn();
             _tempPawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: null);
             _tempPawnCachedTexture = PortraitsCache.Get(_tempPawn, UIConstants.pawnPortraitSize);
         }

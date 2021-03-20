@@ -263,7 +263,14 @@ namespace AutomataRace
 
             bill.SetParameter(parameter);
 
-            _tempPawn.Destroy();
+            if (_tempPawn != null)
+            {
+                _tempPawn.Destroy();
+                Find.WorldPawns.RemovePawn(_tempPawn);
+                Find.WorldPawns.PassToWorld(_tempPawn, RimWorld.Planet.PawnDiscardDecideMode.Discard);
+                _tempPawn = null;
+            }
+
             ConfirmBill(bill);
         }
 

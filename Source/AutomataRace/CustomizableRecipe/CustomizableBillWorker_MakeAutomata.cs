@@ -11,6 +11,8 @@ namespace AutomataRace
 {
     public class CustomizableBillWorker_MakeAutomata : CustomizableBillWorker
     {
+        public AutomataSpecializationDef selectedSpecialization;
+
         public int baseMaterialCount;
         public int componentTotalCount;
         public float componentIndustrialScore;
@@ -20,10 +22,10 @@ namespace AutomataRace
         public int craftingSkillRequirementsMax;
 
         public ThingDef baseMaterial;
+        public bool useAIPersonaCore;
 
         public int componentIndustrialCount;
         public int componentSpacerCount;
-        public bool useAIPersonaCore;
 
         public List<IngredientCount> fixedIngredients;
 
@@ -37,13 +39,49 @@ namespace AutomataRace
             }
         }
 
+        public int ComponentIndustrialCount
+        {
+            get => componentIndustrialCount;
+            set
+            {
+                if (value >= componentTotalCount)
+                {
+                    componentIndustrialCount = componentTotalCount;
+                    componentSpacerCount = 0;
+                }
+                else
+                {
+                    componentIndustrialCount = value;
+                    componentSpacerCount = componentTotalCount - value;
+                }
+            }
+        }
+
+        public int ComponentSpacerCount
+        {
+            get => componentSpacerCount;
+            set
+            {
+                if (value >= componentTotalCount)
+                {
+                    componentSpacerCount = componentTotalCount;
+                    componentIndustrialCount = 0;
+                }
+                else
+                {
+                    componentSpacerCount = value;
+                    componentIndustrialCount = componentTotalCount - value;
+                }
+            }
+        }
+
         public float MinScore => componentTotalCount * componentIndustrialScore;
         public float MaxScore => componentTotalCount * componentSpacerScore + useAIPersonaCoreScore;
 
-        public float Score => 
-            componentIndustrialScore * componentIndustrialCount + 
+        public int Score => 
+            (int)(componentIndustrialScore * componentIndustrialCount + 
             componentSpacerScore * componentSpacerCount + 
-            (useAIPersonaCore ? useAIPersonaCoreScore : 0f);
+            (useAIPersonaCore ? useAIPersonaCoreScore : 0));
 
         public int SkillLevelRequirement
         {
@@ -57,34 +95,6 @@ namespace AutomataRace
 
         public CustomizableBillWorker_MakeAutomata()
         {
-        }
-
-        public void SetComponentIndustrialCount(int count)
-        {
-            if (count >= componentTotalCount)
-            {
-                componentIndustrialCount = componentTotalCount;
-                componentSpacerCount = 0;
-            }
-            else
-            {
-                componentIndustrialCount = count;
-                componentSpacerCount = componentTotalCount - count;
-            }
-        }
-
-        public void SetComponentSpacerCount(int count)
-        {
-            if (count >= componentTotalCount)
-            {
-                componentSpacerCount = componentTotalCount;
-                componentIndustrialCount = 0;
-            }
-            else
-            {
-                componentSpacerCount = count;
-                componentIndustrialCount = componentTotalCount - count;
-            }
         }
 
         public override void CopyFrom(CustomizableBillWorker worker)

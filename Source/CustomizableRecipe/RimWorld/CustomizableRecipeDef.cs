@@ -13,5 +13,12 @@ namespace CustomizableRecipe
     public class CustomizableRecipeDef : RecipeDef
     {
         public CustomizableBillWorker billWorker;
+
+        public override void ResolveReferences()
+        {
+            base.ResolveReferences();
+
+            billWorker.ResolveReferences();
+        }
     }
 }

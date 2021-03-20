@@ -29,7 +29,6 @@ namespace CustomizableRecipe
                 ingredient.SetBaseCount((float)count);
 
                 ingredient.ResolveReferences();
-
                 ingredientCounts.Add(ingredient);
             }
 

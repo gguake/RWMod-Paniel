@@ -19,6 +19,8 @@ namespace CustomizableRecipe
         [Unsaved(false)]
         public BillStack billStack;
 
+        public abstract void ResolveReferences();
+
         public abstract void CopyFrom(CustomizableBillWorker worker);
 
         /// <summary>

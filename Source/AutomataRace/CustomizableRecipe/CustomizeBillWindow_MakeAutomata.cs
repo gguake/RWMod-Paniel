@@ -250,6 +250,7 @@ namespace AutomataRace
             CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
             {
                 workAmount = billWorker.WorkAmount,
+                specialization = billWorker.selectedSpecialization,
                 ingredients = ingredients,
                 craftingSkillLevel = billWorker.SkillLevelRequirement,
             };

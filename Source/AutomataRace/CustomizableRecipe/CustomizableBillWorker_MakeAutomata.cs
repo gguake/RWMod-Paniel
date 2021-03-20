@@ -88,13 +88,20 @@ namespace AutomataRace
             get
             {
                 float t = (Score - MinScore) / (MaxScore - MinScore);
-                Log.Message($"{t}");
                 return Mathf.RoundToInt(Mathf.Lerp(craftingSkillRequirementsMin, craftingSkillRequirementsMax, t));
             }
         }
 
         public CustomizableBillWorker_MakeAutomata()
         {
+        }
+
+        public override void ResolveReferences()
+        {
+            foreach (var fixedIngredient in fixedIngredients)
+            {
+                fixedIngredient.ResolveReferences();
+            }
         }
 
         public override void CopyFrom(CustomizableBillWorker worker)
@@ -114,10 +121,10 @@ namespace AutomataRace
             craftingSkillRequirementsMax = other.craftingSkillRequirementsMax;
 
             baseMaterial = other.baseMaterial;
-            baseMaterialCount = other.baseMaterialCount;
+            useAIPersonaCore = other.useAIPersonaCore;
+
             componentIndustrialCount = other.componentIndustrialCount;
             componentSpacerCount = other.componentSpacerCount;
-            useAIPersonaCore = other.useAIPersonaCore;
 
             fixedIngredients = other.fixedIngredients;
         }
@@ -127,6 +134,5 @@ namespace AutomataRace
             Find.WindowStack.Add(new CustomizeBillWindow_MakeAutomata(this, recipe, billStack));
             return false;
         }
-
     }
 }

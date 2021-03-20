@@ -12,12 +12,14 @@ namespace AutomataRace
     public class CustomizableBillParameter_MakeAutomata : CustomizableBillParameter
     {
         public float workAmount;
+        public AutomataSpecializationDef specialization;
         public Dictionary<ThingDef, int> ingredients;
         public int craftingSkillLevel;
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref workAmount, "workAmount");
+            Scribe_Defs.Look(ref specialization, "specialization");
             Scribe_Collections.Look(ref ingredients, "ingredients");
             Scribe_Values.Look(ref craftingSkillLevel, "craftingSkillLevel");
         }
@@ -29,8 +31,6 @@ namespace AutomataRace
             var billWorker = customizableRecipe?.billWorker as CustomizableBillWorker_MakeAutomata;
 
             bill.recipe.workAmount = workAmount;
-
-            var newIngredients = new List<IngredientCount>();
             bill.recipe.ingredients = MakeIngredientCountList(ingredients);
 
             if (!billWorker.fixedIngredients.NullOrEmpty())

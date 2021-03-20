@@ -272,8 +272,6 @@ namespace AutomataRace
 
             _tempPawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: null);
             _tempPawnCachedTexture = PortraitsCache.Get(_tempPawn, UIConstants.pawnPortraitSize);
-
-            Log.Message($"AllPawns: {Find.WorldPawns.AllPawnsAliveOrDead.Count}");
         }
 
         private void DrawQualityProbabilitySection(Dictionary<QualityCategory, float> probability, QualityCategory quality, Rect rect)

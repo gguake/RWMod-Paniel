@@ -1,17 +1,15 @@
 ﻿using AutomataRace.Logic;
 using CustomizableRecipe;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace AutomataRace
 {
     public class CustomizableBillParameter_MakeAutomata : CustomizableBillParameter
     {
+        public List<AutomataAppearanceParameter> appearanceChoices = new List<AutomataAppearanceParameter>();
         public float workAmount;
         public int componentScore;
         public AutomataSpecializationDef specialization;
@@ -22,6 +20,7 @@ namespace AutomataRace
 
         public override void ExposeData()
         {
+            Scribe_Collections.Look(ref appearanceChoices, "appearanceChoices");
             Scribe_Values.Look(ref workAmount, "workAmount");
             Scribe_Values.Look(ref componentScore, "componentScore");
             Scribe_Defs.Look(ref specialization, "specialization");

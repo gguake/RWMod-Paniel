@@ -1,11 +1,9 @@
-﻿using AutomataRace.Logic;
+﻿using AutomataRace.Extensions;
+using AutomataRace.Logic;
 using CustomizableRecipe;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -16,6 +14,8 @@ namespace AutomataRace
     {
         static class UIConstants
         {
+            public static float distanceAppearanceGap = 22f;
+
             public static float groupMargin = 10f;
             public static float baseMaterialY = 38f;
             public static float componentIndustrialY = 88f;
@@ -28,11 +28,11 @@ namespace AutomataRace
             public static Rect rtExpectedTab = new Rect(0f, 390f, 572f, 125f);
             public static Rect rtButtonTab = new Rect(0f, 550f, 572f, 40f);
 
-            public static readonly Vector2 pawnPortraitSize = new Vector2(184f, 256f);
+            public static readonly Vector2 pawnPortraitSize = new Vector2(92f, 128f);
         }
 
-        Pawn _tempPawn;
-        RenderTexture _tempPawnCachedTexture;
+        SamplePawnDrawer[] _samplePawnDrawers = new SamplePawnDrawer[4];
+
         List<ThingDef> _baseMaterialThings = DefDatabase<ThingDef>.AllDefs.Where(x => x.IsMetal).ToList();
 
         public override Vector2 InitialSize => new Vector2(
@@ -42,7 +42,11 @@ namespace AutomataRace
         public CustomizeBillWindow_MakeAutomata(CustomizableBillWorker_MakeAutomata billWorker, CustomizableRecipeDef recipe, BillStack billStack)
         {
             Initialize(billWorker, recipe, billStack);
-            RecreateSamplePawn();
+
+            for (int i = 0; i < _samplePawnDrawers.Length; ++i)
+            {
+                _samplePawnDrawers[i] = new SamplePawnDrawer();
+            }
         }
 
         public override void ConfirmBill(Bill bill)
@@ -71,13 +75,36 @@ namespace AutomataRace
                 Widgets.Label(new Rect(0f, 0f, 200f, 40f), "Appearance");
                 Text.Font = GameFont.Small;
 
+                Rect innerRect = UIConstants.rtAppearanceTab.ContractedBy(UIConstants.groupMargin);
+                TooltipHandler.TipRegion(new Rect(0f, 40f, innerRect.width, innerRect.height - 40f), "Appearance is choiced randomly in four options when it assembled.");
+                GUI.BeginGroup(new Rect(0f, 40f, innerRect.width, innerRect.height - 40f));
+
+                Rect[] rectPortraits = new Rect[]
+                {
+                    new Rect(UIConstants.distanceAppearanceGap, 0f, UIConstants.pawnPortraitSize.x, UIConstants.pawnPortraitSize.y),
+                    new Rect(UIConstants.distanceAppearanceGap, UIConstants.pawnPortraitSize.y + 12f, UIConstants.pawnPortraitSize.x, UIConstants.pawnPortraitSize.y),
+                    new Rect(innerRect.width - UIConstants.pawnPortraitSize.x - UIConstants.distanceAppearanceGap, 0f, UIConstants.pawnPortraitSize.x, UIConstants.pawnPortraitSize.y),
+                    new Rect(innerRect.width - UIConstants.pawnPortraitSize.x - UIConstants.distanceAppearanceGap, UIConstants.pawnPortraitSize.y + 12f, UIConstants.pawnPortraitSize.x, UIConstants.pawnPortraitSize.y),
+                };
+
+                for (int i = 0; i < rectPortraits.Length; ++i)
+                {
+                    if (i < _samplePawnDrawers.Length)
+                        _samplePawnDrawers[i].Draw(rectPortraits[i]);
+                }
+
+                GUI.EndGroup();
+
                 Rect rect = new Rect(10f, 130f, 230f, 220f);
-                GUI.DrawTexture(new Rect(rect.center.x - UIConstants.pawnPortraitSize.x / 2f, rect.yMin - 24f, UIConstants.pawnPortraitSize.x, UIConstants.pawnPortraitSize.y), _tempPawnCachedTexture);
 
                 if (Widgets.ButtonText(new Rect(150f, 324f, 100f, 36f), "Randomize".Translate()))
                 {
                     SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
-                    RecreateSamplePawn();
+
+                    for (int i = 0; i < _samplePawnDrawers.Length; ++i)
+                    {
+                        _samplePawnDrawers[i].RerollAndUpdateTexture();
+                    }
                 }
             }
             GUI.EndGroup();
@@ -254,6 +281,7 @@ namespace AutomataRace
 
             CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
             {
+                appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, faceVariantIndex = x.FaceVariantIndex }).ToList(),
                 workAmount = billWorker.WorkAmount,
                 componentScore = billWorker.Score,
                 specialization = billWorker.selectedSpecialization,
@@ -264,25 +292,10 @@ namespace AutomataRace
             bill.SetParameter(parameter);
             ConfirmBill(bill);
 
-            DestroySamplePawn();
-        }
-
-        private void DestroySamplePawn()
-        {
-            if (_tempPawn != null)
+            for (int i = 0; i < _samplePawnDrawers.Length; ++i)
             {
-                _tempPawn.Destroy();
-                Find.WorldPawns.RemovePawn(_tempPawn);
-                Find.WorldPawns.PassToWorld(_tempPawn, RimWorld.Planet.PawnDiscardDecideMode.Discard);
-                _tempPawn = null;
+                _samplePawnDrawers[i].Destroy();
             }
-        }
-
-        private void RecreateSamplePawn()
-        {
-            DestroySamplePawn();
-            _tempPawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: null);
-            _tempPawnCachedTexture = PortraitsCache.Get(_tempPawn, UIConstants.pawnPortraitSize);
         }
 
         private void DrawQualityProbabilitySection(Dictionary<QualityCategory, float> probability, QualityCategory quality, Rect rect)
@@ -311,4 +324,54 @@ namespace AutomataRace
             GUI.EndGroup();
         }
     }
+    public class SamplePawnDrawer
+    {
+        private Pawn _pawn;
+
+        public RenderTexture Texture { get; private set; }
+        public HairDef HairDef => _pawn.story.hairDef;
+        public int FaceVariantIndex { get; private set; }
+
+        public SamplePawnDrawer()
+        {
+            _pawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: null);
+            Texture = PortraitsCache.Get(_pawn, new Vector2(92f, 128f));
+        }
+
+        public void Draw(Rect rect)
+        {
+            Widgets.DrawBox(rect);
+            Widgets.DrawAltRect(rect);
+            GUI.DrawTexture(rect, Texture);
+        }
+
+        public void RerollAndUpdateTexture()
+        {
+            _pawn.story.hairDef = PawnHairChooser.RandomHairDefFor(_pawn, null);
+            FaceVariantIndex = _pawn.SetFaceBodyAddonRandomly();
+            if (FaceVariantIndex < 0)
+            {
+                Log.Error("Something wrong since face variant index is not valid.");
+                FaceVariantIndex = 0;
+                _pawn.SetFaceBodyAddonVariant(0);
+            }
+
+            _pawn.Drawer.renderer.graphics.ResolveAllGraphics();
+
+            PortraitsCache.SetDirty(_pawn);
+
+            Texture = null;
+            Texture = PortraitsCache.Get(_pawn, new Vector2(92f, 128f));
+        }
+
+        public void Destroy()
+        {
+            _pawn.Destroy();
+            Find.WorldPawns.RemovePawn(_pawn);
+            Find.WorldPawns.PassToWorld(_pawn, RimWorld.Planet.PawnDiscardDecideMode.Discard);
+
+            _pawn = null;
+        }
+    }
+
 }

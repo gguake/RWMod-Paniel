@@ -37,6 +37,10 @@
       <HintPath>E:\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="AlienRace">
+      <HintPath>E:\Steam\steamapps\workshop\content\294100\839005762\1.2\Assemblies\AlienRace.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>E:\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
@@ -67,13 +71,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutomataAppearanceParameter.cs" />
     <Compile Include="AutomataRaceDefOf.cs" />
     <Compile Include="AutomataRaceSettings.cs" />
     <Compile Include="CustomizableRecipe\CustomizableBillWorker_MakeAutomata.cs" />
     <Compile Include="CustomizableRecipe\CustomizableBillParameter_MakeAutomata.cs" />
     <Compile Include="CustomizableRecipe\CustomizeBillWindow_MakeAutomata.cs" />
+    <Compile Include="Extensions\AlienRaceExtension.cs" />
     <Compile Include="Extensions\HediffSetExtension.cs" />
     <Compile Include="AutomataSpecializationDef.cs" />
+    <Compile Include="Extensions\PrivateMemberExtension.cs" />
     <Compile Include="Logic\AutomataQualityService.cs" />
     <Compile Include="PseudoRandomGenerator\PseudoRandom.cs" />
     <Compile Include="RimWorld\CompAddCompHediffConditional.cs" />

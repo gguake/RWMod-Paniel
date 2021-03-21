@@ -14,5 +14,11 @@ namespace CustomizableRecipe
         public ThingDef thingDef;
         public StatDef statDef;
         public StatOverrideWorker worker;
+
+        public override void ResolveReferences()
+        {
+            base.ResolveReferences();
+            worker?.ResolveReferences();
+        }
     }
 }

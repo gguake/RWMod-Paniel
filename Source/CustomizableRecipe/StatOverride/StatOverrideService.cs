@@ -34,13 +34,6 @@ namespace CustomizableRecipe.StatOverride
                 }
 
                 Log.Message($"StatOverrideService Cached: {_cache.Count}");
-                foreach(var kv in _cache)
-                {
-                    foreach (var kv2 in kv.Value)
-                    {
-                        Log.Message($"{kv.Key.defName} - {kv2.Key.defName} - {kv2.Value.GetType().Name}");
-                    }
-                }
             }
 
             Dictionary<StatDef, StatOverrideWorker> dictStat = null;

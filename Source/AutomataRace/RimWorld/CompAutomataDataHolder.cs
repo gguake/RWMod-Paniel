@@ -30,6 +30,11 @@ namespace AutomataRace
         {
         }
 
+        public void CopyFrom(CompAutomataDataHolder other)
+        {
+            automataData = other.automataData;
+        }
+
         public override void PostExposeData()
         {
             Scribe_Deep.Look(ref automataData, "automataData");

@@ -11,5 +11,9 @@ namespace CustomizableRecipe.StatOverride
     public abstract class StatOverrideWorker
     {
         public abstract void Apply(ref float statValue, StatDef statDef, Thing thing);
+
+        public virtual void ResolveReferences()
+        {
+        }
     }
 }

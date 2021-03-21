@@ -8,7 +8,7 @@ namespace AutomataRace.HarmonyPatches
         {
             if (__result)
             {
-                var raceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(pawn.def.defName, errorOnFail: false);
+                var raceSettings = AutomataRaceSettingCache.Get(pawn.def);
                 if (raceSettings != null)
                 {
                     if (!raceSettings.socialActivated)
@@ -23,7 +23,7 @@ namespace AutomataRace.HarmonyPatches
         {
             if (__result)
             {
-                var raceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(pawn.def.defName, errorOnFail: false);
+                var raceSettings = AutomataRaceSettingCache.Get(pawn.def);
                 if (raceSettings != null)
                 {
                     if (!raceSettings.socialActivated)

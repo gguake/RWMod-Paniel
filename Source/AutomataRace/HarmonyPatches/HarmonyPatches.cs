@@ -45,7 +45,7 @@ namespace AutomataRace.HarmonyPatches
 
         public static void PawnGenerator_GenerateSkills_Postfix(Pawn pawn)
         {
-            var raceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(pawn.def.defName, errorOnFail: false);
+            var raceSettings = AutomataRaceSettingCache.Get(pawn.def);
             if (raceSettings == null)
             {
                 return;
@@ -70,7 +70,7 @@ namespace AutomataRace.HarmonyPatches
 
         public static void PawnDiedOrDownedThoughtsUtility_GetThoughts_Postfix(Pawn victim, ref DamageInfo? dinfo, PawnDiedOrDownedThoughtsKind thoughtsKind, List<IndividualThoughtToAdd> outIndividualThoughts, List<ThoughtToAddToAll> outAllColonistsThoughts)
         {
-            var raceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(victim.def.defName, errorOnFail: false);
+            var raceSettings = AutomataRaceSettingCache.Get(victim.def);
             if (!(raceSettings?.deadThoughtOverrides?.NullOrEmpty() ?? true))
             {
                 var oldIndividualThoughts = new List<IndividualThoughtToAdd>(outIndividualThoughts);
@@ -129,7 +129,7 @@ namespace AutomataRace.HarmonyPatches
         {
             if (___pawn.IsHashIntervalTick(200))
             {
-                var raceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(___pawn.def.defName, errorOnFail: false);
+                var raceSettings = AutomataRaceSettingCache.Get(___pawn.def);
                 if (raceSettings != null)
                 {
                     if (!raceSettings.skillDecayActivated)
@@ -147,10 +147,10 @@ namespace AutomataRace.HarmonyPatches
             Pawn pawn = __instance.Pawn;
             if (pawn != null)
             {
-                AutomataRaceSettings automataRaceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(pawn.def.defName, errorOnFail: false);
-                if (automataRaceSettings != null)
+                var raceSettings = AutomataRaceSettingCache.Get(pawn.def);
+                if (raceSettings != null)
                 {
-                    if (!automataRaceSettings.infectionActivated)
+                    if (!raceSettings.infectionActivated)
                     {
                         return false;
                     }
@@ -162,7 +162,7 @@ namespace AutomataRace.HarmonyPatches
 
         public static bool HealthAIUtility_FindBestMedicine_Prefix(Pawn patient, Thing __result)
         {
-            var raceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(patient.def.defName, errorOnFail: false);
+            var raceSettings = AutomataRaceSettingCache.Get(patient.def);
             if (raceSettings != null)
             {
                 if (!raceSettings.medicineTendable)

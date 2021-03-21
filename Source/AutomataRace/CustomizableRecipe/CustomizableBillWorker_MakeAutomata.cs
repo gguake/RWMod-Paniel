@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Verse;
 using RimWorld;
 using UnityEngine;
+using AutomataRace.Logic;
 
 namespace AutomataRace
 {
@@ -28,16 +29,6 @@ namespace AutomataRace
         public int componentSpacerCount;
 
         public List<IngredientCount> fixedIngredients;
-
-        public float WorkAmount
-        {
-            get
-            {
-                float baseMaterialWorkToMake = baseMaterial.stuffProps?.statFactors?.FirstOrDefault(x => x.stat == StatDefOf.WorkToMake)?.value ?? 1f;
-                float workAmount = recipe.workAmount * baseMaterialWorkToMake;
-                return workAmount;
-            }
-        }
 
         public int ComponentIndustrialCount
         {
@@ -75,22 +66,7 @@ namespace AutomataRace
             }
         }
 
-        public float MinScore => componentTotalCount * componentIndustrialScore;
-        public float MaxScore => componentTotalCount * componentSpacerScore + useAIPersonaCoreScore;
-
-        public int Score => 
-            (int)(componentIndustrialScore * componentIndustrialCount + 
-            componentSpacerScore * componentSpacerCount + 
-            (useAIPersonaCore ? useAIPersonaCoreScore : 0));
-
-        public int SkillLevelRequirement
-        {
-            get
-            {
-                float t = (Score - MinScore) / (MaxScore - MinScore);
-                return Mathf.RoundToInt(Mathf.Lerp(craftingSkillRequirementsMin, craftingSkillRequirementsMax, t));
-            }
-        }
+        public int Score => AutomataBillService.CalcComponentScore(recipe, componentIndustrialCount, componentSpacerCount, useAIPersonaCore);
 
         public CustomizableBillWorker_MakeAutomata()
         {

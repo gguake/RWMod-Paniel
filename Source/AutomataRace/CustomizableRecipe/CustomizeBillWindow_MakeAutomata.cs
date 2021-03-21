@@ -196,10 +196,10 @@ namespace AutomataRace
                 Widgets.Label(new Rect(10f, 10f, 200f, 40f), "Expected");
                 Text.Font = GameFont.Small;
 
-                //Widgets.DrawLineHorizontal(0f, 45f, 572f);
                 Text.Font = GameFont.Tiny;
                 Text.Anchor = TextAnchor.MiddleRight;
-                Widgets.Label(new Rect(UIConstants.rtExpectedTab.width - 200f, 0f, 200f, 40f), $"Required Crafting Skill: {billWorker.SkillLevelRequirement}");
+                Widgets.Label(new Rect(UIConstants.rtExpectedTab.width - 200f, 0f, 200f, 40f), 
+                    $"Required Crafting Skill: { AutomataBillService.CalcCraftingSkillRequirement(billWorker.recipe, billWorker.Score) }");
                 Text.Anchor = TextAnchor.UpperLeft;
                 Text.Font = GameFont.Small;
 
@@ -209,7 +209,7 @@ namespace AutomataRace
                     float width = innerRect.width / 7f;
                     Widgets.DrawLineHorizontal(0f, 30f, innerRect.width);
 
-                    Dictionary<QualityCategory, float> probability = AutomataQualityService.GetProductProbability(billWorker);
+                    Dictionary<QualityCategory, float> probability = AutomataQualityService.GetProductProbability(billWorker.Score);
 
                     for (byte i = 0; i < 7; ++i)
                     {
@@ -282,11 +282,8 @@ namespace AutomataRace
             CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
             {
                 appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, faceVariantIndex = x.FaceVariantIndex }).ToList(),
-                workAmount = billWorker.WorkAmount,
-                componentScore = billWorker.Score,
                 specialization = billWorker.selectedSpecialization,
                 ingredients = ingredients,
-                craftingSkillLevel = billWorker.SkillLevelRequirement,
             };
 
             bill.SetParameter(parameter);

@@ -12,7 +12,7 @@ namespace AutomataRace.HarmonyPatches
     {
         public static void Pawn_NeedsTracker_ShouldHaveNeed_Postfix(NeedDef nd, Pawn ___pawn, ref bool __result)
         {
-            var raceSettings = DefDatabase<AutomataRaceSettings>.GetNamed(___pawn.def.defName, errorOnFail: false);
+            var raceSettings = AutomataRaceSettingCache.Get(___pawn.def);
             if (raceSettings != null)
             {
                 if (raceSettings.needBlacklists.Contains(nd))

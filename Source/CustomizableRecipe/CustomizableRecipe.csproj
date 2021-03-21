@@ -79,6 +79,9 @@
     <Compile Include="RimWorld\CustomizableRecipeDef.cs" />
     <Compile Include="RimWorld\CustomizableBillParameter.cs" />
     <Compile Include="Extensions\ThingFilterExtensions.cs" />
+    <Compile Include="StatOverride\StatOverrideDef.cs" />
+    <Compile Include="StatOverride\StatOverrideService.cs" />
+    <Compile Include="StatOverride\StatOverrideWorker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

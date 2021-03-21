@@ -51,9 +51,9 @@ namespace AutomataRace.Logic
             return result;
         }
 
-        public static Dictionary<QualityCategory, float> GetProductProbability(CustomizableBillWorker_MakeAutomata billWorker)
+        public static Dictionary<QualityCategory, float> GetProductProbability(int score)
         {
-            var weights = GetProductProbabilityWeights(billWorker.Score);
+            var weights = GetProductProbabilityWeights(score);
             Dictionary<QualityCategory, float> result = new Dictionary<QualityCategory, float>();
 
             int weightSum = weights.Sum(x => x.Value);

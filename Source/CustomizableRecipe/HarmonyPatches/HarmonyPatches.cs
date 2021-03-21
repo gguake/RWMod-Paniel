@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using CustomizableRecipe.StatOverride;
+using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,9 @@ namespace CustomizableRecipe.HarmonyPatches
             harmony.Patch(AccessTools.Method(typeof(GenRecipe), "PostProcessProduct"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(GenRecipe_PostProcessProduct_Postfix)));
 
+            harmony.Patch(AccessTools.Method(typeof(StatWorker), "GetValueUnfinalized"),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(StatWorker_GetValueUnfinalized_Postfix)));
+            
             Log.Message($"[CustomizableRecipe] Harmony patch completed.");
         }
 
@@ -79,7 +83,17 @@ namespace CustomizableRecipe.HarmonyPatches
             var bill = worker.CurJob?.bill as IBill_Customized;
             if (bill != null)
             {
-                bill.BillParameter?.OnComplete(product, worker);
+                bill.BillParameter?.OnComplete(worker.CurJob?.bill, product, worker);
+            }
+        }
+
+        public static void StatWorker_GetValueUnfinalized_Postfix(float __result, StatDef ___stat, ref StatRequest req, bool applyPostProcess)
+        {
+            if (req.HasThing)
+            {
+                var worker = StatOverrideService.Get(req.Thing.def, ___stat);
+                if (worker != null)
+                    Log.Message(worker.ToString());
             }
         }
     }

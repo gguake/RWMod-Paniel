@@ -12,6 +12,7 @@ namespace AutomataRace
     {
         public List<AutomataAppearanceParameter> appearanceChoices = new List<AutomataAppearanceParameter>();
         public AutomataSpecializationDef specialization;
+        public ThingDef baseMaterial;
         public Dictionary<ThingDef, int> ingredients;
 
         private PseudoRandom _randomGenerator = new PseudoRandom();
@@ -20,6 +21,7 @@ namespace AutomataRace
         {
             Scribe_Collections.Look(ref appearanceChoices, "appearanceChoices");
             Scribe_Defs.Look(ref specialization, "specialization");
+            Scribe_Defs.Look(ref baseMaterial, "baseMaterial");
             Scribe_Collections.Look(ref ingredients, "ingredients");
 
             Scribe_Deep.Look(ref _randomGenerator, "randomGenerator");
@@ -106,6 +108,17 @@ namespace AutomataRace
 
                 thing.AllComps.Add(compQuality);
             }
+
+            var compAutomataData = thing.GetComp<CompAutomataDataHolder>();
+            if (compAutomataData == null)
+            {
+                Log.Error("Failed to find CompAutomataDataHolder from product.");
+                return;
+            }
+
+            compAutomataData.automataData.baseMaterialDef = baseMaterial;
+            compAutomataData.automataData.ingredients = ingredients;
+
         }
     }
 

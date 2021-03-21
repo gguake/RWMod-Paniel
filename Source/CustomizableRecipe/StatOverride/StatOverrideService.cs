@@ -10,18 +10,18 @@ namespace CustomizableRecipe.StatOverride
 {
     public class StatOverrideService
     {
-        private static Dictionary<ThingDef, Dictionary<StatDef, StatOverrideWorker>> _cache;
+        private static Dictionary<Def, Dictionary<StatDef, StatOverrideWorker>> _cache;
 
-        public static StatOverrideWorker Get(ThingDef thingDef, StatDef statDef)
+        public static StatOverrideWorker Get(Def def, StatDef statDef)
         {
             if (_cache == null)
             {
-                _cache = new Dictionary<ThingDef, Dictionary<StatDef, StatOverrideWorker>>();
-                foreach (var def in DefDatabase<StatOverrideDef>.AllDefs)
+                _cache = new Dictionary<Def, Dictionary<StatDef, StatOverrideWorker>>();
+                foreach (var statOverrideDef in DefDatabase<StatOverrideDef>.AllDefs)
                 {
-                    ThingDef td = def.thingDef;
-                    StatDef sd = def.statDef;
-                    StatOverrideWorker worker = def.worker;
+                    ThingDef td = statOverrideDef.thingDef;
+                    StatDef sd = statOverrideDef.statDef;
+                    StatOverrideWorker worker = statOverrideDef.worker;
 
                     Dictionary<StatDef, StatOverrideWorker> dict;
                     if (!_cache.TryGetValue(td, out dict))
@@ -32,10 +32,19 @@ namespace CustomizableRecipe.StatOverride
 
                     dict[sd] = worker;
                 }
+
+                Log.Message($"StatOverrideService Cached: {_cache.Count}");
+                foreach(var kv in _cache)
+                {
+                    foreach (var kv2 in kv.Value)
+                    {
+                        Log.Message($"{kv.Key.defName} - {kv2.Key.defName} - {kv2.Value.GetType().Name}");
+                    }
+                }
             }
 
             Dictionary<StatDef, StatOverrideWorker> dictStat = null;
-            if (_cache.TryGetValue(thingDef, out dictStat))
+            if (_cache.TryGetValue(def, out dictStat))
             {
                 StatOverrideWorker worker;
                 if (dictStat.TryGetValue(statDef, out worker))

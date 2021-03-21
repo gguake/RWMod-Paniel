@@ -87,13 +87,11 @@ namespace CustomizableRecipe.HarmonyPatches
             }
         }
 
-        public static void StatWorker_GetValueUnfinalized_Postfix(float __result, StatDef ___stat, ref StatRequest req, bool applyPostProcess)
+        public static void StatWorker_GetValueUnfinalized_Postfix(ref float __result, StatDef ___stat, ref StatRequest req, bool applyPostProcess)
         {
             if (req.HasThing)
             {
-                var worker = StatOverrideService.Get(req.Thing.def, ___stat);
-                if (worker != null)
-                    Log.Message(worker.ToString());
+                StatOverrideService.Get(req.Def, ___stat)?.Apply(ref __result, ___stat, req.Thing);
             }
         }
     }

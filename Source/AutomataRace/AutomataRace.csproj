@@ -85,11 +85,13 @@
     <Compile Include="Logic\AutomataQualityService.cs" />
     <Compile Include="PseudoRandomGenerator\PseudoRandom.cs" />
     <Compile Include="RimWorld\CompAddCompHediffConditional.cs" />
+    <Compile Include="RimWorld\CompAutomataDataHolder.cs" />
     <Compile Include="RimWorld\CompExplosiveInstant.cs" />
     <Compile Include="RimWorld\CompProperties_AddCompHediffConditional.cs" />
     <Compile Include="RimWorld\CompProperties_SelfResurrect.cs" />
     <Compile Include="RimWorld\CompProperties_UseEffectGeneratePawn.cs" />
     <Compile Include="RimWorld\CompProperties_UseEffectRepairKit.cs" />
+    <Compile Include="RimWorld\CompPropeties_AutomataDataHolder.cs" />
     <Compile Include="RimWorld\CompSelfResurrect.cs" />
     <Compile Include="RimWorld\CompUseEffect_GeneratePawn.cs" />
     <Compile Include="RimWorld\CompUseEffect_RepairKit.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="RimWorld\Recipe_RemoveBrain.cs" />
     <Compile Include="RimWorld\Recipe_Repair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatOverrideWorker\StatOverrideWorker_MarketValue_Automaton.cs" />
     <Compile Include="ThingDefInject\ThingDefInjectConditions.cs" />
     <Compile Include="ThingDefInject\ThingDefInjectDef.cs" />
     <Compile Include="ThingDefInject\ThingDefInjectService.cs" />

@@ -283,6 +283,7 @@ namespace AutomataRace
             {
                 appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, faceVariantIndex = x.FaceVariantIndex }).ToList(),
                 specialization = billWorker.selectedSpecialization,
+                baseMaterial = billWorker.baseMaterial,
                 ingredients = ingredients,
             };
 

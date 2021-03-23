@@ -12,6 +12,11 @@ namespace AutomataRace.Logic
 {
     public static class AutomataBillService
     {
+        public static IEnumerable<ThingDef> GetBaseMaterialThingDefs()
+        {
+            return DefDatabase<ThingDef>.AllDefs.Where(x => x.IsMetal);
+        }
+
         public static float CalcWorkAmount(RecipeDef recipe, ThingDef baseMaterial)
         {
             float baseMaterialWorkToMake = baseMaterial.stuffProps?.statFactors?.FirstOrDefault(x => x.stat == StatDefOf.WorkToMake)?.value ?? 1f;

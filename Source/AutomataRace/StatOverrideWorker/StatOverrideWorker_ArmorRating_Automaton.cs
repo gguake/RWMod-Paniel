@@ -59,7 +59,6 @@ namespace AutomataRace
             if (comp != null)
             {
                 float materialStat = GetMaterialStuffPower(comp.automataData.baseMaterialDef, statDef);
-                // Log.Message($"{comp.automataData.baseMaterialDef.defName}, {statDef.defName}: {statValue} + {materialStat} = {statValue + materialStat}");
                 statValue += Mathf.Max(materialStat * multiplier + addition, 0f);
             }
         }

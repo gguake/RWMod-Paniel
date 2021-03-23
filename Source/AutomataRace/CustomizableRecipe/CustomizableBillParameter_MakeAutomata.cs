@@ -86,6 +86,7 @@ namespace AutomataRace
             int weightSum = weights.Sum(x => x.Value);
             int randomValue = (_randomGenerator.Next % weightSum);
 
+            // randomly select quality in weight table.
             QualityCategory quality = QualityCategory.Awful;
             int weightStack = 0;
             foreach (var kv in weights)
@@ -99,25 +100,23 @@ namespace AutomataRace
                 weightStack += kv.Value;
             }
 
-            var thing = product as ThingWithComps;
-            if (thing != null)
+            var thingWithComp = product as ThingWithComps;
+            if (thingWithComp != null)
             {
-                CompQuality compQuality = new CompQuality();
-                compQuality.parent = thing;
+                var compQuality = thingWithComp.GetComp<CompQuality>();
                 compQuality.SetQuality(quality, ArtGenerationContext.Colony);
 
-                thing.AllComps.Add(compQuality);
+                var compAutomataData = thingWithComp.GetComp<CompAutomataDataHolder>();
+                if (compAutomataData == null)
+                {
+                    Log.Error("Failed to find CompAutomataDataHolder from product.");
+                    return;
+                }
+
+                compAutomataData.automataData.baseMaterialDef = baseMaterial;
+                compAutomataData.automataData.ingredients = ingredients;
             }
 
-            var compAutomataData = thing.GetComp<CompAutomataDataHolder>();
-            if (compAutomataData == null)
-            {
-                Log.Error("Failed to find CompAutomataDataHolder from product.");
-                return;
-            }
-
-            compAutomataData.automataData.baseMaterialDef = baseMaterial;
-            compAutomataData.automataData.ingredients = ingredients;
 
         }
     }

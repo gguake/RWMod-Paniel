@@ -12,16 +12,59 @@ namespace AutomataRace
             var automataDataComp = parent.GetComp<CompAutomataDataHolder>();
             var automataData = automataDataComp?.automataData;
 
-            PawnGenerationRequest pawnGenReq = new PawnGenerationRequest(AutomataRaceDefOf.Paniel_Randombox_Normal,
-                faction: Faction.OfPlayer,
-                context: PawnGenerationContext.NonPlayer,
-                tile: -1,
-                forceGenerateNewPawn: true);
+            QualityCategory qualityCategory = parent.TryGetComp<CompQuality>()?.Quality ?? QualityCategory.Normal;
+            var qualityProperty = GetQualityProperty(qualityCategory);
+            if (qualityProperty == null)
+            {
+                Log.Error($"There is no AutomataQualityProperty for quality '{qualityCategory}'");
+                return;
+            }
 
-            Pawn generated = PawnGenerator.GeneratePawn(pawnGenReq);
+            PawnKindDef pawnKindDef = qualityProperty.pawnKindDefs.TryGetValue(automataData.specializationDef, null);
+            if (pawnKindDef != null)
+            {
+                PawnGenerationRequest pawnGenReq = new PawnGenerationRequest(
+                    pawnKindDef,
+                    faction: Faction.OfPlayer,
+                    context: PawnGenerationContext.NonPlayer,
+                    tile: -1,
+                    forceGenerateNewPawn: true);
 
-            generated.GetComp<CompAutomataDataHolder>().CopyFrom(automataDataComp);
-            GenSpawn.Spawn(generated, parent.Position, parent.Map);
+                Pawn generated = PawnGenerator.GeneratePawn(pawnGenReq);
+                generated.GetComp<CompAutomataDataHolder>().CopyFrom(automataDataComp);
+
+                GenSpawn.Spawn(generated, parent.Position, parent.Map);
+            }
+        }
+
+        AutomataQualityProperty GetQualityProperty(QualityCategory quality)
+        {
+            switch (quality)
+            {
+                case QualityCategory.Awful:
+                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Awful;
+
+                case QualityCategory.Poor:
+                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Poor;
+
+                case QualityCategory.Normal:
+                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Normal;
+
+                case QualityCategory.Good:
+                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Good;
+
+                case QualityCategory.Excellent:
+                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Excellent;
+
+                case QualityCategory.Masterwork:
+                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Masterwork;
+
+                case QualityCategory.Legendary:
+                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Legendary;
+
+                default:
+                    return null;
+            }
         }
     }
 }

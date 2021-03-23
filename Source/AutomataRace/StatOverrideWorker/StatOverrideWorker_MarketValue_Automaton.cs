@@ -5,9 +5,9 @@ using Verse;
 
 namespace AutomataRace
 {
-    public class StatOverrideWorker_MarketValue_PackagedAutomaton : StatOverrideWorker
+    public class StatOverrideWorker_MarketValue_Automaton : StatOverrideWorker
     {
-        public StatOverrideWorker_MarketValue_PackagedAutomaton()
+        public StatOverrideWorker_MarketValue_Automaton()
         {
         }
 
@@ -16,13 +16,7 @@ namespace AutomataRace
             ThingWithComps thingWithComps = (ThingWithComps)thing;
 
             CompAutomataDataHolder comp = thingWithComps.TryGetComp<CompAutomataDataHolder>();
-            if (comp != null)
-            {
-                foreach (var kv in comp.automataData.ingredients)
-                {
-                    statValue += kv.Key.BaseMarketValue * kv.Value;
-                }
-            }
+            statValue += comp?.MarketValue ?? 0;
         }
     }
 }

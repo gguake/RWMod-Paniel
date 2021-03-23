@@ -34,7 +34,10 @@ namespace CustomizableRecipe.HarmonyPatches
 
             harmony.Patch(AccessTools.Method(typeof(StatWorker), "GetValueUnfinalized"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(StatWorker_GetValueUnfinalized_Postfix)));
-            
+
+            harmony.Patch(AccessTools.Method(typeof(StatWorker_MarketValue), "GetValueUnfinalized"),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(StatWorker_MarketValue_GetValueUnfinalized_Postfix)));
+
             Log.Message($"[CustomizableRecipe] Harmony patch completed.");
         }
 
@@ -87,7 +90,20 @@ namespace CustomizableRecipe.HarmonyPatches
             }
         }
 
-        public static void StatWorker_GetValueUnfinalized_Postfix(ref float __result, StatDef ___stat, ref StatRequest req, bool applyPostProcess)
+        public static void StatWorker_GetValueUnfinalized_Postfix(StatWorker __instance, ref float __result, StatDef ___stat, ref StatRequest req, bool applyPostProcess)
+        {
+            if (__instance is StatWorker_MarketValue)
+            {
+                return;
+            }
+
+            if (req.HasThing)
+            {
+                StatOverrideService.Get(req.Def, ___stat)?.Apply(ref __result, ___stat, req.Thing);
+            }
+        }
+
+        public static void StatWorker_MarketValue_GetValueUnfinalized_Postfix(StatWorker __instance, ref float __result, StatDef ___stat, ref StatRequest req, bool applyPostProcess)
         {
             if (req.HasThing)
             {

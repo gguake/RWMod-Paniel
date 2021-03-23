@@ -1,7 +1,9 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using Verse;
 
 namespace AutomataRace.HarmonyPatches
@@ -41,6 +43,10 @@ namespace AutomataRace.HarmonyPatches
 
             harmony.Patch(AccessTools.Method(typeof(HealthAIUtility), "FindBestMedicine"),
                 prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HealthAIUtility_FindBestMedicine_Prefix)));
+
+            harmony.Patch(AccessTools.Method(typeof(GenRecipe), "PostProcessProduct"),
+                transpiler: new HarmonyMethod(typeof(HarmonyPatches), nameof(GenRecipe_PostProcessProduct_Transpiler)));
+
         }
 
         public static void PawnGenerator_GenerateSkills_Postfix(Pawn pawn)
@@ -174,5 +180,21 @@ namespace AutomataRace.HarmonyPatches
 
             return true;
         }
+
+        public static IEnumerable<CodeInstruction> GenRecipe_PostProcessProduct_Transpiler(IEnumerable<CodeInstruction> codeInstructions)
+        {
+            var instList = codeInstructions.ToList();
+            int i = codeInstructions.FirstIndexOf(x => x.opcode == OpCodes.Brfalse_S);
+
+            instList.InsertRange(i + 1, new CodeInstruction[]
+            {
+                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ThingCompUtility), "TryGetComp", generics: new Type[] { typeof(CompAutomataDataHolder) })),
+                new CodeInstruction(OpCodes.Brfalse_S, instList[i].operand),
+            });
+
+            return instList;
+        }
+
     }
 }

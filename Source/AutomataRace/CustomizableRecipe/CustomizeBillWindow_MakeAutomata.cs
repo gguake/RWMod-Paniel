@@ -33,7 +33,7 @@ namespace AutomataRace
 
         SamplePawnDrawer[] _samplePawnDrawers = new SamplePawnDrawer[4];
 
-        List<ThingDef> _baseMaterialThings = DefDatabase<ThingDef>.AllDefs.Where(x => x.IsMetal).ToList();
+        List<ThingDef> _baseMaterialThings = AutomataBillService.GetBaseMaterialThingDefs().ToList();
 
         public override Vector2 InitialSize => new Vector2(
             Margin * 2 + UIConstants.rtSpecializationTab.x + UIConstants.rtSpecializationTab.width,

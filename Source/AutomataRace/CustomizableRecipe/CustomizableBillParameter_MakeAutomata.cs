@@ -1,6 +1,7 @@
 ﻿using AutomataRace.Logic;
 using CustomizableRecipe;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -84,7 +85,7 @@ namespace AutomataRace
 
             var weights = AutomataQualityService.GetProductProbabilityWeights(finalScore);
             int weightSum = weights.Sum(x => x.Value);
-            int randomValue = (_randomGenerator.Next % weightSum);
+            int randomValue = _randomGenerator.IntRange(weightSum);
 
             // randomly select quality in weight table.
             QualityCategory quality = QualityCategory.Awful;
@@ -113,8 +114,11 @@ namespace AutomataRace
                     return;
                 }
 
+                compAutomataData.automataData.specializationDef = specialization;
                 compAutomataData.automataData.baseMaterialDef = baseMaterial;
                 compAutomataData.automataData.ingredients = ingredients;
+
+                compAutomataData.automataData.appearance = appearanceChoices[_randomGenerator.IntRange(appearanceChoices.Count)];
             }
 
 

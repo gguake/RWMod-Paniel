@@ -18,6 +18,15 @@ namespace AutomataRace
             }
         }
 
+        // return integer in [0, n).
+        public int IntRange(int n)
+        {
+            return Math.Abs(Next % n);
+        }
+
+        // return integer in [a, b).
+        public int IntRange(int a, int b) => a + IntRange(b);
+
         public PseudoRandom()
         {
             seed = Find.TickManager.TicksGame;

@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using Verse;
+using AutomataRace.Extensions;
 
 namespace AutomataRace
 {
@@ -33,7 +34,10 @@ namespace AutomataRace
                 Pawn generated = PawnGenerator.GeneratePawn(pawnGenReq);
                 generated.GetComp<CompAutomataDataHolder>().CopyFrom(automataDataComp);
 
+                generated.story.hairDef = automataData.appearance?.hairDef;
+
                 GenSpawn.Spawn(generated, parent.Position, parent.Map);
+                generated.SetFaceBodyAddonVariant(automataData.appearance.faceVariantIndex);
             }
         }
 

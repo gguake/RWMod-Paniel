@@ -88,6 +88,8 @@ namespace AutomataRace
                 return;
             }
 
+            selectedSpecialization = other.selectedSpecialization;
+
             baseMaterialCount = other.baseMaterialCount;
             componentTotalCount = other.componentTotalCount;
             componentIndustrialScore = other.componentIndustrialScore;

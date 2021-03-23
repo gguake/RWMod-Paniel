@@ -15,6 +15,8 @@ namespace AutomataRace
         public ThingDef baseMaterialDef = AutomataBillService.GetBaseMaterialThingDefs().RandomElement();
         public Dictionary<ThingDef, int> ingredients = new Dictionary<ThingDef, int>();
 
+        public AutomataAppearanceParameter appearance = new AutomataAppearanceParameter();
+
         public AutomataData()
         {
             ingredients = new Dictionary<ThingDef, int>();
@@ -40,6 +42,7 @@ namespace AutomataRace
             Scribe_Defs.Look(ref specializationDef, "specialization");
             Scribe_Defs.Look(ref baseMaterialDef, "baseMaterial");
             Scribe_Collections.Look(ref ingredients, "ingredients");
+            Scribe_Deep.Look(ref appearance, "appearance");
         }
     }
 

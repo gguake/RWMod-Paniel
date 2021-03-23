@@ -1,5 +1,6 @@
 ﻿using AlienRace;
 using System;
+using System.Collections.Generic;
 using Verse;
 
 namespace AutomataRace.Extensions
@@ -35,7 +36,7 @@ namespace AutomataRace.Extensions
                 return -1;
             }
 
-            int faceBodyAddonIndex = FindFaceBodyAddonIndex(pawn);
+            int faceBodyAddonIndex = pawn.FindFaceBodyAddonIndex();
             if (faceBodyAddonIndex < 0)
             {
                 Log.Error($"Failed to find face body addon.");
@@ -74,13 +75,21 @@ namespace AutomataRace.Extensions
                 return;
             }
 
-            int faceBodyAddonIndex = FindFaceBodyAddonIndex(pawn);
+            int faceBodyAddonIndex = pawn.FindFaceBodyAddonIndex();
             if (faceBodyAddonIndex < 0)
             {
                 Log.Error($"Failed to find face body addon.");
                 return;
             }
 
+            if (alienComp.addonVariants == null)
+            {
+                alienComp.addonVariants = new List<int>();
+                for (int i = 0; i < faceBodyAddonIndex + 1; ++i)
+                {
+                    alienComp.addonVariants.Add(0);
+                }
+            }
             alienComp.addonVariants[faceBodyAddonIndex] = index;
         }
 

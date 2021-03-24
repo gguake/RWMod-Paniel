@@ -10,6 +10,7 @@ namespace AutomataRace
         public Need_Maintenance(Pawn pawn) : 
             base(pawn)
         {
+            curLevelInt = 1f;
         }
 
         public override void NeedInterval()

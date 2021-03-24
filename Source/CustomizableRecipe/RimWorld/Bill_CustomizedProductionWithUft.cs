@@ -24,7 +24,7 @@ namespace CustomizableRecipe
         }
 
         public Bill_CustomizedProductionWithUft(RecipeDef originalRecipe)
-            : base(originalRecipe.MakeClone())
+            : base(CustomizableRecipeService.CloneRecipeDef(originalRecipe))
         {
             _originalRecipe = originalRecipe;
         }
@@ -47,12 +47,12 @@ namespace CustomizableRecipe
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
-                string defName = null;
-                Scribe_Values.Look<string>(ref defName, "recipe");
+                string recipeDefName = null;
+                Scribe_Values.Look<string>(ref recipeDefName, "recipe");
 
-                if (!DefDatabase<RecipeDef>.AllDefsListForReading.Any(x => x.defName == defName))
+                if (!DefDatabase<RecipeDef>.AllDefsListForReading.Any(x => x.defName == recipeDefName))
                 {
-                    var recipeClone = _originalRecipe.MakeClone(defName);
+                    CustomizableRecipeService.CloneRecipeDef(_originalRecipe, recipeDefName);
                 }
             }
 

@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomizableRecipeService.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="HarmonyPatches\HarmonyPatches.cs" />
     <Compile Include="Extensions\RecipeDefExtensions.cs" />

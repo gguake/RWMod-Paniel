@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
+using Verse.Profile;
 
 namespace CustomizableRecipe.HarmonyPatches
 {
@@ -37,6 +38,9 @@ namespace CustomizableRecipe.HarmonyPatches
 
             harmony.Patch(AccessTools.Method(typeof(StatWorker_MarketValue), "GetValueUnfinalized"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(StatWorker_MarketValue_GetValueUnfinalized_Postfix)));
+
+            harmony.Patch(AccessTools.Method(typeof(MemoryUtility), "ClearAllMapsAndWorld"),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(MemoryUtility_ClearAllMapsAndWorld_Postfix)));
 
             Log.Message($"[CustomizableRecipe] Harmony patch completed.");
         }
@@ -109,6 +113,11 @@ namespace CustomizableRecipe.HarmonyPatches
             {
                 StatOverrideService.Get(req.Def, ___stat)?.Apply(ref __result, ___stat, req.Thing);
             }
+        }
+
+        public static void MemoryUtility_ClearAllMapsAndWorld_Postfix()
+        {
+            CustomizableRecipeService.Reset();
         }
     }
 }

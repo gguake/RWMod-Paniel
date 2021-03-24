@@ -81,7 +81,6 @@ namespace CustomizableRecipe
             ret.dontShowIfAnyIngredientMissing = recipe.dontShowIfAnyIngredientMissing;
             // _field_RecipeDef_isSurgeryCached.SetValue(ret, _field_RecipeDef_isSurgeryCached.GetValue(recipe));
 
-            DefDatabase<RecipeDef>.Add(ret);
             return ret;
         }
     }

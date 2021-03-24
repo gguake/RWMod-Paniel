@@ -1,4 +1,5 @@
 ﻿using AutomataRace.Logic;
+using AutomataRace.Extensions;
 using CustomizableRecipe;
 using RimWorld;
 using System;
@@ -40,6 +41,7 @@ namespace AutomataRace
                 return;
             }
 
+            bill.recipe.SetLabelCap(specialization.RecipeDefLabelCap);
             bill.recipe.workAmount = AutomataBillService.CalcWorkAmount(customizableRecipe, billWorker.baseMaterial);
             bill.recipe.ingredients = MakeIngredientCountList(ingredients);
 

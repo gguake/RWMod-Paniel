@@ -58,7 +58,7 @@ namespace AutomataRace
                 if (_cachedMarketValue < 0)
                 {
                     float t = 0f;
-                    foreach (var kv in automataData.ingredients)
+                    foreach (var kv in automataData.ingredients.Where(x => x.Key.tradeability == Tradeability.All))
                     {
                         t += kv.Key.BaseMarketValue * kv.Value;
                     }
@@ -82,6 +82,29 @@ namespace AutomataRace
         public override void PostExposeData()
         {
             Scribe_Deep.Look(ref automataData, "automataData");
+        }
+
+        public override string CompInspectStringExtra()
+        {
+            if (automataData != null)
+            {
+                return $"{"PN_AUTOMATA_MATERIAL".Translate()}: {automataData.baseMaterialDef.LabelCap}";
+            }
+
+            return null;
+        }
+
+        public override string TransformLabel(string label)
+        {
+            if (parent is Pawn)
+            {
+                return label;
+            }
+            else
+            {
+                QualityCategory quality = parent.GetComp<CompQuality>().Quality;
+                return $"{automataData.specializationDef.PackagedThingDefLabelCap} ({quality.GetLabel()})";
+            }
         }
     }
 }

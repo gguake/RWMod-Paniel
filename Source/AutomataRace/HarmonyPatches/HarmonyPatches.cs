@@ -47,6 +47,9 @@ namespace AutomataRace.HarmonyPatches
             harmony.Patch(AccessTools.Method(typeof(GenRecipe), "PostProcessProduct"),
                 transpiler: new HarmonyMethod(typeof(HarmonyPatches), nameof(GenRecipe_PostProcessProduct_Transpiler)));
 
+            harmony.Patch(AccessTools.Method(typeof(TransferableUtility), "CanStack"),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(TransferableUtility_CanStack_Postfix)));
+
         }
 
         public static void PawnGenerator_GenerateSkills_Postfix(Pawn pawn)
@@ -196,5 +199,12 @@ namespace AutomataRace.HarmonyPatches
             return instList;
         }
 
+        public static void TransferableUtility_CanStack_Postfix(ref bool __result, Thing thing)
+        {
+            if (thing.TryGetComp<CompAutomataDataHolder>() != null)
+            {
+                __result = false;
+            }
+        }
     }
 }

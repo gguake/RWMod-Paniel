@@ -12,6 +12,8 @@ namespace AutomataRace
         public static HediffDef PN_OilLoss;
         public static ThingDef PN_Brain;
 
+        public static ThingDef Paniel_Race;
+
         public static CustomizableRecipeDef PN_Make_Automaton;
 
         public static AutomataSpecializationDef PN_Specialization_Combat;

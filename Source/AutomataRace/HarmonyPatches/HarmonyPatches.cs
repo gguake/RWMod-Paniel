@@ -50,6 +50,9 @@ namespace AutomataRace.HarmonyPatches
             harmony.Patch(AccessTools.Method(typeof(TransferableUtility), "CanStack"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(TransferableUtility_CanStack_Postfix)));
 
+            harmony.Patch(AccessTools.Method(typeof(PawnGenerator), "GeneratePawn", parameters: new Type[] { typeof(PawnGenerationRequest) }),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(PawnGenerator_GeneratePawn_Postfix)));
+
         }
 
         public static void PawnGenerator_GenerateSkills_Postfix(Pawn pawn)
@@ -204,6 +207,15 @@ namespace AutomataRace.HarmonyPatches
             if (thing.TryGetComp<CompAutomataDataHolder>() != null)
             {
                 __result = false;
+            }
+        }
+
+        public static void PawnGenerator_GeneratePawn_Postfix(ref Pawn __result)
+        {
+            if (__result.def == AutomataRaceDefOf.Paniel_Race)
+            {
+                __result.ageTracker.AgeBiologicalTicks = 0;
+                __result.ageTracker.AgeChronologicalTicks = 0;
             }
         }
     }

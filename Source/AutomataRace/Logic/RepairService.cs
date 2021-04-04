@@ -8,16 +8,14 @@ namespace AutomataRace.Logic
     {
         public static void Repair(Pawn pawn)
         {
-            foreach (Hediff_MissingPart hediff in pawn.health.hediffSet.GetMissingPartsCommonAncestors())
+            List<Hediff_MissingPart> missings = pawn.health.hediffSet.GetMissingPartsCommonAncestors().Where(x => !pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(x.Part)).ToList();
+            foreach (var hediff in missings)
             {
-                if (!pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(hediff.Part))
-                {
-                    pawn.health.RestorePart(hediff.Part);
-                }
+                pawn.health.RestorePart(hediff.Part);
             }
 
             List<Hediff> injuries = pawn.health.hediffSet.hediffs.Where(x => IsCurableHediff(x)).ToList();
-            foreach (Hediff hediff in injuries)
+            foreach (var hediff in injuries)
             {
                 HealthUtility.CureHediff(hediff);
             }

@@ -18,7 +18,7 @@ namespace CustomizableRecipe
         {
             base.ResolveReferences();
 
-            billWorker.ResolveReferences();
+            billWorker?.ResolveReferences();
         }
     }
 }

@@ -56,10 +56,6 @@ namespace AutomataRace
                 Bill.CreateNoPawnsWithSkillDialog(bill.recipe);
             }
 
-            string x = null;
-
-            string y = x ?? "fdf";
-
             base.ConfirmBill(bill);
         }
 
@@ -72,11 +68,11 @@ namespace AutomataRace
             GUI.BeginGroup(UIConstants.rtAppearanceTab.ContractedBy(UIConstants.groupMargin));
             {
                 Text.Font = GameFont.Medium;
-                Widgets.Label(new Rect(0f, 0f, 200f, 40f), "Appearance");
+                Widgets.Label(new Rect(0f, 0f, 200f, 40f), "PN_BILL_WINDOW_TAB_APPEARANCE_TITLE".Translate());
                 Text.Font = GameFont.Small;
 
                 Rect innerRect = UIConstants.rtAppearanceTab.ContractedBy(UIConstants.groupMargin);
-                TooltipHandler.TipRegion(new Rect(0f, 40f, innerRect.width, innerRect.height - 40f), "Appearance is choiced randomly in four options when it assembled.");
+                TooltipHandler.TipRegion(new Rect(0f, 40f, innerRect.width, innerRect.height - 40f), "PN_BILL_WINDOW_TAB_APPEARANCE_TOOLTIP".Translate());
                 GUI.BeginGroup(new Rect(0f, 40f, innerRect.width, innerRect.height - 40f));
 
                 Rect[] rectPortraits = new Rect[]
@@ -115,7 +111,7 @@ namespace AutomataRace
             GUI.BeginGroup(UIConstants.rtSpecializationTab.ContractedBy(UIConstants.groupMargin));
             {
                 Text.Font = GameFont.Medium;
-                Widgets.Label(new Rect(0f, 0f, 200f, 40f), "Specialization");
+                Widgets.Label(new Rect(0f, 0f, 200f, 40f), "PN_BILL_WINDOW_TAB_SPECIALIZATION_TITLE".Translate());
                 Text.Font = GameFont.Small;
 
                 // Combat
@@ -124,6 +120,8 @@ namespace AutomataRace
                     SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
                     billWorker.selectedSpecialization = AutomataRaceDefOf.PN_Specialization_Combat;
                 }
+
+                TooltipHandler.TipRegion(new Rect(15f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Combat.tooltip);
 
                 if (billWorker.selectedSpecialization == AutomataRaceDefOf.PN_Specialization_Combat)
                     GUI.DrawTexture(new Rect(31f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
@@ -135,6 +133,8 @@ namespace AutomataRace
                     billWorker.selectedSpecialization = AutomataRaceDefOf.PN_Specialization_Engineer;
                 }
 
+                TooltipHandler.TipRegion(new Rect(104f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Engineer.tooltip);
+
                 if (billWorker.selectedSpecialization == AutomataRaceDefOf.PN_Specialization_Engineer)
                     GUI.DrawTexture(new Rect(120f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
 
@@ -144,6 +144,8 @@ namespace AutomataRace
                     SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
                     billWorker.selectedSpecialization = AutomataRaceDefOf.PN_Specialization_Domestic;
                 }
+
+                TooltipHandler.TipRegion(new Rect(193f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Domestic.tooltip);
 
                 if (billWorker.selectedSpecialization == AutomataRaceDefOf.PN_Specialization_Domestic)
                     GUI.DrawTexture(new Rect(209f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
@@ -156,8 +158,10 @@ namespace AutomataRace
             GUI.BeginGroup(UIConstants.rtMaterialTab.ContractedBy(UIConstants.groupMargin));
             {
                 Text.Font = GameFont.Medium;
-                Widgets.Label(new Rect(0f, 0f, 200f, 40f), "Choose Materials");
+                Widgets.Label(new Rect(0f, 0f, 200f, 40f), "PN_BILL_WINDOW_TAB_MATERIAL_TITLE".Translate());
                 Text.Font = GameFont.Small;
+
+                TooltipHandler.TipRegion(new Rect(0f, UIConstants.baseMaterialY, UIConstants.rtMaterialTab.width, 40f), "PN_BILL_WINDOW_TAB_MATERIAL_BASE_MATERIAL_TOOLTIP".Translate());
 
                 GUI.DrawTexture(new Rect(5f, UIConstants.baseMaterialY, 32f, 32f), billWorker.baseMaterial.uiIcon);
                 Widgets.Label(new Rect(47f, UIConstants.baseMaterialY + 5f, 50f, 30f), $"x{billWorker.baseMaterialCount * (billWorker.baseMaterial.smallVolume ? 10 : 1)}");
@@ -170,18 +174,19 @@ namespace AutomataRace
                     })).ToList()));
                 }
 
-                TooltipHandler.TipRegion(new Rect(0f, UIConstants.componentIndustrialY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.ComponentIndustrial.LabelCap);
+
+                TooltipHandler.TipRegion(new Rect(0f, UIConstants.componentIndustrialY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.ComponentIndustrial.LabelCap + "\n\n" + "PN_BILL_WINDOW_TAB_MATERIAL_COMPONENT_TOOLTIP".Translate());
                 GUI.DrawTexture(new Rect(5f, UIConstants.componentIndustrialY, 32f, 32f), ThingDefOf.ComponentIndustrial.uiIcon);
                 Widgets.Label(new Rect(47f, UIConstants.componentIndustrialY + 3f, 50f, 30f), $"x{billWorker.ComponentIndustrialCount}");
                 billWorker.ComponentIndustrialCount = (int)Widgets.HorizontalSlider(new Rect(110f, UIConstants.componentIndustrialY, 150f, 38f), billWorker.ComponentIndustrialCount, 0f, 20f, middleAlignment: true, leftAlignedLabel: "0", rightAlignedLabel: "20", roundTo: 0);
 
 
-                TooltipHandler.TipRegion(new Rect(0f, UIConstants.componentSpacerY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.ComponentSpacer.LabelCap);
+                TooltipHandler.TipRegion(new Rect(0f, UIConstants.componentSpacerY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.ComponentSpacer.LabelCap + "\n\n" + "PN_BILL_WINDOW_TAB_MATERIAL_COMPONENT_TOOLTIP".Translate());
                 GUI.DrawTexture(new Rect(5f, UIConstants.componentSpacerY, 32f, 32f), ThingDefOf.ComponentSpacer.uiIcon);
                 Widgets.Label(new Rect(47f, UIConstants.componentSpacerY + 3f, 50f, 30f), $"x{billWorker.ComponentSpacerCount}");
                 billWorker.ComponentSpacerCount = (int)Widgets.HorizontalSlider(new Rect(110f, UIConstants.componentSpacerY, 150f, 38f), billWorker.ComponentSpacerCount, 0f, 20f, middleAlignment: true, leftAlignedLabel: "0", rightAlignedLabel: "20", roundTo: 0);
 
-                TooltipHandler.TipRegion(new Rect(0f, UIConstants.aiPersonaCoreY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.AIPersonaCore.LabelCap);
+                TooltipHandler.TipRegion(new Rect(0f, UIConstants.aiPersonaCoreY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.AIPersonaCore.LabelCap + "\n\n" + "PN_BILL_WINDOW_TAB_MATERIAL_AICORE_TOOLTIP".Translate());
                 GUI.DrawTexture(new Rect(5f, UIConstants.aiPersonaCoreY, 32f, 32f), ThingDefOf.AIPersonaCore.uiIcon);
                 Widgets.Label(new Rect(47f, UIConstants.aiPersonaCoreY + 3f, 50f, 30f), $"x{(billWorker.useAIPersonaCore ? 1 : 0)}");
                 Widgets.Checkbox(new Vector2(170f, UIConstants.aiPersonaCoreY + 2.5f), ref billWorker.useAIPersonaCore);
@@ -193,13 +198,13 @@ namespace AutomataRace
             GUI.BeginGroup(UIConstants.rtExpectedTab);
             {
                 Text.Font = GameFont.Medium;
-                Widgets.Label(new Rect(10f, 10f, 200f, 40f), "Expected");
+                Widgets.Label(new Rect(10f, 10f, 200f, 40f), "PN_BILL_WINDOW_TAB_SUMMARY_TITLE".Translate());
                 Text.Font = GameFont.Small;
 
                 Text.Font = GameFont.Tiny;
                 Text.Anchor = TextAnchor.MiddleRight;
                 Widgets.Label(new Rect(UIConstants.rtExpectedTab.width - 200f, 0f, 200f, 40f), 
-                    $"Required Crafting Skill: { AutomataBillService.CalcCraftingSkillRequirement(billWorker.recipe, billWorker.Score) }");
+                    $"{"PN_BILL_WINDOW_TAB_SUMMARY_REQUIRED_SKILL".Translate()}: { AutomataBillService.CalcCraftingSkillRequirement(billWorker.recipe, billWorker.Score) }");
                 Text.Anchor = TextAnchor.UpperLeft;
                 Text.Font = GameFont.Small;
 
@@ -224,14 +229,14 @@ namespace AutomataRace
             #region Buttons Tab
             GUI.BeginGroup(UIConstants.rtButtonTab);
 
-            if (Widgets.ButtonText(new Rect(150f, 0f, 110f, 40f), "Cancel"))
+            if (Widgets.ButtonText(new Rect(150f, 0f, 110f, 40f), "PN_BILL_WINDOW_TAB_SUMMARY_BTN_CANCEL".Translate()))
             {
                 Close(true);
             }
 
             Color defaultColor = GUI.color;
             GUI.color = CheckAllRequirements() ? defaultColor : Color.grey;
-            if (Widgets.ButtonText(new Rect(312f, 0f, 110f, 40f), "Add Bill"))
+            if (Widgets.ButtonText(new Rect(312f, 0f, 110f, 40f), "PN_BILL_WINDOW_TAB_SUMMARY_BTN_ADD_BILL".Translate()))
             {
                 TryAddBill();
             }
@@ -346,6 +351,8 @@ namespace AutomataRace
         public void RerollAndUpdateTexture()
         {
             _pawn.story.hairDef = PawnHairChooser.RandomHairDefFor(_pawn, null);
+            _pawn.story.hairColor = Color.white;
+
             FaceVariantIndex = _pawn.SetFaceBodyAddonRandomly();
             if (FaceVariantIndex < 0)
             {

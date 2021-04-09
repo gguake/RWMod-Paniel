@@ -11,6 +11,7 @@ namespace CustomizableRecipe
     public abstract class CustomizableBillParameter : IExposable
     {
         public abstract void ExposeData();
+        public abstract CustomizableBillParameter Clone();
 
         public abstract void OnAttachBill(Bill bill);
         public abstract void OnComplete(Bill bill, Thing product, Pawn worker);

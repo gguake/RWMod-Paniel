@@ -11,11 +11,10 @@ namespace CustomizableRecipe
 {
     public class Bill_CustomizedProduction : Bill_Production, IBill_Customized
     {
-        public RecipeDef OriginalRecipe => _originalRecipe;
-        public CustomizableBillParameter BillParameter => _billParameter;
+        public RecipeDef OriginalRecipe => _impl.originalRecipe;
+        public CustomizableBillParameter BillParameter => _impl.billParameter;
 
-        private RecipeDef _originalRecipe;
-        private CustomizableBillParameter _billParameter;
+        private Bill_CustomizedProductionImpl _impl;
 
         /// <summary>
         /// do not use default constructor without parameters.
@@ -27,24 +26,24 @@ namespace CustomizableRecipe
         public Bill_CustomizedProduction(RecipeDef originalRecipe)
             : base(CustomizableRecipeService.CloneRecipeDef(originalRecipe))
         {
-            _originalRecipe = originalRecipe;
+            _impl = new Bill_CustomizedProductionImpl();
+            _impl.originalRecipe = originalRecipe;
         }
 
         public void SetParameter(CustomizableBillParameter parameter)
         {
-            if (_billParameter != null)
+            if (_impl.billParameter != null)
             {
                 Log.Message($"Tried to set bill parameter over twice.");
             }
 
-            _billParameter = parameter;
-            _billParameter.OnAttachBill(this);
+            _impl.billParameter = parameter;
+            _impl.billParameter.OnAttachBill(this);
         }
 
         public override void ExposeData()
         {
-            Scribe_Defs.Look(ref _originalRecipe, "originalRecipe");
-            Scribe_Deep.Look(ref _billParameter, "billParameter");
+            Scribe_Deep.Look(ref _impl, "impl");
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
@@ -53,12 +52,27 @@ namespace CustomizableRecipe
 
                 if (!DefDatabase<RecipeDef>.AllDefsListForReading.Any(x => x.defName == recipeDefName))
                 {
-                    CustomizableRecipeService.CloneRecipeDef(_originalRecipe, recipeDefName);
+                    CustomizableRecipeService.CloneRecipeDef(_impl.originalRecipe, recipeDefName);
                 }
             }
 
             base.ExposeData();
-            _billParameter.OnAttachBill(this);
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                _impl.billParameter.OnAttachBill(this);
+            }
+        }
+
+        public override Bill Clone()
+        {
+            Bill_CustomizedProduction bill = (Bill_CustomizedProduction)base.Clone();
+
+            bill._impl = new Bill_CustomizedProductionImpl();
+            bill._impl.originalRecipe = _impl.originalRecipe;
+            bill._impl.billParameter = _impl.billParameter.Clone();
+
+            return bill;
         }
     }
 }

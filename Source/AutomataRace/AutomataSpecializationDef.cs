@@ -8,6 +8,7 @@ namespace AutomataRace
     public class AutomataSpecializationDef : Def
     {
         public string uiIconPath;
+        public string tooltip;
         public string recipeDefLabel;
         public string packagedDefLabel;
 

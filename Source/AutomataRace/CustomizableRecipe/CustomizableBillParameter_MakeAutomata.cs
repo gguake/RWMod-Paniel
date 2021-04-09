@@ -29,6 +29,17 @@ namespace AutomataRace
             Scribe_Deep.Look(ref _randomGenerator, "randomGenerator");
         }
 
+        public override CustomizableBillParameter Clone()
+        {
+            CustomizableBillParameter_MakeAutomata clone = new CustomizableBillParameter_MakeAutomata();
+            clone.appearanceChoices = appearanceChoices.ListFullCopy();
+            clone.specialization = specialization;
+            clone.baseMaterial = baseMaterial;
+            clone.ingredients = new Dictionary<ThingDef, int>(ingredients);
+
+            return clone;
+        }
+
         public override void OnAttachBill(Bill bill)
         {
             var customizedBill = bill as Bill_CustomizedProductionWithUft;

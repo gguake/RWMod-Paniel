@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using Verse;
 using AutomataRace.Extensions;
+using UnityEngine;
 
 namespace AutomataRace
 {
@@ -35,6 +36,7 @@ namespace AutomataRace
                 generated.GetComp<CompAutomataDataHolder>().CopyFrom(automataDataComp);
 
                 generated.story.hairDef = automataData.appearance?.hairDef;
+                generated.story.hairColor = Color.white;
 
                 GenSpawn.Spawn(generated, parent.Position, parent.Map);
                 generated.SetFaceBodyAddonVariant(automataData.appearance.faceVariantIndex);

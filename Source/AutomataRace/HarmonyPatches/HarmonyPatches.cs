@@ -194,9 +194,9 @@ namespace AutomataRace.HarmonyPatches
 
             instList.InsertRange(i + 1, new CodeInstruction[]
             {
-                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ThingCompUtility), "TryGetComp", generics: new Type[] { typeof(CompAutomataDataHolder) })),
-                new CodeInstruction(OpCodes.Brfalse_S, instList[i].operand),
+                new CodeInstruction(OpCodes.Brtrue_S, instList[i].operand)
             });
 
             return instList;

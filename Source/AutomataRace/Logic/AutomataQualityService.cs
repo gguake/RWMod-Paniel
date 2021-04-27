@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace AutomataRace.Logic
 {
@@ -9,32 +10,8 @@ namespace AutomataRace.Logic
     {
         public static int GetProbabilityWeightFromComponentScore(QualityCategory qualityCategory, int componentScore)
         {
-            switch (qualityCategory)
-            {
-                case QualityCategory.Awful:
-                    return Math.Max(0, 125 - componentScore);
-
-                case QualityCategory.Poor:
-                    return Math.Max(0, 200 - componentScore);
-
-                case QualityCategory.Normal:
-                    return Math.Max(50, 300 - componentScore);
-
-                case QualityCategory.Good:
-                    return Math.Max(componentScore - 180, 0);
-
-                case QualityCategory.Excellent:
-                    return Math.Max(componentScore - 250, 0);
-
-                case QualityCategory.Masterwork:
-                    return Math.Max(componentScore - 350, 0);
-
-                case QualityCategory.Legendary:
-                    return Math.Max(componentScore - 500, 0);
-
-                default:
-                    return 0;
-            }
+            var qualityProperty = AutomataQualityProperty.GetQualityProperty(qualityCategory);
+            return Mathf.FloorToInt(Mathf.Max(0, qualityProperty.scoreCurve.Evaluate(componentScore)));
         }
 
         public static Dictionary<QualityCategory, int> GetProductProbabilityWeights(int score)

@@ -94,7 +94,7 @@ namespace AutomataRace
             }
 
             int score = AutomataBillService.CalcComponentScore(customizableRecipe, ingredients);
-            int finalScore = Mathf.FloorToInt(score * (workerInspired ? 1.2f : 1f));
+            int finalScore = Mathf.FloorToInt(score * (workerInspired ? 1.5f : 1f));
 
             var weights = AutomataQualityService.GetProductProbabilityWeights(finalScore);
             int weightSum = weights.Sum(x => x.Value);

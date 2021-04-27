@@ -15,7 +15,7 @@ namespace AutomataRace
             var automataData = automataDataComp?.automataData;
 
             QualityCategory qualityCategory = parent.TryGetComp<CompQuality>()?.Quality ?? QualityCategory.Normal;
-            var qualityProperty = GetQualityProperty(qualityCategory);
+            var qualityProperty = AutomataQualityProperty.GetQualityProperty(qualityCategory);
             if (qualityProperty == null)
             {
                 Log.Error($"There is no AutomataQualityProperty for quality '{qualityCategory}'");
@@ -40,36 +40,6 @@ namespace AutomataRace
 
                 GenSpawn.Spawn(generated, parent.Position, parent.Map);
                 generated.SetFaceBodyAddonVariant(automataData.appearance.faceVariantIndex);
-            }
-        }
-
-        AutomataQualityProperty GetQualityProperty(QualityCategory quality)
-        {
-            switch (quality)
-            {
-                case QualityCategory.Awful:
-                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Awful;
-
-                case QualityCategory.Poor:
-                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Poor;
-
-                case QualityCategory.Normal:
-                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Normal;
-
-                case QualityCategory.Good:
-                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Good;
-
-                case QualityCategory.Excellent:
-                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Excellent;
-
-                case QualityCategory.Masterwork:
-                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Masterwork;
-
-                case QualityCategory.Legendary:
-                    return AutomataRaceDefOf.PN_AutomataQualityProperty_Legendary;
-
-                default:
-                    return null;
             }
         }
     }

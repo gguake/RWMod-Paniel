@@ -14,13 +14,16 @@ namespace AutomataRace
     {
         static class UIConstants
         {
-            public static float distanceAppearanceGap = 22f;
+            public const float distanceAppearanceGap = 22f;
 
-            public static float groupMargin = 10f;
-            public static float baseMaterialY = 38f;
-            public static float componentIndustrialY = 88f;
-            public static float componentSpacerY = 130f;
-            public static float aiPersonaCoreY = 175f;
+            public const float groupMargin = 10f;
+            public const float baseMaterialY = 38f;
+            public const float componentIndustrialY = 88f;
+            public const float componentSpacerY = 130f;
+            public const float aiPersonaCoreY = 175f;
+
+            public const float specializationButtonSize = 84f;
+            public const float specializationButtonGap = 10f;
 
             public static Rect rtAppearanceTab = new Rect(0f, 0f, 270f, 380f);
             public static Rect rtSpecializationTab = new Rect(280f, 0f, 292f, 140f);
@@ -115,40 +118,43 @@ namespace AutomataRace
                 Text.Font = GameFont.Small;
 
                 // Combat
-                if (Widgets.ButtonImageFitted(new Rect(15f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Combat.UIIcon))
+                float combatButtonLeft = 0f;
+                if (Widgets.ButtonImageFitted(new Rect(combatButtonLeft, 35f, UIConstants.specializationButtonSize, UIConstants.specializationButtonSize), AutomataRaceDefOf.PN_Specialization_Combat.UIIcon))
                 {
                     SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
                     billWorker.selectedSpecialization = AutomataRaceDefOf.PN_Specialization_Combat;
                 }
 
-                TooltipHandler.TipRegion(new Rect(15f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Combat.tooltip);
+                TooltipHandler.TipRegion(new Rect(combatButtonLeft, 35f, UIConstants.specializationButtonSize, UIConstants.specializationButtonSize), AutomataRaceDefOf.PN_Specialization_Combat.tooltip);
 
                 if (billWorker.selectedSpecialization == AutomataRaceDefOf.PN_Specialization_Combat)
-                    GUI.DrawTexture(new Rect(31f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
+                    GUI.DrawTexture(new Rect(combatButtonLeft + 26f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
 
                 // Engineer
-                if (Widgets.ButtonImageFitted(new Rect(104f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Engineer.UIIcon))
+                float engineerButtonLeft = combatButtonLeft + UIConstants.specializationButtonSize + UIConstants.specializationButtonGap;
+                if (Widgets.ButtonImageFitted(new Rect(engineerButtonLeft, 35f, UIConstants.specializationButtonSize, UIConstants.specializationButtonSize), AutomataRaceDefOf.PN_Specialization_Engineer.UIIcon))
                 {
                     SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
                     billWorker.selectedSpecialization = AutomataRaceDefOf.PN_Specialization_Engineer;
                 }
 
-                TooltipHandler.TipRegion(new Rect(104f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Engineer.tooltip);
+                TooltipHandler.TipRegion(new Rect(engineerButtonLeft, 35f, UIConstants.specializationButtonSize, UIConstants.specializationButtonSize), AutomataRaceDefOf.PN_Specialization_Engineer.tooltip);
 
                 if (billWorker.selectedSpecialization == AutomataRaceDefOf.PN_Specialization_Engineer)
-                    GUI.DrawTexture(new Rect(120f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
+                    GUI.DrawTexture(new Rect(engineerButtonLeft + 26f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
 
                 // Domestic
-                if (Widgets.ButtonImageFitted(new Rect(193f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Domestic.UIIcon))
+                float domesticButtonLeft = engineerButtonLeft + UIConstants.specializationButtonSize + UIConstants.specializationButtonGap;
+                if (Widgets.ButtonImageFitted(new Rect(domesticButtonLeft, 35f, UIConstants.specializationButtonSize, UIConstants.specializationButtonSize), AutomataRaceDefOf.PN_Specialization_Domestic.UIIcon))
                 {
                     SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
                     billWorker.selectedSpecialization = AutomataRaceDefOf.PN_Specialization_Domestic;
                 }
 
-                TooltipHandler.TipRegion(new Rect(193f, 45f, 64f, 64f), AutomataRaceDefOf.PN_Specialization_Domestic.tooltip);
+                TooltipHandler.TipRegion(new Rect(domesticButtonLeft, 35f, UIConstants.specializationButtonSize, UIConstants.specializationButtonSize), AutomataRaceDefOf.PN_Specialization_Domestic.tooltip);
 
                 if (billWorker.selectedSpecialization == AutomataRaceDefOf.PN_Specialization_Domestic)
-                    GUI.DrawTexture(new Rect(209f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
+                    GUI.DrawTexture(new Rect(domesticButtonLeft + 26f, 81f, 32f, 32f), Widgets.CheckboxOnTex);
             }
             GUI.EndGroup();
             #endregion

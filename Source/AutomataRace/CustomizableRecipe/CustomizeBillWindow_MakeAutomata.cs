@@ -343,7 +343,9 @@ namespace AutomataRace
 
         public SamplePawnDrawer()
         {
-            _pawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: null);
+            var factionDef = AutomataRaceSettingCache.Get(AutomataRaceDefOf.Paniel_Race).defaultFaction;
+            var faction = factionDef != null ? Find.FactionManager.FirstFactionOfDef(factionDef) : null;
+            _pawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: faction);
             Texture = PortraitsCache.Get(_pawn, new Vector2(92f, 128f));
         }
 

@@ -17,7 +17,7 @@ namespace AutomataRace.Logic
             List<Hediff> injuries = pawn.health.hediffSet.hediffs.Where(x => IsCurableHediff(x)).ToList();
             foreach (var hediff in injuries)
             {
-                HealthUtility.CureHediff(hediff);
+                HealthUtility.Cure(hediff);
             }
         }
 

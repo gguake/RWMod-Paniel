@@ -2,6 +2,7 @@
 using Verse;
 using AutomataRace.Extensions;
 using UnityEngine;
+using AlienRace;
 
 namespace AutomataRace
 {
@@ -38,8 +39,16 @@ namespace AutomataRace
                 generated.story.hairDef = automataData.appearance?.hairDef;
                 generated.story.hairColor = Color.white;
 
+                if (automataData.appearance?.headGraphicPath != null)
+                {
+                    generated.story.SetHeadGraphicPath(automataData.appearance.headGraphicPath);
+                }
+
                 GenSpawn.Spawn(generated, parent.Position, parent.Map);
-                generated.SetFaceBodyAddonVariant(automataData.appearance.faceVariantIndex);
+                CachedData.headGraphicPath(generated.story) = automataData.appearance.headGraphicPath;
+
+                // CHECKME: Face Addon
+                //generated.SetFaceBodyAddonVariant(automataData.appearance.faceVariantIndex);
             }
         }
     }

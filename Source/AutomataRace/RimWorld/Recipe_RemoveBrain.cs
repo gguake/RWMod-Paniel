@@ -66,13 +66,13 @@ namespace AutomataRace
 			{
 				if (pawn.Dead)
 				{
-					ThoughtUtility.GiveThoughtsForPawnExecuted(pawn, PawnExecutionKind.OrganHarvesting);
+					ThoughtUtility.GiveThoughtsForPawnExecuted(pawn, billDoer, PawnExecutionKind.OrganHarvesting);
 				}
-				ThoughtUtility.GiveThoughtsForPawnOrganHarvested(pawn);
+				ThoughtUtility.GiveThoughtsForPawnOrganHarvested(pawn, billDoer);
 			}
 			if (isViolation)
 			{
-				ReportViolation(pawn, billDoer, pawn.FactionOrExtraMiniOrHomeFaction, -70, "GoodwillChangedReason_RemovedBodyPart".Translate(part.LabelShort));
+				ReportViolation(pawn, billDoer, pawn.HomeFaction, -70);
 			}
 		}
 	}

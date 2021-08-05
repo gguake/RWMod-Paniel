@@ -1,4 +1,5 @@
-﻿using AutomataRace.Extensions;
+﻿using AlienRace;
+using AutomataRace.Extensions;
 using AutomataRace.Logic;
 using CustomizableRecipe;
 using RimWorld;
@@ -292,7 +293,7 @@ namespace AutomataRace
 
             CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
             {
-                appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, faceVariantIndex = x.FaceVariantIndex }).ToList(),
+                appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, headGraphicPath = x.HeadGraphicPath, faceVariantIndex = x.FaceVariantIndex }).ToList(),
                 specialization = billWorker.selectedSpecialization,
                 baseMaterial = billWorker.baseMaterial,
                 ingredients = ingredients,
@@ -340,13 +341,14 @@ namespace AutomataRace
         public RenderTexture Texture { get; private set; }
         public HairDef HairDef => _pawn.story.hairDef;
         public int FaceVariantIndex { get; private set; }
+        public string HeadGraphicPath => _pawn.story.HeadGraphicPath;
 
         public SamplePawnDrawer()
         {
             var factionDef = AutomataRaceSettingCache.Get(AutomataRaceDefOf.Paniel_Race).defaultFaction;
             var faction = factionDef != null ? Find.FactionManager.FirstFactionOfDef(factionDef) : null;
             _pawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: faction);
-            Texture = PortraitsCache.Get(_pawn, new Vector2(92f, 128f));
+            Texture = PortraitsCache.Get(_pawn, new Vector2(92f, 128f), Rot4.South);
         }
 
         public void Draw(Rect rect)
@@ -358,23 +360,38 @@ namespace AutomataRace
 
         public void RerollAndUpdateTexture()
         {
-            _pawn.story.hairDef = PawnHairChooser.RandomHairDefFor(_pawn, null);
+            _pawn.story.hairDef = PawnStyleItemChooser.RandomHairFor(_pawn);
             _pawn.story.hairColor = Color.white;
 
-            FaceVariantIndex = _pawn.SetFaceBodyAddonRandomly();
-            if (FaceVariantIndex < 0)
+            var pawnDef = _pawn.def as ThingDef_AlienRace;
+            if (pawnDef == null)
             {
-                Log.Error("Something wrong since face variant index is not valid.");
-                FaceVariantIndex = 0;
-                _pawn.SetFaceBodyAddonVariant(0);
+                Log.Warning($"[Paniel] Try to reroll non alien pawn.");
+                return;
             }
+
+            string path = pawnDef.alienRace.graphicPaths.GetCurrentGraphicPath(_pawn.ageTracker.CurLifeStageRace.def).head;
+            var headGraphicPath = pawnDef.alienRace.generalSettings.alienPartGenerator.RandomAlienHead(path, _pawn);
+            CachedData.headGraphicPath(_pawn.story) = headGraphicPath;
+
+            _pawn.story.SetHeadGraphicPath(headGraphicPath);
+            Log.Message($"headGraphicPath: {headGraphicPath}");
+
+            // CHECKME: Face Addon
+            //FaceVariantIndex = _pawn.SetFaceBodyAddonRandomly();
+            //if (FaceVariantIndex < 0)
+            //{
+            //    Log.Error("Something wrong since face variant index is not valid.");
+            //    FaceVariantIndex = 0;
+            //    _pawn.SetFaceBodyAddonVariant(0);
+            //}
 
             _pawn.Drawer.renderer.graphics.ResolveAllGraphics();
 
             PortraitsCache.SetDirty(_pawn);
 
             Texture = null;
-            Texture = PortraitsCache.Get(_pawn, new Vector2(92f, 128f));
+            Texture = PortraitsCache.Get(_pawn, new Vector2(92f, 128f), Rot4.South);
         }
 
         public void Destroy()

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace AutomataRace
@@ -39,11 +40,21 @@ namespace AutomataRace
 
                     if (injectDef.recipes?.Count > 0)
                     {
+                        if (thingDef.recipes.NullOrEmpty())
+                        {
+                            thingDef.recipes = new List<RecipeDef>();
+                        }
+
                         thingDef.recipes = thingDef.recipes.Concat(injectDef.recipes).ToList();
                     }
 
                     if (injectDef.comps?.Count > 0)
                     {
+                        if (thingDef.comps.NullOrEmpty())
+                        {
+                            thingDef.comps = new List<CompProperties>();
+                        }
+
                         thingDef.comps = thingDef.comps.Concat(injectDef.comps).ToList();
                     }
                 }

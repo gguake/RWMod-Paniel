@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 
@@ -35,8 +36,11 @@ namespace AutomataRace.HarmonyPatches
             harmony.Patch(AccessTools.Method(typeof(InteractionUtility), "CanReceiveInteraction"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(InteractionUtility_CanReceiveInteraction_Postfix)));
             
+            //harmony.Patch(AccessTools.Method(typeof(Pawn_SkillTracker), "SkillsTick"),
+            //    prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(Pawn_SkillTracker_SkillsTick_Prefix)));
+
             harmony.Patch(AccessTools.Method(typeof(Pawn_SkillTracker), "SkillsTick"),
-                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(Pawn_SkillTracker_SkillsTick_Prefix)));
+                transpiler: new HarmonyMethod(typeof(HarmonyPatches), nameof(Pawn_SkillTracker_SkillsTick_Transpiler)));
 
             harmony.Patch(AccessTools.Method(typeof(HediffComp_Infecter), "CheckMakeInfection"),
                 prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HediffComp_Infecter_CheckMakeInfection_Prefix)));
@@ -152,6 +156,43 @@ namespace AutomataRace.HarmonyPatches
             }
 
             return true;
+        }
+
+        public static IEnumerable<CodeInstruction> Pawn_SkillTracker_SkillsTick_Transpiler(IEnumerable<CodeInstruction> codeInstructions, ILGenerator ilGenerator)
+        {
+            var instructions = codeInstructions.ToList();
+            var automataRaceSettings = ilGenerator.DeclareLocal(typeof(AutomataRaceSettings));
+
+            var labelStart = ilGenerator.DefineLabel();
+            var labelEnd = (Label)instructions[instructions.FindIndex(v => v.opcode == OpCodes.Call && (MethodInfo)v.operand == AccessTools.Method(typeof(GenLocalDate), "HourInteger", parameters: new Type[] { typeof(Thing) })) + 1].operand;
+
+            foreach (var instruction in instructions)
+            {
+                if (instruction.operand is Label && (Label)instruction.operand == labelEnd)
+                {
+                    instruction.operand = labelStart;
+                }
+            }
+
+            var injections = new List<CodeInstruction>()
+            {
+                new CodeInstruction(OpCodes.Ldarg_0).WithLabels(labelStart),
+                new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Pawn_SkillTracker), "pawn")),
+                new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Pawn), "def")),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(AutomataRaceSettingCache), "Get")),
+                new CodeInstruction(OpCodes.Stloc_S, automataRaceSettings.LocalIndex),
+                new CodeInstruction(OpCodes.Ldloc_S, automataRaceSettings.LocalIndex),
+                new CodeInstruction(OpCodes.Brfalse_S, labelEnd),
+                new CodeInstruction(OpCodes.Ldloc_S, automataRaceSettings.LocalIndex),
+                new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(AutomataRaceSettings), "skillDecayActivated")),
+                new CodeInstruction(OpCodes.Brtrue_S, labelEnd),
+                new CodeInstruction(OpCodes.Ret),
+            };
+
+            int i = instructions.FindIndex(v => v.opcode == OpCodes.Stfld && (FieldInfo)v.operand == AccessTools.Field(typeof(Pawn_SkillTracker), "lastXpSinceMidnightResetTimestamp")) + 1;
+            instructions.InsertRange(i, injections);
+
+            return instructions;
         }
 
         public static bool HediffComp_Infecter_CheckMakeInfection_Prefix(HediffComp_Infecter __instance)

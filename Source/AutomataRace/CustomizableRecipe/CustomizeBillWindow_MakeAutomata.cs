@@ -182,16 +182,16 @@ namespace AutomataRace
                 }
 
 
+                int componentTotalCount = billWorker.componentTotalCount;
                 TooltipHandler.TipRegion(new Rect(0f, UIConstants.componentIndustrialY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.ComponentIndustrial.LabelCap + "\n\n" + "PN_BILL_WINDOW_TAB_MATERIAL_COMPONENT_TOOLTIP".Translate());
                 GUI.DrawTexture(new Rect(5f, UIConstants.componentIndustrialY, 32f, 32f), ThingDefOf.ComponentIndustrial.uiIcon);
                 Widgets.Label(new Rect(47f, UIConstants.componentIndustrialY + 3f, 50f, 30f), $"x{billWorker.ComponentIndustrialCount}");
-                billWorker.ComponentIndustrialCount = (int)Widgets.HorizontalSlider(new Rect(110f, UIConstants.componentIndustrialY, 150f, 38f), billWorker.ComponentIndustrialCount, 0f, 20f, middleAlignment: true, leftAlignedLabel: "0", rightAlignedLabel: "20", roundTo: 0);
-
+                billWorker.ComponentIndustrialCount = (int)Widgets.HorizontalSlider(new Rect(110f, UIConstants.componentIndustrialY, 150f, 38f), billWorker.ComponentIndustrialCount, 0f, componentTotalCount, middleAlignment: true, leftAlignedLabel: "0", rightAlignedLabel: componentTotalCount.ToString(), roundTo: 0);
 
                 TooltipHandler.TipRegion(new Rect(0f, UIConstants.componentSpacerY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.ComponentSpacer.LabelCap + "\n\n" + "PN_BILL_WINDOW_TAB_MATERIAL_COMPONENT_TOOLTIP".Translate());
                 GUI.DrawTexture(new Rect(5f, UIConstants.componentSpacerY, 32f, 32f), ThingDefOf.ComponentSpacer.uiIcon);
                 Widgets.Label(new Rect(47f, UIConstants.componentSpacerY + 3f, 50f, 30f), $"x{billWorker.ComponentSpacerCount}");
-                billWorker.ComponentSpacerCount = (int)Widgets.HorizontalSlider(new Rect(110f, UIConstants.componentSpacerY, 150f, 38f), billWorker.ComponentSpacerCount, 0f, 20f, middleAlignment: true, leftAlignedLabel: "0", rightAlignedLabel: "20", roundTo: 0);
+                billWorker.ComponentSpacerCount = (int)Widgets.HorizontalSlider(new Rect(110f, UIConstants.componentSpacerY, 150f, 38f), billWorker.ComponentSpacerCount, 0f, componentTotalCount, middleAlignment: true, leftAlignedLabel: "0", rightAlignedLabel: componentTotalCount.ToString(), roundTo: 0);
 
                 TooltipHandler.TipRegion(new Rect(0f, UIConstants.aiPersonaCoreY, UIConstants.rtMaterialTab.width, 40f), ThingDefOf.AIPersonaCore.LabelCap + "\n\n" + "PN_BILL_WINDOW_TAB_MATERIAL_AICORE_TOOLTIP".Translate());
                 GUI.DrawTexture(new Rect(5f, UIConstants.aiPersonaCoreY, 32f, 32f), ThingDefOf.AIPersonaCore.uiIcon);

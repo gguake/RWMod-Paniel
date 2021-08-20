@@ -49,8 +49,8 @@ namespace AutomataRace.Logic
             var billWorker = customizableRecipe?.billWorker as CustomizableBillWorker_MakeAutomata;
 
             float fScore = score;
-            float minScore = CalcComponentScore(recipe, 20, 0, false);
-            float maxScore = CalcComponentScore(recipe, 0, 20, true);
+            float minScore = CalcComponentScore(recipe, billWorker.componentTotalCount, 0, false);
+            float maxScore = CalcComponentScore(recipe, 0, billWorker.componentTotalCount, true);
 
             float t = (fScore - minScore) / (maxScore - minScore);
             return Mathf.RoundToInt(Mathf.Lerp(billWorker.craftingSkillRequirementsMin, billWorker.craftingSkillRequirementsMax, t));

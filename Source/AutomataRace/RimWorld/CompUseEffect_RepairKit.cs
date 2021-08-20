@@ -12,6 +12,7 @@ namespace AutomataRace
         public override void DoEffect(Pawn usedBy)
         {
             RepairService.Repair(usedBy);
+            RepairService.RecoverMaintenance(usedBy);
         }
 
         public override bool CanBeUsedBy(Pawn p, out string failReason)

@@ -9,7 +9,7 @@ namespace AutomataRace
     {
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
         {
-            var need = pawn.needs.AllNeeds.FirstOrDefault(x => x.def == AutomataRaceDefOf.PN_Need_Maintenance);
+            var need = pawn?.needs?.AllNeeds?.FirstOrDefault(x => x.def == AutomataRaceDefOf.PN_Need_Maintenance);
             if (need != null)
             {
                 need.CurLevel = 1.0f;

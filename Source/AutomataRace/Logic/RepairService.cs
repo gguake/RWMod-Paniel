@@ -40,5 +40,14 @@ namespace AutomataRace.Logic
 
             return false;
         }
+
+        public static void RecoverMaintenance(Pawn pawn)
+        {
+            var need = pawn?.needs?.AllNeeds?.FirstOrDefault(x => x.def == AutomataRaceDefOf.PN_Need_Maintenance);
+            if (need != null)
+            {
+                need.CurLevel = 1.0f;
+            }
+        }
     }
 }

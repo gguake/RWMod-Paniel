@@ -10,6 +10,7 @@ namespace AutomataRace
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
         {
             RepairService.Repair(pawn);
+            RepairService.RecoverMaintenance(pawn);
         }
     }
 }

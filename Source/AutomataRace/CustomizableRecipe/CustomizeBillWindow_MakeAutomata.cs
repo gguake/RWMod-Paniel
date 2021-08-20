@@ -293,7 +293,7 @@ namespace AutomataRace
 
             CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
             {
-                appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, headGraphicPath = x.HeadGraphicPath, faceVariantIndex = x.FaceVariantIndex }).ToList(),
+                appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, headGraphicPath = x.HeadGraphicPath, bodyAddonVariant = x.BodyAddonVariant }).ToList(),
                 specialization = billWorker.selectedSpecialization,
                 baseMaterial = billWorker.baseMaterial,
                 ingredients = ingredients,
@@ -340,7 +340,7 @@ namespace AutomataRace
 
         public RenderTexture Texture { get; private set; }
         public HairDef HairDef => _pawn.story.hairDef;
-        public int FaceVariantIndex { get; private set; }
+        public List<int> BodyAddonVariant { get; private set; }
         public string HeadGraphicPath => _pawn.story.HeadGraphicPath;
 
         public SamplePawnDrawer()
@@ -378,13 +378,11 @@ namespace AutomataRace
             Log.Message($"headGraphicPath: {headGraphicPath}");
 
             // CHECKME: Face Addon
-            //FaceVariantIndex = _pawn.SetFaceBodyAddonRandomly();
-            //if (FaceVariantIndex < 0)
-            //{
-            //    Log.Error("Something wrong since face variant index is not valid.");
-            //    FaceVariantIndex = 0;
-            //    _pawn.SetFaceBodyAddonVariant(0);
-            //}
+            BodyAddonVariant = new List<int>(_pawn.SetBodyAddonRandomly());
+            if (BodyAddonVariant == null)
+            {
+                Log.Error("Failed to get body addons. failed to set body addon randomly.");
+            }
 
             _pawn.Drawer.renderer.graphics.ResolveAllGraphics();
 

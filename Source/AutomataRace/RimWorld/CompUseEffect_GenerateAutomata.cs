@@ -48,7 +48,7 @@ namespace AutomataRace
                 CachedData.headGraphicPath(generated.story) = automataData.appearance.headGraphicPath;
 
                 // CHECKME: Face Addon
-                //generated.SetFaceBodyAddonVariant(automataData.appearance.faceVariantIndex);
+                generated.SetBodyAddonVariant(automataData.appearance.bodyAddonVariant);
             }
         }
     }

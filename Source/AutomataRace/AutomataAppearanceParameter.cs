@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System.Collections.Generic;
 using Verse;
 
 namespace AutomataRace
@@ -7,13 +8,13 @@ namespace AutomataRace
     {
         public HairDef hairDef;
         public string headGraphicPath;
-        public int faceVariantIndex;
+        public List<int> bodyAddonVariant;
 
         public void ExposeData()
         {
             Scribe_Defs.Look(ref hairDef, "hairDef");
             Scribe_Values.Look(ref headGraphicPath, "headGraphicPath");
-            Scribe_Values.Look(ref faceVariantIndex, "faceVariantIndex");
+            Scribe_Collections.Look(ref bodyAddonVariant, "bodyAddonVariant");
         }
     }
 

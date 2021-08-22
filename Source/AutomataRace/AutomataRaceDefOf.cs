@@ -10,6 +10,7 @@ namespace AutomataRace
         public static PawnKindDef Paniel_Randombox_Normal;
         public static NeedDef PN_Need_Maintenance;
         public static HediffDef PN_OilLoss;
+        public static HediffDef PN_Maintenance;
         public static ThingDef PN_Brain;
 
         public static ThingDef Paniel_Race;

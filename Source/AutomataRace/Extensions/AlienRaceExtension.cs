@@ -41,6 +41,11 @@ namespace AutomataRace.Extensions
 
         public static void SetBodyAddonVariant(this Pawn pawn, List<int> variant)
         {
+            if (variant == null)
+            {
+                return;
+            }
+
             var alienComp = pawn.TryGetComp<AlienPartGenerator.AlienComp>();
             if (alienComp == null)
             {

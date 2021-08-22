@@ -85,6 +85,7 @@
     <Compile Include="Logic\AutomataBillService.cs" />
     <Compile Include="Logic\AutomataQualityService.cs" />
     <Compile Include="PseudoRandomGenerator\PseudoRandom.cs" />
+    <Compile Include="RimWorld\Alert_LowMaintenance.cs" />
     <Compile Include="RimWorld\CompAddCompHediffConditional.cs" />
     <Compile Include="RimWorld\CompAutomataDataHolder.cs" />
     <Compile Include="RimWorld\CompExplosiveInstant.cs" />

@@ -10,7 +10,6 @@ namespace AutomataRace
         public Need_Maintenance(Pawn pawn) : 
             base(pawn)
         {
-            curLevelInt = 1f;
         }
 
         public override void NeedInterval()
@@ -19,6 +18,11 @@ namespace AutomataRace
             {
                 CurLevel -= FallPerTick * 150f;
             }
+        }
+
+        public override void SetInitialLevel()
+        {
+            CurLevel = 1f;
         }
     }
 }

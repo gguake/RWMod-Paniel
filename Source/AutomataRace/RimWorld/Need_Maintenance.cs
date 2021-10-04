@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System.Collections.Generic;
 using Verse;
 
 namespace AutomataRace
@@ -10,6 +11,10 @@ namespace AutomataRace
         public Need_Maintenance(Pawn pawn) : 
             base(pawn)
         {
+            this.threshPercents = new List<float>();
+            this.threshPercents.Add(0.1f);
+            this.threshPercents.Add(0.2f);
+            this.threshPercents.Add(0.8f);
         }
 
         public override void NeedInterval()

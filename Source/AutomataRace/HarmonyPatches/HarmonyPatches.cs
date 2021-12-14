@@ -145,14 +145,25 @@ namespace AutomataRace.HarmonyPatches
         {
             if (___pawn.IsHashIntervalTick(200))
             {
-                var raceSettings = AutomataRaceSettingCache.Get(___pawn.def);
-                if (raceSettings != null)
+                if (GenLocalDate.HourInteger(___pawn) == 0 && (___lastXpSinceMidnightResetTimestamp < 0 || Find.TickManager.TicksGame - ___lastXpSinceMidnightResetTimestamp >= 30000))
                 {
-                    if (!raceSettings.skillDecayActivated)
+                    for (int i = 0; i < __instance.skills.Count; i++)
                     {
-                        return false;
+                        __instance.skills[i].xpSinceMidnight = 0f;
+                    }
+                    ___lastXpSinceMidnightResetTimestamp = Find.TickManager.TicksGame;
+                }
+
+                var raceSetting = AutomataRaceSettingCache.Get(___pawn.def);
+                if (raceSetting?.skillDecayActivated ?? true)
+                {
+                    for (int j = 0; j < __instance.skills.Count; j++)
+                    {
+                        __instance.skills[j].Interval();
                     }
                 }
+
+                return false;
             }
 
             return true;
@@ -163,29 +174,26 @@ namespace AutomataRace.HarmonyPatches
             var instructions = codeInstructions.ToList();
             var automataRaceSettings = ilGenerator.DeclareLocal(typeof(AutomataRaceSettings));
 
-            var labelStart = ilGenerator.DefineLabel();
-            var labelEnd = (Label)instructions[instructions.FindIndex(v => v.opcode == OpCodes.Call && (MethodInfo)v.operand == AccessTools.Method(typeof(GenLocalDate), "HourInteger", parameters: new Type[] { typeof(Thing) })) + 1].operand;
+            var labelToSkillInterval = ilGenerator.DefineLabel();
 
-            foreach (var instruction in instructions)
-            {
-                if (instruction.operand is Label && (Label)instruction.operand == labelEnd)
-                {
-                    instruction.operand = labelStart;
-                }
-            }
-
+            // clear preivous labels and add my new label (for jumping in my injections)
+            var hookIndex = instructions.FindIndex(v => v.opcode == OpCodes.Stfld && (FieldInfo)v.operand == AccessTools.Field(typeof(Pawn_SkillTracker), "lastXpSinceMidnightResetTimestamp")) + 1;
+            List<Label> oldLabels = new List<Label>(instructions[hookIndex].labels);
+            instructions[hookIndex].labels.Clear();
+            instructions[hookIndex].labels.Add(labelToSkillInterval);
+            
             var injections = new List<CodeInstruction>()
             {
-                new CodeInstruction(OpCodes.Ldarg_0).WithLabels(labelStart),
+                new CodeInstruction(OpCodes.Ldarg_0).WithLabels(oldLabels),
                 new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Pawn_SkillTracker), "pawn")),
                 new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Pawn), "def")),
                 new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(AutomataRaceSettingCache), "Get")),
                 new CodeInstruction(OpCodes.Stloc_S, automataRaceSettings.LocalIndex),
                 new CodeInstruction(OpCodes.Ldloc_S, automataRaceSettings.LocalIndex),
-                new CodeInstruction(OpCodes.Brfalse_S, labelEnd),
+                new CodeInstruction(OpCodes.Brfalse_S, labelToSkillInterval),
                 new CodeInstruction(OpCodes.Ldloc_S, automataRaceSettings.LocalIndex),
                 new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(AutomataRaceSettings), "skillDecayActivated")),
-                new CodeInstruction(OpCodes.Brtrue_S, labelEnd),
+                new CodeInstruction(OpCodes.Brtrue_S, labelToSkillInterval),
                 new CodeInstruction(OpCodes.Ret),
             };
 

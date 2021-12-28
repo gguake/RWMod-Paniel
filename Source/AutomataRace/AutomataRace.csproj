@@ -92,6 +92,7 @@
     <Compile Include="RimWorld\CompAutomataDataHolder.cs" />
     <Compile Include="RimWorld\CompExplosiveInstant.cs" />
     <Compile Include="RimWorld\CompProperties\CompProperties_AddCompHediffConditional.cs" />
+    <Compile Include="RimWorld\CompProperties\CompProperties_ExplosiveInstant.cs" />
     <Compile Include="RimWorld\CompProperties\CompProperties_SelfResurrect.cs" />
     <Compile Include="RimWorld\CompProperties\CompProperties_UseEffectGenerateAutomata.cs" />
     <Compile Include="RimWorld\CompProperties\CompProperties_UseEffectGeneratePawn.cs" />

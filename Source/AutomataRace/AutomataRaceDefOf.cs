@@ -7,6 +7,9 @@ namespace AutomataRace
     [DefOf]
     public static class AutomataRaceDefOf
     {
+        public static PawnKindDef Paniel_Randombox_Awful;
+        public static PawnKindDef Paniel_Randombox_Poor;
+
         public static PawnKindDef Paniel_Randombox_Normal;
         public static NeedDef PN_Need_Maintenance;
         public static HediffDef PN_OilLoss;

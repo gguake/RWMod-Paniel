@@ -87,6 +87,7 @@
     <Compile Include="Logic\AutomataQualityService.cs" />
     <Compile Include="PseudoRandomGenerator\PseudoRandom.cs" />
     <Compile Include="RimWorld\Alert_LowMaintenance.cs" />
+    <Compile Include="RimWorld\Alert_NeedPnLFuel.cs" />
     <Compile Include="RimWorld\Building_AutomatonCryptosleepCasket.cs" />
     <Compile Include="RimWorld\CompAddCompHediffConditional.cs" />
     <Compile Include="RimWorld\CompAutomataDataHolder.cs" />

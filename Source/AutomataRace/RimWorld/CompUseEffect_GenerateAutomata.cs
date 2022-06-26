@@ -8,6 +8,8 @@ namespace AutomataRace
 {
     public class CompUseEffect_GenerateAutomata : CompUseEffect
     {
+        public CompProperties_UseEffectGenerateAutomata Props => (CompProperties_UseEffectGenerateAutomata)props;
+
         public override void DoEffect(Pawn usedBy)
         {
             base.DoEffect(usedBy);
@@ -49,6 +51,10 @@ namespace AutomataRace
 
                 // CHECKME: Face Addon
                 generated.SetBodyAddonVariant(automataData.appearance.bodyAddonVariant);
+
+                var title = Props.letterLabel.Formatted(generated.Named("PAWN")).AdjustedFor(generated);
+                var text = Props.letterText.Formatted(generated.Named("PAWN")).AdjustedFor(generated);
+                Find.LetterStack.ReceiveLetter(title, text, LetterDefOf.PositiveEvent, generated);
             }
         }
     }

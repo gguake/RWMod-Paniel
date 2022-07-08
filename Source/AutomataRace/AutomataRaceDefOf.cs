@@ -32,5 +32,10 @@ namespace AutomataRace
         public static AutomataQualityProperty PN_AutomataQualityProperty_Excellent;
         public static AutomataQualityProperty PN_AutomataQualityProperty_Masterwork;
         public static AutomataQualityProperty PN_AutomataQualityProperty_Legendary;
+
+        public static FactionDef PN_SubsidiaryFaction;
+        public static TraderKindDef PN_Orbital_PnLindustry;
+
+        public static ThingDef PN_OTPCard;
     }
 }

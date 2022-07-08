@@ -54,6 +54,9 @@ namespace AutomataRace.HarmonyPatches
             harmony.Patch(AccessTools.Method(typeof(TransferableUtility), "CanStack"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(TransferableUtility_CanStack_Postfix)));
 
+            harmony.Patch(AccessTools.Method(typeof(FactionDialogMaker), "FactionDialogFor"),
+                postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(FactionDialogMaker_FactionDialogFor_Postfix)));
+
         }
 
         public static void PawnGenerator_GenerateSkills_Postfix(Pawn pawn)
@@ -254,6 +257,82 @@ namespace AutomataRace.HarmonyPatches
             {
                 __result = false;
             }
+        }
+
+        public static void FactionDialogMaker_FactionDialogFor_Postfix(ref DiaNode __result, Pawn negotiator, Faction faction)
+        {
+            var map = negotiator.Map;
+            if (faction.def != AutomataRaceDefOf.PN_SubsidiaryFaction)
+            {
+                return;
+            }
+
+            Thing sourceItem = null;
+            foreach (Building_OrbitalTradeBeacon item in Building_OrbitalTradeBeacon.AllPowered(map))
+            {
+                foreach (IntVec3 tradeableCell in item.TradeableCells)
+                {
+                    List<Thing> thingList = tradeableCell.GetThingList(map);
+                    for (int i = 0; i < thingList.Count; i++)
+                    {
+                        Thing thing = thingList[i];
+                        if (thing.def == AutomataRaceDefOf.PN_OTPCard)
+                        {
+                            sourceItem = thing;
+                            break;
+                        }
+                    }
+                }
+
+                if (sourceItem != null) { break; }
+            }
+
+            var opt = new DiaOption("PN_REQUEST_ORBITAL_TRADER");
+            if (negotiator.skills.GetSkill(SkillDefOf.Social).TotallyDisabled)
+            {
+                opt.Disable("WorkTypeDisablesOption".Translate(SkillDefOf.Social.label));
+            }
+            else if (sourceItem == null)
+            {
+                opt.Disable("PN_OTP_CARD_REQUIRED_IN_TRADE_BEACON".Translate());
+            }
+
+            DiaNode okNode = new DiaNode("PN_ORBITAL_TRADER_SENT".Translate(faction.leader).CapitalizeFirst());
+            okNode.options.Add(new DiaOption("OK".Translate())
+            {
+                linkLateBind = () => FactionDialogMaker.FactionDialogFor(negotiator, faction)
+            });
+
+            opt.action = () =>
+            {
+                if (sourceItem.stackCount > 1)
+                {
+                    sourceItem.stackCount--;
+                }
+                else
+                {
+                    sourceItem.Destroy();
+                }
+
+                var incidentParams = new IncidentParms
+                {
+                    target = map,
+                    faction = faction,
+                    traderKind = AutomataRaceDefOf.PN_Orbital_PnLindustry,
+                    forced = true,
+                };
+
+                var ticks = new IntRange(120000, 300000).RandomInRange;
+                Find.Storyteller.incidentQueue.Add(
+                    IncidentDefOf.OrbitalTraderArrival,
+                    Find.TickManager.TicksGame + ticks,
+                    incidentParams,
+                    300000);
+            };
+
+            opt.link = okNode;
+
+            __result.options.Insert(__result.options.Count - 1, opt);
         }
     }
 }

@@ -33,7 +33,9 @@ namespace AutomataRace
                     faction: Faction.OfPlayer,
                     context: PawnGenerationContext.NonPlayer,
                     tile: -1,
-                    forceGenerateNewPawn: true);
+                    forceGenerateNewPawn: true,
+                    fixedBiologicalAge: 0,
+                    fixedChronologicalAge: 0);
 
                 Pawn generated = PawnGenerator.GeneratePawn(pawnGenReq);
                 generated.GetComp<CompAutomataDataHolder>().CopyFrom(automataDataComp);

@@ -5,6 +5,8 @@ namespace AutomataRace
 {
     public class CompUseEffect_GeneratePawn : CompUseEffect
     {
+        public CompProperties_UseEffectGeneratePawn Props => (CompProperties_UseEffectGeneratePawn)props;
+
         public override void DoEffect(Pawn usedBy)
         {
             base.DoEffect(usedBy);
@@ -32,10 +34,16 @@ namespace AutomataRace
                 faction: Faction.OfPlayer,
                 context: PawnGenerationContext.NonPlayer,
                 tile: -1,
-                forceGenerateNewPawn: true);
+                forceGenerateNewPawn: true,
+                fixedBiologicalAge: 0,
+                fixedChronologicalAge: 0);
 
             Pawn generated = PawnGenerator.GeneratePawn(pawnGenReq);
             GenSpawn.Spawn(generated, parent.Position, parent.Map);
+
+            var title = Props.letterLabel.Formatted(generated.Named("PAWN")).AdjustedFor(generated);
+            var text = Props.letterText.Formatted(generated.Named("PAWN")).AdjustedFor(generated);
+            Find.LetterStack.ReceiveLetter(title, text, LetterDefOf.PositiveEvent, generated);
         }
 
         public override bool CanBeUsedBy(Pawn p, out string failReason)

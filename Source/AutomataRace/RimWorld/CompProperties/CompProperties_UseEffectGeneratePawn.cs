@@ -12,6 +12,9 @@ namespace AutomataRace
 
     public class CompProperties_UseEffectGeneratePawn : CompProperties_UseEffect
     {
+        public string letterLabel;
+        public string letterText;
+
         public List<GeneratePawnSample> samples = new List<GeneratePawnSample>();
 
         public CompProperties_UseEffectGeneratePawn()

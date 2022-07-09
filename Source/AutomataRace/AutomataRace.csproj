@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomataAppearanceParameter.cs" />
+    <Compile Include="AutomataConsts.cs" />
     <Compile Include="AutomataQualityProperty.cs" />
     <Compile Include="AutomataRaceDefOf.cs" />
     <Compile Include="AutomataRaceSettings.cs" />

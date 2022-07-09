@@ -287,14 +287,40 @@ namespace AutomataRace.HarmonyPatches
                 if (sourceItem != null) { break; }
             }
 
-            var opt = new DiaOption("PN_REQUEST_ORBITAL_TRADER");
+            var opt = new DiaOption("PN_REQUEST_ORBITAL_TRADER".Translate(AutomataConsts.OrbitalTraderRelationshipCost));
             if (negotiator.skills.GetSkill(SkillDefOf.Social).TotallyDisabled)
             {
                 opt.Disable("WorkTypeDisablesOption".Translate(SkillDefOf.Social.label));
             }
+            else if (faction.PlayerRelationKind != FactionRelationKind.Ally)
+            {
+                opt.Disable("MustBeAlly".Translate());
+            }
             else if (sourceItem == null)
             {
                 opt.Disable("PN_OTP_CARD_REQUIRED_IN_TRADE_BEACON".Translate());
+            }
+            else if (map.passingShipManager.passingShips
+                    .Select(v => v as TradeShip)
+                    .Any(v => v != null && v.def == AutomataRaceDefOf.PN_Orbital_PnLindustry))
+            {
+                opt.Disable("PN_ORBITAL_TRADER_ALREADY_ARRIVED".Translate());
+            }
+
+            if (!opt.disabled)
+            {
+                var incidentsEnumerator = Find.Storyteller.incidentQueue.GetEnumerator();
+                while (incidentsEnumerator.MoveNext())
+                {
+                    var incident = incidentsEnumerator.Current as QueuedIncident;
+                    if (incident?.FiringIncident?.def == IncidentDefOf.OrbitalTraderArrival &&
+                        incident?.FiringIncident?.parms?.traderKind == AutomataRaceDefOf.PN_Orbital_PnLindustry &&
+                        incident?.FiringIncident?.parms?.faction == faction)
+                    {
+                        opt.Disable("PN_ORBITAL_TRADER_ALREADY_CALLED".Translate());
+                        break;
+                    }
+                }
             }
 
             DiaNode okNode = new DiaNode("PN_ORBITAL_TRADER_SENT".Translate(faction.leader).CapitalizeFirst());
@@ -322,12 +348,14 @@ namespace AutomataRace.HarmonyPatches
                     forced = true,
                 };
 
-                var ticks = new IntRange(120000, 300000).RandomInRange;
+                var ticks = new IntRange(AutomataConsts.OrbitalTraderArrivalTicksMin, AutomataConsts.OrbitalTraderArrivalTicksMax).RandomInRange;
                 Find.Storyteller.incidentQueue.Add(
                     IncidentDefOf.OrbitalTraderArrival,
                     Find.TickManager.TicksGame + ticks,
                     incidentParams,
                     300000);
+
+                Faction.OfPlayer.TryAffectGoodwillWith(faction, -AutomataConsts.OrbitalTraderRelationshipCost, false, true, HistoryEventDefOf.RequestedTrader);
             };
 
             opt.link = okNode;

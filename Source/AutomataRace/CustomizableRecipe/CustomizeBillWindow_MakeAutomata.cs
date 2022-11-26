@@ -346,7 +346,7 @@ namespace AutomataRace
 
         public SamplePawnDrawer()
         {
-            var pawnKindDef = PawnKindDefOf.Pirate; // AutomataRaceDefOf.Paniel_Randombox_Normal;
+            var pawnKindDef = AutomataRaceDefOf.Paniel_Randombox_Normal;
             var factionDef = AutomataRaceSettingCache.Get(AutomataRaceDefOf.Paniel_Race).defaultFaction;
             var faction = factionDef != null ? Find.FactionManager.FirstFactionOfDef(factionDef) : null;
             var generationRequest = new PawnGenerationRequest(pawnKindDef,

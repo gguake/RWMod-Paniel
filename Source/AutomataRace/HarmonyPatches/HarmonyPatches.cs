@@ -22,8 +22,8 @@ namespace AutomataRace.HarmonyPatches
             Harmony harmony = new Harmony("gguake.automatarace");
 
             #region For Debug
-            harmony.Patch(AccessTools.Method(typeof(LifeStageWorker_HumanlikeAdult), "Notify_LifeStageStarted"),
-                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_Prefix)));
+            //harmony.Patch(AccessTools.Method(typeof(LifeStageWorker_HumanlikeAdult), "Notify_LifeStageStarted"),
+            //    prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_Prefix)));
             #endregion
 
             harmony.Patch(AccessTools.Method(typeof(PawnGenerator), "GenerateSkills"),

@@ -7,13 +7,13 @@ namespace AutomataRace
     public class AutomataAppearanceParameter : IExposable
     {
         public HairDef hairDef;
-        public string headGraphicPath;
+        public HeadTypeDef headTypeDef;
         public List<int> bodyAddonVariant;
 
         public void ExposeData()
         {
             Scribe_Defs.Look(ref hairDef, "hairDef");
-            Scribe_Values.Look(ref headGraphicPath, "headGraphicPath");
+            Scribe_Defs.Look(ref headTypeDef, "headTypeDef");
             Scribe_Collections.Look(ref bodyAddonVariant, "bodyAddonVariant");
         }
     }

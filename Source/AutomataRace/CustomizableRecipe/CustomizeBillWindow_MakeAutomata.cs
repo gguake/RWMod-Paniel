@@ -293,7 +293,7 @@ namespace AutomataRace
 
             CustomizableBillParameter_MakeAutomata parameter = new CustomizableBillParameter_MakeAutomata()
             {
-                appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, headGraphicPath = x.HeadGraphicPath, bodyAddonVariant = x.BodyAddonVariant }).ToList(),
+                appearanceChoices = _samplePawnDrawers.Select(x => new AutomataAppearanceParameter() { hairDef = x.HairDef, headTypeDef = x.HeadTypeDef, bodyAddonVariant = x.BodyAddonVariant }).ToList(),
                 specialization = billWorker.selectedSpecialization,
                 baseMaterial = billWorker.baseMaterial,
                 ingredients = ingredients,
@@ -334,6 +334,7 @@ namespace AutomataRace
             GUI.EndGroup();
         }
     }
+
     public class SamplePawnDrawer
     {
         private Pawn _pawn;
@@ -341,13 +342,26 @@ namespace AutomataRace
         public RenderTexture Texture { get; private set; }
         public HairDef HairDef => _pawn.story.hairDef;
         public List<int> BodyAddonVariant { get; private set; }
-        public string HeadGraphicPath => _pawn.story.HeadGraphicPath;
+        public HeadTypeDef HeadTypeDef => _pawn.story.headType;
 
         public SamplePawnDrawer()
         {
+            var pawnKindDef = PawnKindDefOf.Pirate; // AutomataRaceDefOf.Paniel_Randombox_Normal;
             var factionDef = AutomataRaceSettingCache.Get(AutomataRaceDefOf.Paniel_Race).defaultFaction;
             var faction = factionDef != null ? Find.FactionManager.FirstFactionOfDef(factionDef) : null;
-            _pawn = PawnGenerator.GeneratePawn(AutomataRaceDefOf.Paniel_Randombox_Normal, faction: faction);
+            var generationRequest = new PawnGenerationRequest(pawnKindDef,
+                faction: faction, 
+                context: PawnGenerationContext.NonPlayer,
+                forceGenerateNewPawn: true,
+                canGeneratePawnRelations: false,
+                colonistRelationChanceFactor: 0f,
+                allowGay: false,
+                allowPregnant: false,
+                allowFood: false,
+                allowAddictions: false,
+                developmentalStages: DevelopmentalStage.Adult);
+
+            _pawn = PawnGenerator.GeneratePawn(generationRequest);
             Texture = PortraitsCache.Get(_pawn, new Vector2(92f, 128f), Rot4.South);
         }
 
@@ -361,7 +375,7 @@ namespace AutomataRace
         public void RerollAndUpdateTexture()
         {
             _pawn.story.hairDef = PawnStyleItemChooser.RandomHairFor(_pawn);
-            _pawn.story.hairColor = Color.white;
+            _pawn.story.HairColor = Color.white;
 
             var pawnDef = _pawn.def as ThingDef_AlienRace;
             if (pawnDef == null)
@@ -370,12 +384,9 @@ namespace AutomataRace
                 return;
             }
 
-            string path = pawnDef.alienRace.graphicPaths.GetCurrentGraphicPath(_pawn.ageTracker.CurLifeStageRace.def).head;
-            var headGraphicPath = pawnDef.alienRace.generalSettings.alienPartGenerator.RandomAlienHead(path, _pawn);
-            CachedData.headGraphicPath(_pawn.story) = headGraphicPath;
-
-            _pawn.story.SetHeadGraphicPath(headGraphicPath);
-            Log.Message($"headGraphicPath: {headGraphicPath}");
+            var head = pawnDef.alienRace.generalSettings.alienPartGenerator.HeadTypes.RandomElement();
+            _pawn.story.headType = head;
+            Log.Message($"headGraphicPath: {head}");
 
             // CHECKME: Face Addon
             BodyAddonVariant = new List<int>(_pawn.SetBodyAddonRandomly());

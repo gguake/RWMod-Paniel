@@ -21,6 +21,11 @@ namespace AutomataRace.HarmonyPatches
         {
             Harmony harmony = new Harmony("gguake.automatarace");
 
+            #region For Debug
+            harmony.Patch(AccessTools.Method(typeof(LifeStageWorker_HumanlikeAdult), "Notify_LifeStageStarted"),
+                prefix: new HarmonyMethod(typeof(HarmonyPatches), nameof(LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_Prefix)));
+            #endregion
+
             harmony.Patch(AccessTools.Method(typeof(PawnGenerator), "GenerateSkills"),
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(PawnGenerator_GenerateSkills_Postfix)));
 
@@ -58,6 +63,18 @@ namespace AutomataRace.HarmonyPatches
                 postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(FactionDialogMaker_FactionDialogFor_Postfix)));
 
         }
+
+        #region For Debug
+        public static bool LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_Prefix(Pawn pawn, LifeStageDef previousLifeStage)
+        {
+            Log.Message($"pawn: {pawn}");
+            Log.Message($"previousLifeStage: {previousLifeStage}");
+            Log.Message($"pawn.Map: {pawn?.Map}");
+            Log.Message($"pawn.story: {pawn?.story}");
+
+            return true;
+        }
+        #endregion
 
         public static void PawnGenerator_GenerateSkills_Postfix(Pawn pawn)
         {

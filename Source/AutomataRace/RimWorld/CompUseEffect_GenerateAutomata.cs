@@ -41,15 +41,16 @@ namespace AutomataRace
                 generated.GetComp<CompAutomataDataHolder>().CopyFrom(automataDataComp);
 
                 generated.story.hairDef = automataData.appearance?.hairDef;
-                generated.story.hairColor = Color.white;
+                generated.story.HairColor = Color.white;
 
-                if (automataData.appearance?.headGraphicPath != null)
+                if (automataData.appearance?.headTypeDef != null)
                 {
-                    generated.story.SetHeadGraphicPath(automataData.appearance.headGraphicPath);
+                    generated.story.headType = automataData.appearance.headTypeDef;
                 }
 
                 GenSpawn.Spawn(generated, parent.Position, parent.Map);
-                CachedData.headGraphicPath(generated.story) = automataData.appearance.headGraphicPath;
+
+                //CachedData.headGraphicPath(generated.story) = automataData.appearance.headGraphicPath;
 
                 // CHECKME: Face Addon
                 generated.SetBodyAddonVariant(automataData.appearance.bodyAddonVariant);

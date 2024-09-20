@@ -1,6 +1,4 @@
-﻿using AlienRace;
-using AutomataRace.Extensions;
-using AutomataRace.Logic;
+﻿using AutomataRace.Logic;
 using CustomizableRecipe;
 using RimWorld;
 using System.Collections.Generic;
@@ -377,25 +375,25 @@ namespace AutomataRace
             _pawn.story.hairDef = PawnStyleItemChooser.RandomHairFor(_pawn);
             _pawn.story.HairColor = Color.white;
 
-            var pawnDef = _pawn.def as ThingDef_AlienRace;
-            if (pawnDef == null)
-            {
-                Log.Warning($"[Paniel] Try to reroll non alien pawn.");
-                return;
-            }
+            //var pawnDef = _pawn.def as ThingDef_AlienRace;
+            //if (pawnDef == null)
+            //{
+            //    Log.Warning($"[Paniel] Try to reroll non alien pawn.");
+            //    return;
+            //}
 
-            var head = pawnDef.alienRace.generalSettings.alienPartGenerator.HeadTypes.RandomElement();
-            _pawn.story.headType = head;
-            Log.Message($"headGraphicPath: {head}");
+            //var head = pawnDef.alienRace.generalSettings.alienPartGenerator.HeadTypes.RandomElement();
+            //_pawn.story.headType = head;
+            //Log.Message($"headGraphicPath: {head}");
 
-            // CHECKME: Face Addon
-            BodyAddonVariant = new List<int>(_pawn.SetBodyAddonRandomly());
-            if (BodyAddonVariant == null)
-            {
-                Log.Error("Failed to get body addons. failed to set body addon randomly.");
-            }
+            //// CHECKME: Face Addon
+            //BodyAddonVariant = new List<int>(_pawn.SetBodyAddonRandomly());
+            //if (BodyAddonVariant == null)
+            //{
+            //    Log.Error("Failed to get body addons. failed to set body addon randomly.");
+            //}
 
-            _pawn.Drawer.renderer.graphics.ResolveAllGraphics();
+            //_pawn.Drawer.renderer.graphics.ResolveAllGraphics();
 
             PortraitsCache.SetDirty(_pawn);
 

@@ -1,8 +1,6 @@
 ﻿using RimWorld;
-using Verse;
-using AutomataRace.Extensions;
 using UnityEngine;
-using AlienRace;
+using Verse;
 
 namespace AutomataRace
 {
@@ -53,7 +51,7 @@ namespace AutomataRace
                 //CachedData.headGraphicPath(generated.story) = automataData.appearance.headGraphicPath;
 
                 // CHECKME: Face Addon
-                generated.SetBodyAddonVariant(automataData.appearance.bodyAddonVariant);
+                // generated.SetBodyAddonVariant(automataData.appearance.bodyAddonVariant);
 
                 var title = Props.letterLabel.Formatted(generated.Named("PAWN")).AdjustedFor(generated);
                 var text = Props.letterText.Formatted(generated.Named("PAWN")).AdjustedFor(generated);

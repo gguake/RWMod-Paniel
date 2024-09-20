@@ -15,9 +15,8 @@ namespace AutomataRace
             RepairService.RecoverMaintenance(usedBy);
         }
 
-        public override bool CanBeUsedBy(Pawn p, out string failReason)
+        public override AcceptanceReport CanBeUsedBy(Pawn p)
         {
-            failReason = null;
             if (!Props.thingDefs.NullOrEmpty() && !Props.thingDefs.Contains(p.def))
             {
                 return false;

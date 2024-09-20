@@ -46,9 +46,8 @@ namespace AutomataRace
             Find.LetterStack.ReceiveLetter(title, text, LetterDefOf.PositiveEvent, generated);
         }
 
-        public override bool CanBeUsedBy(Pawn p, out string failReason)
+        public override AcceptanceReport CanBeUsedBy(Pawn p)
         {
-            failReason = null;
             return true;
         }
     }

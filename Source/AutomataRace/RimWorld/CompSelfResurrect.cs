@@ -52,7 +52,7 @@ namespace AutomataRace
                     InnerPawn.health.RemoveHediff(hediff);
                 }
 
-                ResurrectionUtility.ResurrectWithSideEffects(InnerPawn);
+                ResurrectionUtility.TryResurrectWithSideEffects(InnerPawn);
                 _activated = false;
             }
         }

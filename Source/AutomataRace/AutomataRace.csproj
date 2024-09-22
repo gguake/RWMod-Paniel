@@ -17,7 +17,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Mod\1.5\Assemblies\</OutputPath>
+    <OutputPath>..\..\Mod\1.5\Core\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>2</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Mod\1.5\Assemblies\</OutputPath>
+    <OutputPath>..\..\Mod\1.5\Core\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>2</WarningLevel>
@@ -81,6 +81,7 @@
     <Compile Include="HediffComps\HediffComp_WithAbility.cs" />
     <Compile Include="Logic\AutomataBillService.cs" />
     <Compile Include="Logic\AutomataQualityService.cs" />
+    <Compile Include="ModularPaniel\Building_AutomatonAssembler.cs" />
     <Compile Include="PseudoRandomGenerator\PseudoRandom.cs" />
     <Compile Include="RimWorld\Alert_LowMaintenance.cs" />
     <Compile Include="RimWorld\Alert_NeedPnLFuel.cs" />

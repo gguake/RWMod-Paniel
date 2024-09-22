@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A5A4BE9C-886A-4380-9974-937160169329}</ProjectGuid>
+    <ProjectGuid>{25B87D97-0CB9-4492-83D2-C67D3D9E5010}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CustomizableRecipe</RootNamespace>
-    <AssemblyName>1_CustomizableRecipe</AssemblyName>
+    <RootNamespace>ModuleAutomata</RootNamespace>
+    <AssemblyName>ModuleAutomata</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -21,7 +20,7 @@
     <OutputPath>..\..\Mod\1.5\Core\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -29,16 +28,14 @@
     <OutputPath>..\..\Mod\1.5\Core\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="0Harmony">
       <HintPath>E:\SteamLibrary\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp, Version=1.2.7705.25110, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Assembly-CSharp">
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -50,41 +47,27 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.CoreModule">
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomizableRecipeService.cs" />
-    <Compile Include="Extensions\ListExtensions.cs" />
-    <Compile Include="HarmonyPatches\HarmonyPatches.cs" />
-    <Compile Include="Extensions\RecipeDefExtensions.cs" />
-    <Compile Include="RimWorld\Bill_CustomizedProductionImpl.cs" />
-    <Compile Include="RimWorld\IBill_Customized.cs" />
-    <Compile Include="RimWorld\Bill_CustomizedProduction.cs" />
-    <Compile Include="RimWorld\Bill_CustomizedProductionWithUft.cs" />
-    <Compile Include="RimWorld\CustomizableBillWorker.cs" />
+    <Compile Include="AutomataCore\CompAutomataCore.cs" />
+    <Compile Include="AutomataModuleDefModExtension.cs" />
+    <Compile Include="Building_AutomataAssembler.cs" />
+    <Compile Include="AutomataThingDefOf.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="ModuleAutomataAssembleInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RimWorld\CustomizeBillWindow.cs" />
-    <Compile Include="RimWorld\Bill_Customizer.cs" />
-    <Compile Include="RimWorld\CustomizableRecipeDef.cs" />
-    <Compile Include="RimWorld\CustomizableBillParameter.cs" />
-    <Compile Include="Extensions\ThingFilterExtensions.cs" />
-    <Compile Include="StatOverride\StatOverrideDef.cs" />
-    <Compile Include="StatOverride\StatOverrideService.cs" />
-    <Compile Include="StatOverride\StatOverrideWorker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,9 +1,11 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using UnityEngine;
 using Verse;
+using static HarmonyLib.Code;
 
 namespace ModuleAutomata
 {
@@ -30,6 +32,22 @@ namespace ModuleAutomata
         public float sourcePawnSkillMultiplier = 1f;
 
         public WorkTags workDisables;
+
+        private List<WorkTypeDef> _disabledWorkTypeDefs;
+        public List<WorkTypeDef> DisabledWorkTypeDefs
+        {
+            get
+            {
+                if (_disabledWorkTypeDefs == null)
+                {
+                    _disabledWorkTypeDefs = DefDatabase<WorkTypeDef>.AllDefsListForReading
+                        .Where(def => (def.workTags & workDisables) != 0)
+                        .ToList();
+                }
+
+                return _disabledWorkTypeDefs;
+            }
+        }
 
         public CompProperties_AutomataCore()
         {
@@ -78,6 +96,11 @@ namespace ModuleAutomata
             }
 
             return (int)Mathf.Min(20f, baseSkillLevel);
+        }
+
+        public bool IsDisabledSkill(SkillDef skillDef)
+        {
+            return skillDef.IsDisabled(Props.workDisables, Props.DisabledWorkTypeDefs);
         }
     }
 }

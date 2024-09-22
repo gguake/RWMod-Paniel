@@ -1,5 +1,7 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace ModuleAutomata
@@ -8,6 +10,11 @@ namespace ModuleAutomata
     {
         private AutomataAssembleBill _bill;
         private ThingOwner _innerContainer;
+
+        public Building_AutomataAssembler()
+        {
+            _innerContainer = new ThingOwner<Thing>(this);
+        }
 
         public override void ExposeData()
         {
@@ -19,7 +26,61 @@ namespace ModuleAutomata
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            yield break;
+            if (Spawned && Faction == Faction.OfPlayer)
+            {
+                if (_bill == null)
+                {
+                    var commandAssembleNew = new Command_Action();
+                    commandAssembleNew.defaultLabel = PNLocale.PN_CommandAssembleNewLabel.Translate();
+                    commandAssembleNew.defaultDesc = PNLocale.PN_CommandAssembleNewDesc.Translate();
+                    commandAssembleNew.action = () =>
+                    {
+                        Find.WindowStack.Add(new Dialog_AutomataAssemble());
+                    };
+                    yield return commandAssembleNew;
+
+                    var commandReassemble = new Command_Action();
+                    commandReassemble.defaultLabel = PNLocale.PN_CommandReassembleLabel.Translate();
+                    commandReassemble.defaultDesc = PNLocale.PN_CommandReassembleDesc.Translate();
+                    commandReassemble.action = () =>
+                    {
+                        var candidates = Map.mapPawns.FreeColonistsAndPrisonersSpawned.Where(p => p.IsAutomata());
+
+                        Find.WindowStack.Add(new FloatMenu(candidates.Select(pawn => new FloatMenuOption(
+                            pawn.Name.ToStringShort,
+                            () =>
+                            {
+                                Find.WindowStack.Add(new Dialog_AutomataAssemble(pawn));
+                            },
+                            pawn,
+                            Color.white)).ToList()));
+                    };
+                    yield return commandReassemble;
+                }
+                else
+                {
+                    var commandCancel = new Command_Action();
+                    commandCancel.defaultLabel = PNLocale.PN_CommandCancelAssembleLabel.Translate();
+                    commandCancel.defaultDesc = PNLocale.PN_CommandCancelAssembleDesc.Translate();
+                    commandCancel.action = () =>
+                    {
+                        EjectContents();
+                        _bill = null;
+                    };
+                    yield return commandCancel;
+                }
+            }
+        }
+
+        public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
+        {
+            if (_bill == null && selPawn.IsAutomata())
+            {
+                yield return new FloatMenuOption(PNLocale.PN_FloatMenuReassembleLabel.Translate(), () =>
+                {
+                    Find.WindowStack.Add(new Dialog_AutomataAssemble(selPawn));
+                });
+            }
         }
 
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)

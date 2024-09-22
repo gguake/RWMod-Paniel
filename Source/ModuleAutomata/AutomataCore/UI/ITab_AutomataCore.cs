@@ -29,13 +29,9 @@ namespace ModuleAutomata
             var compCore = Find.Selector.SingleSelectedThing?.TryGetComp<CompAutomataCore>();
             if (compCore == null) { return; }
 
-            var disabledWorkTypeDefs = DefDatabase<WorkTypeDef>.AllDefsListForReading
-                .Where(def => (def.workTags & compCore.Props.workDisables) != 0)
-                .ToList();
-
             skillDefsInListOrderCached = DefDatabase<SkillDef>.AllDefsListForReading
                 .OrderByDescending((SkillDef sd) => sd.listOrder)
-                .Where(v => !v.IsDisabled(compCore.Props.workDisables, disabledWorkTypeDefs))
+                .Where(v => !compCore.IsDisabledSkill(v))
                 .ToList();
 
             size = new Vector2(280f, skillDefsInListOrderCached.Count * 27f + 20);

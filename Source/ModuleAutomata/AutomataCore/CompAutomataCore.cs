@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
@@ -13,10 +14,12 @@ namespace ModuleAutomata
 
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)
         {
-            DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "quality", xmlRoot.Name);
-            if (xmlRoot.HasChildNodes)
+            if (Enum.TryParse(xmlRoot.Name, out quality))
             {
-                skillLevel = ParseHelper.FromString<int>(xmlRoot.FirstChild.Value);
+                if (xmlRoot.HasChildNodes)
+                {
+                    skillLevel = ParseHelper.FromString<int>(xmlRoot.FirstChild.Value);
+                }
             }
         }
     }
@@ -24,6 +27,8 @@ namespace ModuleAutomata
     public class CompProperties_AutomataCore : CompProperties
     {
         public List<QualitySkill> qualitySkillValues;
+        public float sourcePawnSkillMultiplier = 1f;
+
         public WorkTags workDisables;
 
         public CompProperties_AutomataCore()
@@ -49,7 +54,7 @@ namespace ModuleAutomata
         {
             if (sourceName == null) { return label; }
 
-            return "PN_AUTOMATA_CORE".Translate(label, sourceName.ToStringShort).Resolve();
+            return "PN_AutomataCoreItemLabel".Translate(label, sourceName.ToStringShort).Resolve();
         }
 
         public void SetPawn(Pawn pawn)
@@ -69,10 +74,10 @@ namespace ModuleAutomata
 
             if (sourceSkill != null && sourceSkill.TryGetValue(skillDef, out var sourceSkillLevel))
             {
-                return baseSkillLevel + Mathf.FloorToInt(sourceSkillLevel / 3f);
+                return (int)Mathf.Min(20f, baseSkillLevel + Mathf.FloorToInt(sourceSkillLevel * Props.sourcePawnSkillMultiplier));
             }
 
-            return baseSkillLevel;
+            return (int)Mathf.Min(20f, baseSkillLevel);
         }
     }
 }

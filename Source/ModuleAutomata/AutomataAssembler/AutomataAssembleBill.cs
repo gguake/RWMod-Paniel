@@ -4,10 +4,9 @@ using Verse;
 
 namespace ModuleAutomata
 {
-    public class ModuleAutomataAssembleInfo : IExposable
+    public class AutomataAssembleBill : IExposable
     {
         public Pawn targetPawn;
-        public bool isInvoice;
 
         public Dictionary<AutomataModulePart, ThingDef> modules = new Dictionary<AutomataModulePart, ThingDef>();
         public List<ThingDef> customModules = new List<ThingDef>();
@@ -15,10 +14,19 @@ namespace ModuleAutomata
         public HairDef hair;
         public HeadTypeDef head;
 
+        public AutomataAssembleBill()
+        {
+        }
+
+        public AutomataAssembleBill(Pawn sourcePawn)
+        {
+            targetPawn = sourcePawn;
+
+        }
+
         public void ExposeData()
         {
             Scribe_References.Look(ref targetPawn, "targetPawn");
-            Scribe_Values.Look(ref isInvoice, "isInvoice");
 
             Scribe_Collections.Look(ref modules, "modules", LookMode.Value, LookMode.Def);
             Scribe_Collections.Look(ref customModules, "customModules", LookMode.Def);

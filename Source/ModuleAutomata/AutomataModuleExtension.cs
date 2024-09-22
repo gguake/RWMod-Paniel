@@ -16,7 +16,7 @@ namespace ModuleAutomata
         Custom,
     }
 
-    public class AutomataModuleDefModExtension : DefModExtension
+    public class AutomataModuleExtension : DefModExtension
     {
         public List<AutomataModulePart> targetParts;
         public bool isDefault;

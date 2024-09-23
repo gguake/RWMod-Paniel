@@ -62,11 +62,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomataAssembler\UI\Dialog_AutomataAssemble.cs" />
+    <Compile Include="Module\AutomataModulePartDef.cs" />
     <Compile Include="AutomataCore\CompAutomataCore.cs" />
     <Compile Include="AutomataCore\UI\ITab_AutomataCore.cs" />
     <Compile Include="AutomataCore\Recipe_MakeAutomatonCore.cs" />
-    <Compile Include="AutomataModuleExtension.cs" />
+    <Compile Include="Module\AutomataModuleDef.cs" />
     <Compile Include="AutomataAssembler\Building_AutomataAssembler.cs" />
+    <Compile Include="Module\AutomataModuleWorker.cs" />
     <Compile Include="PNDefOf.cs" />
     <Compile Include="PNExtensions.cs" />
     <Compile Include="AutomataAssembler\AutomataAssembleBill.cs" />

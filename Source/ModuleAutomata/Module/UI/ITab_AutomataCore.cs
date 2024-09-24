@@ -41,7 +41,7 @@ namespace ModuleAutomata
         {
             get
             {
-                return Find.Selector.SingleSelectedThing?.TryGetComp<CompAutomataCore>()?.sourceSkill != null;
+                return Find.Selector.SingleSelectedThing?.TryGetComp<CompAutomataCore>() != null;
             }
         }
 
@@ -76,12 +76,12 @@ namespace ModuleAutomata
             }
         }
 
-        private void DrawSkill(SkillDef skill, int level, Vector2 topLeft, string tooltipPrefix = "")
+        private void DrawSkill(SkillDef skill, int level, Vector2 topLeft)
         {
             DrawSkill(skill, level, new Rect(topLeft.x, topLeft.y, 230f, 24f));
         }
 
-        private void DrawSkill(SkillDef skillDef, int level, Rect holdingRect, string tooltipPrefix = "")
+        private void DrawSkill(SkillDef skillDef, int level, Rect holdingRect)
         {
             if (Mouse.IsOver(holdingRect))
             {

@@ -20,4 +20,10 @@ namespace ModuleAutomata
     {
         public static InspirationDef Inspired_Surgery;
     }
+
+    [DefOf]
+    public static class PNPawnKindDefOf
+    {
+        public static PawnKindDef PN_ColonistPawn;
+    }
 }

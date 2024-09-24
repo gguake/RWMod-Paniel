@@ -8,7 +8,6 @@ namespace ModuleAutomata
 {
     public class Building_AutomataAssembler : Building, IThingHolder, INotifyHauledTo
     {
-        private AutomataAssembleBill _bill;
         private ThingOwner _innerContainer;
 
         public Building_AutomataAssembler()
@@ -20,7 +19,6 @@ namespace ModuleAutomata
         {
             base.ExposeData();
 
-            Scribe_Deep.Look(ref _bill, "bill");
             Scribe_Deep.Look(ref _innerContainer, "innerContainer", this);
         }
 
@@ -28,7 +26,7 @@ namespace ModuleAutomata
         {
             if (Spawned && Faction == Faction.OfPlayer)
             {
-                if (_bill == null)
+                if (true)
                 {
                     var commandAssembleNew = new Command_Action();
                     commandAssembleNew.defaultLabel = PNLocale.PN_CommandAssembleNewLabel.Translate();
@@ -50,7 +48,7 @@ namespace ModuleAutomata
                             pawn.Name.ToStringShort,
                             () =>
                             {
-                                Find.WindowStack.Add(new Dialog_AutomataAssemble(pawn));
+                                Find.WindowStack.Add(new Dialog_AutomataAssemble());
                             },
                             pawn,
                             Color.white)).ToList()));
@@ -65,7 +63,6 @@ namespace ModuleAutomata
                     commandCancel.action = () =>
                     {
                         EjectContents();
-                        _bill = null;
                     };
                     yield return commandCancel;
                 }
@@ -74,11 +71,11 @@ namespace ModuleAutomata
 
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
         {
-            if (_bill == null && selPawn.IsAutomata())
+            if (selPawn.IsAutomata())
             {
                 yield return new FloatMenuOption(PNLocale.PN_FloatMenuReassembleLabel.Translate(), () =>
                 {
-                    Find.WindowStack.Add(new Dialog_AutomataAssemble(selPawn));
+                    Find.WindowStack.Add(new Dialog_AutomataAssemble());
                 });
             }
         }

@@ -21,10 +21,9 @@ namespace ModuleAutomata
     {
         public List<AutomataModulePartDef> adaptableParts;
 
-        public ThingDef sourceThingDef;
-        public AutomataModuleOptionGroupRule sourceGroupRule;
-
-        public List<ThingDefCountClass> fixedIngredients;
+        public ThingDef recipeThingDef;
+        public AutomataModuleOptionGroupRule recipeGroupRule;
+        public List<ThingDefCountClass> fixedRecipeIngredients;
 
         public List<AutomataModuleWorker> workers;
     }

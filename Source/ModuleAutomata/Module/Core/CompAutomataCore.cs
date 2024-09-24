@@ -5,26 +5,9 @@ using System.Linq;
 using System.Xml;
 using UnityEngine;
 using Verse;
-using static HarmonyLib.Code;
 
 namespace ModuleAutomata
 {
-    public class QualitySkill
-    {
-        public QualityCategory quality;
-        public int skillLevel;
-
-        public void LoadDataFromXmlCustom(XmlNode xmlRoot)
-        {
-            if (Enum.TryParse(xmlRoot.Name, out quality))
-            {
-                if (xmlRoot.HasChildNodes)
-                {
-                    skillLevel = ParseHelper.FromString<int>(xmlRoot.FirstChild.Value);
-                }
-            }
-        }
-    }
 
     public class CompProperties_AutomataCore : CompProperties
     {
@@ -59,30 +42,23 @@ namespace ModuleAutomata
     {
         public CompProperties_AutomataCore Props => (CompProperties_AutomataCore)props;
 
-        public Name sourceName;
-        public Dictionary<SkillDef, int> sourceSkill;
+        private AutomataCorePawnInfo _pawnInfo;
+        public AutomataCorePawnInfo PawnInfo => _pawnInfo;
 
         public override void PostExposeData()
         {
-            Scribe_Deep.Look(ref sourceName, "sourceName");
-            Scribe_Collections.Look(ref sourceSkill, "sourceSkill", LookMode.Def, LookMode.Value);
+            Scribe_Deep.Look(ref _pawnInfo, "pawnInfo");
         }
 
         public override string TransformLabel(string label)
-        {
-            if (sourceName == null) { return label; }
+            => PawnInfo != null ?
+            "PN_AutomataCoreItemLabel".Translate(label, PawnInfo.sourceName.ToStringShort).Resolve() :
+            label;
 
-            return "PN_AutomataCoreItemLabel".Translate(label, sourceName.ToStringShort).Resolve();
-        }
-
-        public void SetPawn(Pawn pawn)
+        public void SetPawnInfo(Pawn pawn)
         {
-            sourceName = pawn.Name;
-            sourceSkill = new Dictionary<SkillDef, int>();
-            foreach (var skillRecord in pawn.skills.skills)
-            {
-                sourceSkill.Add(skillRecord.def, skillRecord.Level);
-            }
+            _pawnInfo = new AutomataCorePawnInfo();
+            _pawnInfo.InitializeFromPawn(pawn);
         }
 
         public int GetSkillLevel(SkillDef skillDef)
@@ -90,7 +66,7 @@ namespace ModuleAutomata
             var quality = parent.GetComp<CompQuality>()?.Quality ?? QualityCategory.Normal;
             var baseSkillLevel = Props.qualitySkillValues.FirstOrDefault(v => v.quality == quality).skillLevel;
 
-            if (sourceSkill != null && sourceSkill.TryGetValue(skillDef, out var sourceSkillLevel))
+            if (PawnInfo != null && PawnInfo.sourceSkill.TryGetValue(skillDef, out var sourceSkillLevel))
             {
                 return (int)Mathf.Min(20f, baseSkillLevel + Mathf.FloorToInt(sourceSkillLevel * Props.sourcePawnSkillMultiplier));
             }

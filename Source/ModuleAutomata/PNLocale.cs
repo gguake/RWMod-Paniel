@@ -14,5 +14,7 @@
 
         public const string PN_TabPawnCapacityLabel = nameof(PN_TabPawnCapacityLabel);
         public const string PN_TabPawnSkillLabel = nameof(PN_TabPawnSkillLabel);
+
+        public const string PN_DialogEmptyModuleElementLabel = nameof(PN_DialogEmptyModuleElementLabel);
     }
 }

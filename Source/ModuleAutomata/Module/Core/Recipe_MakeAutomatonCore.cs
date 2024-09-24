@@ -58,7 +58,7 @@ namespace ModuleAutomata
 
                 var quality = QualityUtility.GenerateQualityCreatedByPawn(billDoerSkillLevel, billDoerInspired);
                 var automatonCore = ThingMaker.MakeThing(recipe.GetModExtension<MakeAutomatonCoreRecipeExtension>().targetCoreDef);
-                automatonCore.TryGetComp<CompAutomataCore>()?.SetPawn(pawn);
+                automatonCore.TryGetComp<CompAutomataCore>().SetPawnInfo(pawn);
                 automatonCore.TryGetComp<CompQuality>()?.SetQuality(quality, null);
 
                 GenSpawn.Spawn(automatonCore, billDoer.Position, billDoer.Map);

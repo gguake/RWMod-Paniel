@@ -31,9 +31,13 @@ namespace ModuleAutomata
         }
     }
 
+    [StaticConstructorOnStartup]
     public class Dialog_AutomataAssemble : Window
     {
-        public override Vector2 InitialSize => new Vector2(860f, 440f);
+        public static readonly Texture2D OpenStatsReportTex = ContentFinder<Texture2D>.Get("UI/Buttons/OpenStatsReport");
+        public static readonly Texture2D DeleteTex = ContentFinder<Texture2D>.Get("UI/Buttons/Delete");
+
+        public override Vector2 InitialSize => new Vector2(900f, 440f);
 
         private AutomataAssembleSummaryTab _currentTab = AutomataAssembleSummaryTab.PawnCapacity;
         private Pawn _samplePawn;
@@ -103,12 +107,12 @@ namespace ModuleAutomata
                 }
             }
 
-            var rtCenterSection = rtMain.NewCol(400f);
+            var rtCenterSection = rtMain.NewCol(440f);
             try
             {
                 Text.Anchor = TextAnchor.MiddleLeft;
 
-                var rtCenterElementLabelSection = rtCenterSection.NewCol(rtCenterSection.Rect.width * 0.375f);
+                var rtCenterElementLabelSection = rtCenterSection.NewCol(rtCenterSection.Rect.width * 0.35f);
                 var rtCenterElementButtonSection = rtCenterSection.NewCol(44f, HorizontalJustification.Right);
                 var rtCenterElementValueSection = rtCenterSection;
 
@@ -121,12 +125,17 @@ namespace ModuleAutomata
                     var partLabelHeight = Text.CalcHeight(partDef.LabelCap, rtCenterElementLabelSection.Rect.width);
                     var partDetailHeightSum = elements.Sum(option => Text.CalcHeight(option.ToString(), rtCenterElementValueSection.Rect.width));
 
-                    var rowHeight = Mathf.Max(partLabelHeight, partDetailHeightSum);
-                    var rtElementLabelSection = rtCenterElementLabelSection.NewRow(rowHeight);
-                    var rtElementValueSection = rtCenterElementValueSection.NewRow(rowHeight);
-                    var rtElementButtonSection = rtCenterElementValueSection.NewRow(rowHeight);
+                    var rowHeight = Mathf.Max(
+                        24f,
+                        partLabelHeight, 
+                        partDetailHeightSum, 
+                        Text.CalcHeight(PNLocale.PN_DialogEmptyModuleElementLabel.Translate(), rtCenterElementValueSection.Rect.width));
 
-                    var elementGroupRect = new Rect(
+                    var rtElementLabelSection = rtCenterElementLabelSection.NewRow(rowHeight, marginOverride: 0f);
+                    var rtElementValueSection = rtCenterElementValueSection.NewRow(rowHeight, marginOverride: 0f);
+                    var rtElementButtonSection = rtCenterElementButtonSection.NewRow(rowHeight, marginOverride: 0f);
+
+                    var elementGroupRect = Rect.MinMaxRect(
                         rtElementLabelSection.Rect.xMin,
                         rtElementLabelSection.Rect.yMin, 
                         rtElementButtonSection.Rect.xMax, 
@@ -149,33 +158,29 @@ namespace ModuleAutomata
                     {
                         var rtElementValue = rtElementValueSection.Rect;
                         Widgets.Label(rtElementValue, PNLocale.PN_DialogEmptyModuleElementLabel.Translate());
+
+                        foreach (var button in GetModuleElementButtons(partDef, null))
+                        {
+                            var rtButton = rtElementButtonSection.NewCol(20f, HorizontalJustification.Right);
+                            button.drawer(rtButton);
+                        }
                     }
                     else
                     {
                         for (int i = 0; i < elements.Count; ++i)
                         {
                             var partElementText = elements[i].ToString();
-                            var rtElementValue = rtElementValueSection.NewRow(Text.CalcHeight(partElementText, rtElementValueSection.Rect.width), marginOverride: 0f);
+                            var rtElementValue = rtElementValueSection.NewRow(
+                                Text.CalcHeight(partElementText, rtElementValueSection.Rect.width), 
+                                marginOverride: 0f);
+
                             Widgets.Label(rtElementValue, partElementText);
 
-                            var buttons = new List<GenUI.AnonymousStackElement>
+                            foreach (var button in GetModuleElementButtons(partDef, null))
                             {
-                                new GenUI.AnonymousStackElement
-                                {
-                                    drawer = (rect) =>
-                                    {
-                                        MouseoverSounds.DoRegion(rect);
-                                        if (Widgets.ButtonImage(rect, TexButton.Info, GUI.color))
-                                        {
-                                            Log.Message(elements[i].ToString());
-                                        }
-                                        UIHighlighter.HighlightOpportunity(rect, "PN_AutomataModuleOption");
-                                    },
-                                    width = 20f
-                                }
-                            };
-
-                            GenUI.DrawElementStack(rtElementButtonSection, rtElementButtonSection.Rect.height, buttons, (r, obj) => obj.drawer(r), obj => obj.width);
+                                var rtButton = rtElementButtonSection.NewCol(20f, HorizontalJustification.Right);
+                                button.drawer(rtButton);
+                            }
                         }
                     }
                 }
@@ -186,6 +191,20 @@ namespace ModuleAutomata
             }
 
             var rtRightSection = rtMain;
+            try
+            {
+                var rtPortraitSection = rtRightSection.NewRow(200f);
+                {
+                    var rtTemp = new Rect(0f, 0f, 140f, 200f);
+                    rtTemp.center = rtPortraitSection.Rect.center;
+                    GUI.color = Color.white;
+                    GUI.DrawTexture(rtTemp, PortraitsCache.Get(_samplePawn, new Vector2(140f, 200f), Rot4.South));
+                }
+            }
+            finally
+            {
+                GUI.color = Color.white;
+            }
         }
 
         public override void Close(bool doCloseSound = true)
@@ -211,8 +230,59 @@ namespace ModuleAutomata
                 forcedTraits: new List<TraitDef>() { },
                 forceNoIdeo: true,
                 forceNoBackstory: true,
-                forceNoGear: true));
+                forceNoGear: true,
+                validatorPostGear: p => !p.apparel.AnyApparel));
 
+        }
+
+        private IEnumerable<GenUI.AnonymousStackElement> GetModuleElementButtons(AutomataModulePartDef modulePartDef, AutomataModuleDialogElement? element)
+        {
+            if (element == null)
+            {
+                yield return new GenUI.AnonymousStackElement
+                {
+                    drawer = (rect) =>
+                    {
+                        MouseoverSounds.DoRegion(rect);
+                        if (Widgets.ButtonImage(rect, OpenStatsReportTex, GUI.color))
+                        {
+                            Log.Message(modulePartDef.LabelCap);
+                        }
+                        UIHighlighter.HighlightOpportunity(rect, "PN_AutomataModuleOption");
+                    },
+                    width = 20f
+                };
+            }
+            else
+            {
+                yield return new GenUI.AnonymousStackElement
+                {
+                    drawer = (rect) =>
+                    {
+                        MouseoverSounds.DoRegion(rect);
+                        if (Widgets.ButtonImage(rect, OpenStatsReportTex, GUI.color))
+                        {
+                            Log.Message(element.ToString());
+                        }
+                        UIHighlighter.HighlightOpportunity(rect, "PN_AutomataModuleOption");
+                    },
+                    width = 20f
+                };
+
+                yield return new GenUI.AnonymousStackElement
+                {
+                    drawer = (rect) =>
+                    {
+                        MouseoverSounds.DoRegion(rect);
+                        if (Widgets.ButtonImage(rect, DeleteTex, GUI.color))
+                        {
+                            Log.Message($"delete");
+                        }
+                        UIHighlighter.HighlightOpportunity(rect, "PN_AutomataModuleOption");
+                    },
+                    width = 20f
+                };
+            }
         }
     }
 }

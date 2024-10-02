@@ -26,4 +26,19 @@ namespace ModuleAutomata
     {
         public static PawnKindDef PN_ColonistPawn;
     }
+
+    [DefOf]
+    public static class PNAutomataModulePartDefOf
+    {
+        public static AutomataModulePartDef PN_Core;
+        public static AutomataModulePartDef PN_Chassi;
+        public static AutomataModulePartDef PN_Shell;
+        public static AutomataModulePartDef PN_CustomModule;
+
+        public static AutomataModulePartDef PN_LeftArm;
+        public static AutomataModulePartDef PN_RightArm;
+
+        public static AutomataModulePartDef PN_LeftLeg;
+        public static AutomataModulePartDef PN_RightLeg;
+    }
 }

@@ -10,6 +10,8 @@ namespace ModuleAutomata
     {
         private ThingOwner _innerContainer;
 
+        public AutomataAssembleUIExtension AutomataAssembleUIExtension => def.GetModExtension<AutomataAssembleUIExtension>();
+
         public Building_AutomataAssembler()
         {
             _innerContainer = new ThingOwner<Thing>(this);

@@ -20,6 +20,7 @@
         public const string PN_DialogTabPawnAppearanceLabel = nameof(PN_DialogTabPawnAppearanceLabel);
 
         public const string PN_DialogTabNoSelectedCoreLabel = nameof(PN_DialogTabNoSelectedCoreLabel);
+
         public const string PN_DialogEmptyModuleElementLabel = nameof(PN_DialogEmptyModuleElementLabel);
 
         public const string PN_DialogFloatMenuOptionNoModuleCandidate = nameof(PN_DialogFloatMenuOptionNoModuleCandidate);

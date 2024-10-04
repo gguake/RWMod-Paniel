@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
@@ -45,19 +44,6 @@ namespace ModuleAutomata
 
         public AutomataAssembleBill Bill { get; private set; } = new AutomataAssembleBill();
 
-
-        public Dialog_AutomataAssemble(Building_AutomataAssembler building, Action<AutomataAssembleBill> callback)
-        {
-            _building = building;
-            _callback = callback;
-
-            doCloseX = true;
-            forcePause = true;
-            absorbInputAroundWindow = true;
-
-            RefreshModuleUI();
-        }
-
         public Dialog_AutomataAssemble(Building_AutomataAssembler building, Pawn pawn, Action<AutomataAssembleBill> callback)
         {
             _building = building;
@@ -68,6 +54,20 @@ namespace ModuleAutomata
             forcePause = true;
             absorbInputAroundWindow = true;
 
+            InitializeBillFromDefaultSetting();
+            RefreshModuleUI();
+        }
+
+        public Dialog_AutomataAssemble(Building_AutomataAssembler building, Action<AutomataAssembleBill> callback)
+        {
+            _building = building;
+            _callback = callback;
+
+            doCloseX = true;
+            forcePause = true;
+            absorbInputAroundWindow = true;
+
+            InitializeBillFromDefaultSetting();
             RefreshModuleUI();
         }
 
@@ -185,9 +185,7 @@ namespace ModuleAutomata
                             #region PawnCapacity
                             {
                                 var rtListDivider = new RectDivider(rtLeftTabGroup, 57843750);
-                                foreach (var pawnCapacityDef in DefDatabase<PawnCapacityDef>.AllDefsListForReading
-                                    .Where(def => def.showOnHumanlikes)
-                                    .OrderBy(def => def.listOrder))
+                                foreach (var pawnCapacityDef in _building.AutomataAssembleUIExtension.capacityDefs)
                                 {
                                     if (PawnCapacityUtility.BodyCanEverDoCapacity(_samplePawn.RaceProps.body, pawnCapacityDef))
                                     {
@@ -216,6 +214,24 @@ namespace ModuleAutomata
                                         Text.Anchor = TextAnchor.UpperLeft;
                                         GUI.color = Color.white;
                                     }
+                                }
+
+                                var rtDivider = rtListDivider.NewRow(2f);
+                                Widgets.DrawLineHorizontal(rtListDivider.Rect.xMin, rtDivider.Rect.yMin, rtDivider.Rect.width, new Color(0.3f, 0.3f, 0.3f, 1f));
+
+                                foreach (var statDef in _building.AutomataAssembleUIExtension.statDefs)
+                                {
+                                    var rtRow = rtListDivider.NewRow(24f);
+                                    var statLabel = statDef.LabelCap;
+                                    var valueLabel = _samplePawn.GetStatValue(statDef).ToStringByStyle(statDef.toStringStyle);
+
+                                    Text.Anchor = TextAnchor.MiddleLeft;
+                                    Widgets.Label(rtRow, statLabel);
+
+                                    Text.Anchor = TextAnchor.MiddleRight;
+                                    Widgets.Label(rtRow, valueLabel);
+
+                                    Text.Anchor = TextAnchor.UpperLeft;
                                 }
                             }
                             #endregion
@@ -303,6 +319,19 @@ namespace ModuleAutomata
             base.Close(doCloseSound);
         }
 
+        private void InitializeBillFromDefaultSetting()
+        {
+            foreach (var setting in _building.AutomataAssembleUIExtension.defaultModuleSetting)
+            {
+                Bill[setting.modulePartDef] = new AutomataModuleBill()
+                {
+                    modulePartDef = setting.modulePartDef,
+                    moduleDef = setting.moduleDef,
+                    thingDef = setting.moduleDef.ingredientThingDef,
+                };
+            }
+        }
+
         private void RefreshSamplePawn()
         {
             _samplePawn?.Destroy();
@@ -324,6 +353,12 @@ namespace ModuleAutomata
 
             _samplePawn.inventory.DestroyAll();
             _samplePawn.apparel.DestroyAll();
+
+            var traits = new List<Trait>(_samplePawn.story.traits.allTraits);
+            foreach (var trait in traits)
+            {
+                _samplePawn.story.traits.RemoveTrait(trait);
+            }
 
             Bill.ApplyPawn(_samplePawn);
         }

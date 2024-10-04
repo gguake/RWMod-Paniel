@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomataAssembler\AutomataAssembleBill.cs" />
+    <Compile Include="AutomataAssembler\AutomataAssembleUIExtension.cs" />
     <Compile Include="AutomataAssembler\UI\Dialog_AutomataAssemble.cs" />
     <Compile Include="Module\AutomataModuleBill.cs" />
     <Compile Include="Module\AutomataModuleDef.cs" />

@@ -26,7 +26,6 @@ namespace ModuleAutomata
         }
 
         public List<AutomataModuleProperty> properties;
-        public bool isDefault;
 
         public override void PostLoad()
         {

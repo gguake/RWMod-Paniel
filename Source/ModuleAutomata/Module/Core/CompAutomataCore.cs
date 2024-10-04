@@ -11,6 +11,23 @@ namespace ModuleAutomata
 
     public class CompProperties_AutomataCore : CompProperties
     {
+        [NoTranslate]
+        public string specializationIconPath;
+
+        private Texture2D _specializationIcon;
+        public Texture2D SpecializationIcon
+        {
+            get
+            {
+                if (_specializationIcon == null)
+                {
+                    _specializationIcon = ContentFinder<Texture2D>.Get(specializationIconPath);
+                }
+
+                return _specializationIcon;
+            }
+        }
+
         public List<QualitySkill> qualitySkillValues;
         public float sourcePawnSkillMultiplier = 1f;
 
@@ -52,7 +69,7 @@ namespace ModuleAutomata
 
         public override string TransformLabel(string label)
             => PawnInfo != null ?
-            "PN_AutomataCoreItemLabel".Translate(label, PawnInfo.sourceName.ToStringShort).Resolve() :
+            PNLocale.PN_AutomataCoreItemLabel.Translate(label, PawnInfo.sourceName.ToStringShort).Resolve() :
             label;
 
         public void SetPawnInfo(Pawn pawn)

@@ -61,15 +61,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutomataAssembler\AutomataAssembleBill.cs" />
     <Compile Include="AutomataAssembler\UI\Dialog_AutomataAssemble.cs" />
-    <Compile Include="AutomataModuleThingExtension.cs" />
+    <Compile Include="Module\AutomataModuleBill.cs" />
+    <Compile Include="Module\AutomataModuleDef.cs" />
+    <Compile Include="Module\AutomataModuleIngredientWorker.cs" />
     <Compile Include="Module\AutomataModulePartDef.cs" />
     <Compile Include="Module\Core\AutomataCoreData.cs" />
     <Compile Include="Module\Core\CompAutomataCore.cs" />
     <Compile Include="Module\UI\ITab_AutomataCore.cs" />
     <Compile Include="Module\Core\Recipe_MakeAutomatonCore.cs" />
     <Compile Include="AutomataAssembler\Building_AutomataAssembler.cs" />
-    <Compile Include="Module\AutomataModuleWorker.cs" />
+    <Compile Include="Module\AutomataModuleProperty.cs" />
     <Compile Include="PNDefOf.cs" />
     <Compile Include="PNExtensions.cs" />
     <Compile Include="PNLocale.cs" />

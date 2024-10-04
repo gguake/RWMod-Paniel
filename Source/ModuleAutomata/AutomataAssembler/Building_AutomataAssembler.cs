@@ -33,7 +33,10 @@ namespace ModuleAutomata
                     commandAssembleNew.defaultDesc = PNLocale.PN_CommandAssembleNewDesc.Translate();
                     commandAssembleNew.action = () =>
                     {
-                        Find.WindowStack.Add(new Dialog_AutomataAssemble());
+                        Find.WindowStack.Add(new Dialog_AutomataAssemble(this, (bill) =>
+                        {
+
+                        }));
                     };
                     yield return commandAssembleNew;
 
@@ -48,7 +51,10 @@ namespace ModuleAutomata
                             pawn.Name.ToStringShort,
                             () =>
                             {
-                                Find.WindowStack.Add(new Dialog_AutomataAssemble());
+                                Find.WindowStack.Add(new Dialog_AutomataAssemble(this, pawn, (bill) =>
+                                {
+
+                                }));
                             },
                             pawn,
                             Color.white)).ToList()));
@@ -75,7 +81,10 @@ namespace ModuleAutomata
             {
                 yield return new FloatMenuOption(PNLocale.PN_FloatMenuReassembleLabel.Translate(), () =>
                 {
-                    Find.WindowStack.Add(new Dialog_AutomataAssemble());
+                    Find.WindowStack.Add(new Dialog_AutomataAssemble(this, selPawn, (bill) =>
+                    {
+
+                    }));
                 });
             }
         }

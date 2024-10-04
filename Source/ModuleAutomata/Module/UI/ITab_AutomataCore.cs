@@ -30,7 +30,7 @@ namespace ModuleAutomata
             if (compCore == null) { return; }
 
             skillDefsInListOrderCached = DefDatabase<SkillDef>.AllDefsListForReading
-                .OrderByDescending((SkillDef sd) => sd.listOrder)
+                .OrderByDescending(def => def.listOrder)
                 .Where(v => !compCore.IsDisabledSkill(v))
                 .ToList();
 
@@ -105,7 +105,7 @@ namespace ModuleAutomata
                 levelTextRect.yMin += 3f;
                 var label = level.ToStringCached();
 
-                GenUI.SetLabelAlign(TextAnchor.MiddleLeft);
+                Text.Anchor = TextAnchor.MiddleLeft;
                 Widgets.Label(levelTextRect, label);
             }
             finally

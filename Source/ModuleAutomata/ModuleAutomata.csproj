@@ -64,6 +64,7 @@
     <Compile Include="AutomataAssembler\AutomataAssembleBill.cs" />
     <Compile Include="AutomataAssembler\AutomataAssembleUIExtension.cs" />
     <Compile Include="AutomataAssembler\UI\Dialog_AutomataAssemble.cs" />
+    <Compile Include="HARExtension.cs" />
     <Compile Include="Module\AutomataModuleBill.cs" />
     <Compile Include="Module\AutomataModuleDef.cs" />
     <Compile Include="Module\AutomataModuleIngredientWorker.cs" />
@@ -79,5 +80,6 @@
     <Compile Include="PNLocale.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

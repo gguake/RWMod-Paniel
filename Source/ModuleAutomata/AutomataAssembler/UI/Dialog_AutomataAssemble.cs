@@ -11,7 +11,6 @@ namespace ModuleAutomata
     {
         PawnSkill,
         PawnCapacity,
-        PawnAppearance,
     }
 
     [StaticConstructorOnStartup]
@@ -54,7 +53,7 @@ namespace ModuleAutomata
             forcePause = true;
             absorbInputAroundWindow = true;
 
-            InitializeBillFromDefaultSetting();
+            InitializeBillFromPawn(pawn);
             RefreshModuleUI();
         }
 
@@ -93,12 +92,7 @@ namespace ModuleAutomata
                     new TabRecord(PNLocale.PN_DialogTabPawnCapacityLabel.Translate(), () =>
                     {
                         _currentTab = AutomataAssembleSummaryTab.PawnCapacity;
-                    }, _currentTab == AutomataAssembleSummaryTab.PawnCapacity),
-
-                    new TabRecord(PNLocale.PN_DialogTabPawnAppearanceLabel.Translate(), () =>
-                    {
-                        _currentTab = AutomataAssembleSummaryTab.PawnAppearance;
-                    }, _currentTab == AutomataAssembleSummaryTab.PawnAppearance)
+                    }, _currentTab == AutomataAssembleSummaryTab.PawnCapacity)
                 };
 
                 TabDrawer.DrawTabs(rtLeftSection, tabs);
@@ -236,14 +230,6 @@ namespace ModuleAutomata
                             }
                             #endregion
                             break;
-
-                        case AutomataAssembleSummaryTab.PawnAppearance:
-                            #region PawnAppareance
-                            {
-
-                            }
-                            #endregion
-                            break;
                     }
                 }
                 finally
@@ -276,9 +262,14 @@ namespace ModuleAutomata
 
             var rtSummarySection = rtMain.NewRow(120f, VerticalJustification.Bottom);
             {
-                var centerRect = new Rect(0f, 0f, 280f, 100f);
-                centerRect.center = rtSummarySection.Rect.center;
-                Widgets.DrawMenuSection(centerRect);
+                var rtSummaryLeft = rtSummarySection.NewCol(rtSummarySection.Rect.width / 2f, marginOverride: 0f).Rect;
+                var rtSummaryRight = rtSummarySection.Rect;
+
+                var rtIngredientsSection = rtSummaryLeft.RightPartPixels(300f).LeftPartPixels(290f);
+                Widgets.DrawMenuSection(rtIngredientsSection);
+
+                var rtButtonSection = rtSummaryRight.LeftPartPixels(300f).RightPartPixels(290f);
+                Widgets.DrawMenuSection(rtButtonSection);
             }
 
             var rtSystemModuleSection = rtMain.NewCol(260f);
@@ -307,8 +298,20 @@ namespace ModuleAutomata
             {
                 var rtTemp = new Rect(0f, 0f, 140f, 200f);
                 rtTemp.center = rtPortraitSection.Rect.center;
+                rtTemp.y -= 32f;
                 GUI.color = Color.white;
                 GUI.DrawTexture(rtTemp, PortraitsCache.Get(_samplePawn, new Vector2(210f, 300f), Rot4.South, cameraZoom: 1.5f));
+
+                rtPortraitSection.NewRow(4f, VerticalJustification.Bottom, marginOverride: 0f);
+                var rtFaceSelector = rtPortraitSection.NewRow(28f, VerticalJustification.Bottom, marginOverride: 4f);
+                {
+                    Widgets.DrawMenuSection(rtFaceSelector);
+                }
+
+                var rtHairSelector = rtPortraitSection.NewRow(28f, VerticalJustification.Bottom);
+                {
+                    Widgets.DrawMenuSection(rtHairSelector);
+                }
             }
         }
 
@@ -330,6 +333,11 @@ namespace ModuleAutomata
                     thingDef = setting.moduleDef.ingredientThingDef,
                 };
             }
+        }
+
+        private void InitializeBillFromPawn(Pawn pawn)
+        {
+
         }
 
         private void RefreshSamplePawn()

@@ -8,6 +8,9 @@ namespace ModuleAutomata
     {
         private Dictionary<AutomataModulePartDef, AutomataModuleBill> _modules = new Dictionary<AutomataModulePartDef, AutomataModuleBill>();
 
+        private int _hairAddonIndex;
+        private HeadTypeDef _headDef;
+
         public bool AllModuleAcquired => DefDatabase<AutomataModulePartDef>.AllDefsListForReading.Where(def => def.required).Count() == _modules.Keys.Count;
 
         public AutomataModuleBill this[AutomataModulePartDef partDef]
@@ -24,11 +27,14 @@ namespace ModuleAutomata
 
         public AutomataAssembleBill()
         {
+            _headDef = PNThingDefOf.Paniel_Race.GetAvailableAlienHeadTypes().RandomElement();
         }
 
         public void ExposeData()
         {
             Scribe_Collections.Look(ref _modules, "modules", LookMode.Def, LookMode.Def);
+            Scribe_Values.Look(ref _hairAddonIndex, "hairAddonIndex");
+            Scribe_Defs.Look(ref _headDef, "headDef");
         }
 
         public void ApplyPawn(Pawn pawn)
@@ -40,6 +46,11 @@ namespace ModuleAutomata
                     prop.OnApplyPawn(pawn, moduleBill);
                 }
             }
+
+            pawn.story.headType = _headDef;
+            pawn.SetBodyAddonIndex(0, _hairAddonIndex);
+
+            pawn.Drawer.renderer.SetAllGraphicsDirty();
         }
     }
 }

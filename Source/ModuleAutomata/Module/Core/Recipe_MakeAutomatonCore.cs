@@ -11,13 +11,6 @@ namespace ModuleAutomata
 
     public class Recipe_MakeAutomatonCore : Recipe_Surgery
     {
-        public override bool AvailableOnNow(Thing thing, BodyPartRecord part = null)
-        {
-            var result = base.AvailableOnNow(thing, part);
-            Log.Message(result);
-            return result;
-        }
-
         public override bool IsViolationOnPawn(Pawn pawn, BodyPartRecord part, Faction billDoerFaction)
         {
             if ((pawn.Faction == billDoerFaction || pawn.Faction == null) && !pawn.IsQuestLodger())

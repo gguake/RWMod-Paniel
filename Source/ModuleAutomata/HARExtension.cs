@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
@@ -45,25 +46,65 @@ namespace ModuleAutomata
             variants[addonIndex] = variantIndex;
         }
 
-        public static IEnumerable<HeadTypeDef> GetAvailableAlienHeadTypes(this ThingDef pawnThingDef)
+        private static Dictionary<(ThingDef, int), int> _cachedBodyAddonCounts = new Dictionary<(ThingDef, int), int>();
+        public static int GetBodyAddonVariantCount(this ThingDef pawnThingDef, int addonIndex)
         {
-            if (pawnThingDef == null) { yield break; }
+            if (pawnThingDef == null) { return 0; }
 
-            var alienRaceFieldInfo = pawnThingDef.GetType().GetField("alienRace");
-            var alienRace = alienRaceFieldInfo.GetValue(pawnThingDef);
-
-            var generalSettingsFieldInfo = alienRace.GetType().GetField("generalSettings");
-            var generalSettings = generalSettingsFieldInfo.GetValue(alienRace);
-
-            var alienPartGeneratorFieldInfo = generalSettings.GetType().GetField("alienPartGenerator");
-            var alienPartGenerator = alienPartGeneratorFieldInfo.GetValue(generalSettings);
-
-            var headTypesFieldInfo = alienPartGenerator.GetType().GetField("headTypes");
-            var headTypes = headTypesFieldInfo.GetValue(alienPartGenerator) as List<HeadTypeDef>;
-
-            foreach (var headTypeDef in headTypes)
+            if (_cachedBodyAddonCounts.TryGetValue((pawnThingDef, addonIndex), out var cached))
             {
-                yield return headTypeDef;
+                return cached;
+            }
+            else
+            {
+                var alienRaceFieldInfo = pawnThingDef.GetType().GetField("alienRace");
+                var alienRace = alienRaceFieldInfo.GetValue(pawnThingDef);
+
+                var generalSettingsFieldInfo = alienRace.GetType().GetField("generalSettings");
+                var generalSettings = generalSettingsFieldInfo.GetValue(alienRace);
+
+                var alienPartGeneratorFieldInfo = generalSettings.GetType().GetField("alienPartGenerator");
+                var alienPartGenerator = alienPartGeneratorFieldInfo.GetValue(generalSettings);
+
+                var bodyAddonsFieldInfo = alienPartGenerator.GetType().GetField("bodyAddons");
+                var bodyAddons = bodyAddonsFieldInfo.GetValue(alienPartGenerator);
+
+                var indexOfMethodInfo = bodyAddons.GetType().GetMethod("get_Item");
+                var bodyAddon = indexOfMethodInfo.Invoke(bodyAddons, new object[] { addonIndex });
+
+                var variantCountMaxPropertyGetter = bodyAddon.GetType().GetProperty("VariantCountMax").GetGetMethod();
+                var variantCountMax = (int)variantCountMaxPropertyGetter.Invoke(bodyAddon, new object[] { });
+
+                _cachedBodyAddonCounts.Add((pawnThingDef, addonIndex), variantCountMax);
+                return variantCountMax;
+            }
+        }
+
+        private static Dictionary<ThingDef, List<HeadTypeDef>> _cachedHeadTypeDefs = new Dictionary<ThingDef, List<HeadTypeDef>>();
+        public static List<HeadTypeDef> GetAvailableAlienHeadTypes(this ThingDef pawnThingDef)
+        {
+            if (pawnThingDef == null) { return null; }
+
+            if (_cachedHeadTypeDefs.TryGetValue(pawnThingDef, out var cached))
+            {
+                return cached;
+            }
+            else
+            {
+                var alienRaceFieldInfo = pawnThingDef.GetType().GetField("alienRace");
+                var alienRace = alienRaceFieldInfo.GetValue(pawnThingDef);
+
+                var generalSettingsFieldInfo = alienRace.GetType().GetField("generalSettings");
+                var generalSettings = generalSettingsFieldInfo.GetValue(alienRace);
+
+                var alienPartGeneratorFieldInfo = generalSettings.GetType().GetField("alienPartGenerator");
+                var alienPartGenerator = alienPartGeneratorFieldInfo.GetValue(generalSettings);
+
+                var headTypesFieldInfo = alienPartGenerator.GetType().GetField("headTypes");
+                var headTypes = headTypesFieldInfo.GetValue(alienPartGenerator) as List<HeadTypeDef>;
+
+                _cachedHeadTypeDefs.Add(pawnThingDef, headTypes.OrderBy(v => v.label).ToList());
+                return headTypes;
             }
         }
     }

@@ -8,7 +8,24 @@ namespace ModuleAutomata
     {
         private Dictionary<AutomataModulePartDef, AutomataModuleBill> _modules = new Dictionary<AutomataModulePartDef, AutomataModuleBill>();
 
+        public int HairAddonIndex
+        {
+            get => _hairAddonIndex;
+            set
+            {
+                _hairAddonIndex = value;
+            }
+        }
         private int _hairAddonIndex;
+
+        public HeadTypeDef HeadTypeDef
+        {
+            get => _headDef;
+            set
+            {
+                _headDef = value;
+            }
+        }
         private HeadTypeDef _headDef;
 
         public bool AllModuleAcquired => DefDatabase<AutomataModulePartDef>.AllDefsListForReading.Where(def => def.required).Count() == _modules.Keys.Count;
@@ -49,8 +66,6 @@ namespace ModuleAutomata
 
             pawn.story.headType = _headDef;
             pawn.SetBodyAddonIndex(0, _hairAddonIndex);
-
-            pawn.Drawer.renderer.SetAllGraphicsDirty();
         }
     }
 }

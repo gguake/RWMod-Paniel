@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -30,7 +31,9 @@ namespace ModuleAutomata
         private ModuleElementInfo[] _legModuleElementInfos = new ModuleElementInfo[2];
 
         public static readonly Texture2D OpenStatsReportTex = ContentFinder<Texture2D>.Get("UI/Buttons/OpenStatsReport");
-        public static readonly Texture2D PNTitleIconTex = ContentFinder<Texture2D>.Get("UI/Icons/PNCT_PnL");
+        public static readonly Texture2D PNTitleIconTex = ContentFinder<Texture2D>.Get("Icon/Paniel_HQ");
+        public static readonly Texture2D ArrowLeftTex = ContentFinder<Texture2D>.Get("UI/Widgets/PN_ArrowLeft");
+        public static readonly Texture2D ArrowRightTex = ContentFinder<Texture2D>.Get("UI/Widgets/PN_ArrowRight");
 
         public override Vector2 InitialSize => new Vector2(1000f, 520f);
 
@@ -306,11 +309,71 @@ namespace ModuleAutomata
                 var rtFaceSelector = rtPortraitSection.NewRow(28f, VerticalJustification.Bottom, marginOverride: 4f);
                 {
                     Widgets.DrawMenuSection(rtFaceSelector);
+
+                    var headTypes = _samplePawn.def.GetAvailableAlienHeadTypes();
+                    var index = headTypes.IndexOf(Bill.HeadTypeDef);
+
+                    var rtFaceSelectorArrowLeft = rtFaceSelector.NewCol(28f, marginOverride: 0f);
+                    if (Widgets.ButtonImageFitted(rtFaceSelectorArrowLeft.Rect.ContractedBy(2f), ArrowLeftTex))
+                    {
+                        if (index == 0) { index = headTypes.Count - 1; }
+                        else { index--; }
+
+                        Bill.HeadTypeDef = headTypes[index];
+                        RefreshModuleUI();
+                    }
+
+                    var rtFaceSelectorArrowRight = rtFaceSelector.NewCol(28f, HorizontalJustification.Right, marginOverride: 0f);
+                    if (Widgets.ButtonImageFitted(rtFaceSelectorArrowRight.Rect.ContractedBy(2f), ArrowRightTex))
+                    {
+                        index = (index + 1) % headTypes.Count;
+
+                        Bill.HeadTypeDef = headTypes[index];
+                        RefreshModuleUI();
+                    }
+
+                    Text.Anchor = TextAnchor.MiddleLeft;
+                    Widgets.Label(rtFaceSelector, PNLocale.PN_DialogHeadSelectorLabel.Translate());
+
+                    Text.Anchor = TextAnchor.MiddleCenter;
+                    Widgets.Label(rtFaceSelector, _samplePawn.story.headType.LabelCap);
+
+                    Text.Anchor = TextAnchor.UpperLeft;
                 }
 
                 var rtHairSelector = rtPortraitSection.NewRow(28f, VerticalJustification.Bottom);
                 {
                     Widgets.DrawMenuSection(rtHairSelector);
+
+                    var maxHairAddonIndex = _samplePawn.def.GetBodyAddonVariantCount(0);
+                    var index = Bill.HairAddonIndex;
+
+                    var rtHairSelectorArrowLeft = rtHairSelector.NewCol(28f, marginOverride: 0f);
+                    if (Widgets.ButtonImageFitted(rtHairSelectorArrowLeft.Rect.ContractedBy(2f), ArrowLeftTex))
+                    {
+                        if (index == 0) { index = maxHairAddonIndex - 1; }
+                        else { index--; }
+
+                        Bill.HairAddonIndex = index;
+                        RefreshModuleUI();
+                    }
+
+                    var rtHairSelectorArrowRight = rtHairSelector.NewCol(28f, HorizontalJustification.Right, marginOverride: 0f);
+                    if (Widgets.ButtonImageFitted(rtHairSelectorArrowRight.Rect.ContractedBy(2f), ArrowRightTex))
+                    {
+                        index = (index + 1) % maxHairAddonIndex;
+
+                        Bill.HairAddonIndex = index;
+                        RefreshModuleUI();
+                    }
+
+                    Text.Anchor = TextAnchor.MiddleLeft;
+                    Widgets.Label(rtHairSelector, PNLocale.PN_DialogHairSelectorLabel.Translate());
+
+                    Text.Anchor = TextAnchor.MiddleCenter;
+                    Widgets.Label(rtHairSelector, ((char)('A' + Bill.HairAddonIndex)).ToString());
+
+                    Text.Anchor = TextAnchor.UpperLeft;
                 }
             }
         }
@@ -369,6 +432,8 @@ namespace ModuleAutomata
             }
 
             Bill.ApplyPawn(_samplePawn);
+
+            _samplePawn.Drawer.renderer.SetAllGraphicsDirty();
         }
 
         private void RefreshModuleUI()

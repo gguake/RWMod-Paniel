@@ -4,9 +4,10 @@ using Verse;
 
 namespace ModuleAutomata
 {
-    public class AutomataAssembleBill : IExposable
+
+    public class AutomataInfo : IExposable
     {
-        private Dictionary<AutomataModulePartDef, AutomataModuleBill> _modules = new Dictionary<AutomataModulePartDef, AutomataModuleBill>();
+        private Dictionary<AutomataModulePartDef, AutomataModuleSpec> _modules = new Dictionary<AutomataModulePartDef, AutomataModuleSpec>();
 
         public int HairAddonIndex
         {
@@ -28,9 +29,7 @@ namespace ModuleAutomata
         }
         private HeadTypeDef _headDef;
 
-        public bool AllModuleAcquired => DefDatabase<AutomataModulePartDef>.AllDefsListForReading.Where(def => def.required).Count() == _modules.Keys.Count;
-
-        public AutomataModuleBill this[AutomataModulePartDef partDef]
+        public AutomataModuleSpec this[AutomataModulePartDef partDef]
         {
             get
             {
@@ -42,7 +41,7 @@ namespace ModuleAutomata
             }
         }
 
-        public AutomataAssembleBill()
+        public AutomataInfo()
         {
             _headDef = PNThingDefOf.Paniel_Race.GetAvailableAlienHeadTypes().RandomElement();
         }

@@ -33,6 +33,7 @@ namespace ModuleAutomata
         public static AutomataModulePartDef PN_Core;
         public static AutomataModulePartDef PN_Chassi;
         public static AutomataModulePartDef PN_Shell;
+
         public static AutomataModulePartDef PN_CustomModule;
 
         public static AutomataModulePartDef PN_LeftArm;

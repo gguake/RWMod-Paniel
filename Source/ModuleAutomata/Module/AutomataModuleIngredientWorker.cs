@@ -18,7 +18,8 @@ namespace ModuleAutomata
             _moduleDef = moduleDef;
         }
 
-        public abstract IEnumerable<FloatMenuOption> GetCandidateFloatMenuOptions(AutomataModulePartDef partDef, Map map, Action<AutomataModuleBill> callback);
+        public abstract IEnumerable<FloatMenuOption> GetCandidateFloatMenuOptions(AutomataModulePartDef partDef, Map map, Action<AutomataModuleSpec> callback);
+
     }
 
     public class AutomataModuleIngredientWorker_ThingDef : AutomataModuleIngredientWorker
@@ -27,7 +28,7 @@ namespace ModuleAutomata
         {
         }
 
-        public override IEnumerable<FloatMenuOption> GetCandidateFloatMenuOptions(AutomataModulePartDef partDef, Map map, Action<AutomataModuleBill> callback)
+        public override IEnumerable<FloatMenuOption> GetCandidateFloatMenuOptions(AutomataModulePartDef partDef, Map map, Action<AutomataModuleSpec> callback)
         {
             if (HasQuality)
             {
@@ -38,7 +39,7 @@ namespace ModuleAutomata
                         .GroupBy(thing => (thing.TryGetQuality(out var quality) ? quality : QualityCategory.Normal, thing.Stuff))
                         .OrderBy(v => v.Key.Item1))
                     {
-                        var bill = new AutomataModuleBill()
+                        var bill = new AutomataModuleSpec()
                         {
                             modulePartDef = partDef,
                             moduleDef = _moduleDef,
@@ -60,7 +61,7 @@ namespace ModuleAutomata
                         .GroupBy(thing => thing.TryGetQuality(out var quality) ? quality : QualityCategory.Normal)
                         .OrderBy(v => v.Key))
                     {
-                        var bill = new AutomataModuleBill()
+                        var bill = new AutomataModuleSpec()
                         {
                             modulePartDef = partDef,
                             moduleDef = _moduleDef,
@@ -83,7 +84,7 @@ namespace ModuleAutomata
                         .ThingsOfDef(_moduleDef.ingredientThingDef)
                         .GroupBy(thing => thing.Stuff))
                     {
-                        var bill = new AutomataModuleBill()
+                        var bill = new AutomataModuleSpec()
                         {
                             modulePartDef = partDef,
                             moduleDef = _moduleDef,
@@ -101,7 +102,7 @@ namespace ModuleAutomata
                 {
                     if (map.listerThings.AnyThingWithDef(_moduleDef.ingredientThingDef))
                     {
-                        var bill = new AutomataModuleBill()
+                        var bill = new AutomataModuleSpec()
                         {
                             modulePartDef = partDef,
                             moduleDef = _moduleDef,
@@ -124,7 +125,7 @@ namespace ModuleAutomata
         {
         }
 
-        public override IEnumerable<FloatMenuOption> GetCandidateFloatMenuOptions(AutomataModulePartDef partDef, Map map, Action<AutomataModuleBill> callback)
+        public override IEnumerable<FloatMenuOption> GetCandidateFloatMenuOptions(AutomataModulePartDef partDef, Map map, Action<AutomataModuleSpec> callback)
         {
             foreach (var thing in map.listerThings
                 .ThingsOfDef(_moduleDef.ingredientThingDef)
@@ -132,7 +133,7 @@ namespace ModuleAutomata
             {
                 yield return new FloatMenuOption(thing.LabelCap, () =>
                 {
-                    callback(new AutomataModuleBill()
+                    callback(new AutomataModuleSpec()
                     {
                         modulePartDef = partDef,
                         moduleDef = _moduleDef,

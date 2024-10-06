@@ -61,11 +61,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutomataAssembler\AutomataAssembleBill.cs" />
-    <Compile Include="AutomataAssembler\AutomataAssembleUIExtension.cs" />
-    <Compile Include="AutomataAssembler\UI\Dialog_AutomataAssemble.cs" />
+    <Compile Include="Assembler\AutomataInfo.cs" />
+    <Compile Include="Assembler\AutomataAssembleUIModExtension.cs" />
+    <Compile Include="Assembler\AutomataAssemblePlan.cs" />
+    <Compile Include="Assembler\UI\Dialog_AutomataAssemble.cs" />
     <Compile Include="HARExtension.cs" />
-    <Compile Include="Module\AutomataModuleBill.cs" />
+    <Compile Include="AutomataModExtension.cs" />
+    <Compile Include="Module\AutomataModuleSpec.cs" />
     <Compile Include="Module\AutomataModuleDef.cs" />
     <Compile Include="Module\AutomataModuleIngredientWorker.cs" />
     <Compile Include="Module\AutomataModulePartDef.cs" />
@@ -73,7 +75,7 @@
     <Compile Include="Module\Core\CompAutomataCore.cs" />
     <Compile Include="Module\UI\ITab_AutomataCore.cs" />
     <Compile Include="Module\Core\Recipe_MakeAutomatonCore.cs" />
-    <Compile Include="AutomataAssembler\Building_AutomataAssembler.cs" />
+    <Compile Include="Assembler\Building_AutomataAssembler.cs" />
     <Compile Include="Module\AutomataModuleProperty.cs" />
     <Compile Include="PNDefOf.cs" />
     <Compile Include="PNExtensions.cs" />

@@ -4,16 +4,12 @@ using Verse;
 
 namespace ModuleAutomata
 {
-    public struct AutomataModuleBill : IExposable
+    public class AutomataModuleSpec : IExposable
     {
-        public bool IsInvalid => moduleDef == null;
-
         public string Label
         {
             get
             {
-                if (IsInvalid) return "";
-
                 if (thing != null) { return thing.LabelCap; }
 
                 var sb = new StringBuilder();

@@ -15,6 +15,8 @@
         public const string PN_FloatMenuReassembleLabel = nameof(PN_FloatMenuReassembleLabel);
 
         public const string PN_DialogAssembleTitleLabel = nameof(PN_DialogAssembleTitleLabel);
+        public const string PN_DialogModifyTitleLabel = nameof(PN_DialogModifyTitleLabel);
+        public const string PN_DialogOrderTitleLabel = nameof(PN_DialogOrderTitleLabel);
         public const string PN_DialogTabPawnCapacityLabel = nameof(PN_DialogTabPawnCapacityLabel);
         public const string PN_DialogTabPawnSkillLabel = nameof(PN_DialogTabPawnSkillLabel);
         public const string PN_DialogTabNoSelectedCoreLabel = nameof(PN_DialogTabNoSelectedCoreLabel);

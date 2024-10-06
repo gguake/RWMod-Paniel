@@ -20,7 +20,7 @@ namespace ModuleAutomata
         }
     }
 
-    public class AutomataAssembleUIExtension : DefModExtension
+    public class AutomataAssembleUIModExtension : DefModExtension
     {
         public List<PawnCapacityDef> capacityDefs;
 

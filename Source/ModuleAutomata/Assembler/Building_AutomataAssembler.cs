@@ -10,7 +10,7 @@ namespace ModuleAutomata
     {
         private ThingOwner _innerContainer;
 
-        public AutomataAssembleUIExtension AutomataAssembleUIExtension => def.GetModExtension<AutomataAssembleUIExtension>();
+        public AutomataAssembleUIModExtension AutomataAssembleUIExtension => def.GetModExtension<AutomataAssembleUIModExtension>();
 
         public Building_AutomataAssembler()
         {

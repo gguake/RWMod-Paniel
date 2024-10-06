@@ -39,12 +39,12 @@ namespace ModuleAutomata
 
     public abstract class AutomataModuleProperty
     {
-        public abstract void OnApplyPawn(Pawn pawn, AutomataModuleBill moduleBill);
+        public abstract void OnApplyPawn(Pawn pawn, AutomataModuleSpec moduleBill);
     }
 
     public class AutomataModuleProperty_Core : AutomataModuleProperty
     {
-        public override void OnApplyPawn(Pawn pawn, AutomataModuleBill moduleBill)
+        public override void OnApplyPawn(Pawn pawn, AutomataModuleSpec moduleBill)
         {
         }
     }
@@ -53,7 +53,7 @@ namespace ModuleAutomata
     {
         public List<QualityHediff> hediffs;
 
-        public override void OnApplyPawn(Pawn pawn, AutomataModuleBill moduleBill)
+        public override void OnApplyPawn(Pawn pawn, AutomataModuleSpec moduleBill)
         {
             var quality = moduleBill.moduleDef.IngredientWorker.HasQuality ? moduleBill.quality : QualityCategory.Normal;
 
@@ -69,7 +69,7 @@ namespace ModuleAutomata
     {
         public List<QualityHediff> hediffs;
 
-        public override void OnApplyPawn(Pawn pawn, AutomataModuleBill moduleBill)
+        public override void OnApplyPawn(Pawn pawn, AutomataModuleSpec moduleBill)
         {
             var quality = moduleBill.moduleDef.IngredientWorker.HasQuality ? moduleBill.quality : QualityCategory.Normal;
 
@@ -87,7 +87,7 @@ namespace ModuleAutomata
         public List<StatModifier> statOffsets;
         public List<StatModifier> statFactors;
 
-        public override void OnApplyPawn(Pawn pawn, AutomataModuleBill moduleBill)
+        public override void OnApplyPawn(Pawn pawn, AutomataModuleSpec moduleBill)
         {
         }
     }

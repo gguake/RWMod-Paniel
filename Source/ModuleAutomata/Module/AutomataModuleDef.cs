@@ -9,6 +9,7 @@ namespace ModuleAutomata
         public List<AutomataModulePartDef> adaptParts;
 
         public ThingDef ingredientThingDef;
+        public bool isSharedIngredient;
         public Type ingredientWorkerClass;
 
         private AutomataModuleIngredientWorker _ingredientWorker;
@@ -26,6 +27,9 @@ namespace ModuleAutomata
         }
 
         public List<AutomataModuleProperty> properties;
+
+        public List<ThingDefCountClass> additionalIngredientsOnAssemble;
+        public List<ThingDefCountClass> additionalIngredientsOnModify;
 
         public override void PostLoad()
         {

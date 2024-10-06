@@ -14,7 +14,7 @@ namespace ModuleAutomata
     public struct AutomataModuleAssemblePlan
     {
         public AutomataModuleAssemblePlanState state;
-        public AutomataModuleSpec spec;
+        public AutomataModuleSpec_ThingDef spec;
     }
 
     public class AutomataAssemblePlan

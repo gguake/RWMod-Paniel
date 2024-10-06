@@ -39,13 +39,13 @@ namespace ModuleAutomata
                         .GroupBy(thing => (thing.TryGetQuality(out var quality) ? quality : QualityCategory.Normal, thing.Stuff))
                         .OrderBy(v => v.Key.Item1))
                     {
-                        var bill = new AutomataModuleSpec()
+                        var bill = new AutomataModuleSpec_ThingDef()
                         {
                             modulePartDef = partDef,
                             moduleDef = _moduleDef,
                             thingDef = _moduleDef.ingredientThingDef,
                             quality = group.Key.Item1,
-                            stuff = group.Key.Item2,
+                            stuffDef = group.Key.Item2,
                         };
 
                         yield return new FloatMenuOption(bill.Label, () =>
@@ -61,7 +61,7 @@ namespace ModuleAutomata
                         .GroupBy(thing => thing.TryGetQuality(out var quality) ? quality : QualityCategory.Normal)
                         .OrderBy(v => v.Key))
                     {
-                        var bill = new AutomataModuleSpec()
+                        var bill = new AutomataModuleSpec_ThingDef()
                         {
                             modulePartDef = partDef,
                             moduleDef = _moduleDef,
@@ -84,12 +84,12 @@ namespace ModuleAutomata
                         .ThingsOfDef(_moduleDef.ingredientThingDef)
                         .GroupBy(thing => thing.Stuff))
                     {
-                        var bill = new AutomataModuleSpec()
+                        var bill = new AutomataModuleSpec_ThingDef()
                         {
                             modulePartDef = partDef,
                             moduleDef = _moduleDef,
                             thingDef = _moduleDef.ingredientThingDef,
-                            stuff = group.Key,
+                            stuffDef = group.Key,
                         };
 
                         yield return new FloatMenuOption(bill.Label, () =>
@@ -102,7 +102,7 @@ namespace ModuleAutomata
                 {
                     if (map.listerThings.AnyThingWithDef(_moduleDef.ingredientThingDef))
                     {
-                        var bill = new AutomataModuleSpec()
+                        var bill = new AutomataModuleSpec_ThingDef()
                         {
                             modulePartDef = partDef,
                             moduleDef = _moduleDef,
@@ -133,7 +133,7 @@ namespace ModuleAutomata
             {
                 yield return new FloatMenuOption(thing.LabelCap, () =>
                 {
-                    callback(new AutomataModuleSpec()
+                    callback(new AutomataModuleSpec_Core()
                     {
                         modulePartDef = partDef,
                         moduleDef = _moduleDef,

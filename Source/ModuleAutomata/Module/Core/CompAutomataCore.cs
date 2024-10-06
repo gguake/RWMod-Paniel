@@ -59,23 +59,25 @@ namespace ModuleAutomata
     {
         public CompProperties_AutomataCore Props => (CompProperties_AutomataCore)props;
 
-        private AutomataCorePawnInfo _pawnInfo;
-        public AutomataCorePawnInfo PawnInfo => _pawnInfo;
+        private AutomataCoreInfo _coreInfo;
+        public AutomataCoreInfo CoreInfo => _coreInfo;
 
         public override void PostExposeData()
         {
-            Scribe_Deep.Look(ref _pawnInfo, "pawnInfo");
+            Scribe_Deep.Look(ref _coreInfo, "coreInfo");
         }
 
         public override string TransformLabel(string label)
-            => PawnInfo != null ?
-            PNLocale.PN_AutomataCoreItemLabel.Translate(label, PawnInfo.sourceName.ToStringShort).Resolve() :
-            label;
-
-        public void SetPawnInfo(Pawn pawn)
         {
-            _pawnInfo = new AutomataCorePawnInfo();
-            _pawnInfo.InitializeFromPawn(pawn);
+            if (CoreInfo == null || parent is Pawn) { return label; }
+
+            return PNLocale.PN_AutomataCoreItemLabel.Translate(label, CoreInfo.sourceName.ToStringShort).Resolve();
+        }
+
+        public void InitializePawnInfo(ThingDef thingDef, QualityCategory quality, Pawn pawn)
+        {
+            _coreInfo = new AutomataCoreInfo();
+            _coreInfo.Initialize(thingDef, quality, pawn);
         }
 
         public int GetSkillLevel(SkillDef skillDef)
@@ -83,7 +85,7 @@ namespace ModuleAutomata
             var quality = parent.GetComp<CompQuality>()?.Quality ?? QualityCategory.Normal;
             var baseSkillLevel = Props.qualitySkillValues.FirstOrDefault(v => v.quality == quality).skillLevel;
 
-            if (PawnInfo != null && PawnInfo.sourceSkill.TryGetValue(skillDef, out var sourceSkillLevel))
+            if (CoreInfo != null && CoreInfo.sourceSkill.TryGetValue(skillDef, out var sourceSkillLevel))
             {
                 return (int)Mathf.Min(20f, baseSkillLevel + Mathf.FloorToInt(sourceSkillLevel * Props.sourcePawnSkillMultiplier));
             }

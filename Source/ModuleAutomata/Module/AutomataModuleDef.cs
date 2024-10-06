@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using Verse;
 
@@ -30,6 +31,9 @@ namespace ModuleAutomata
 
         public List<ThingDefCountClass> additionalIngredientsOnAssemble;
         public List<ThingDefCountClass> additionalIngredientsOnModify;
+
+        public bool HasQuality => ingredientThingDef.HasComp<CompQuality>();
+        public bool HasStuff => ingredientThingDef.stuffCategories != null;
 
         public override void PostLoad()
         {

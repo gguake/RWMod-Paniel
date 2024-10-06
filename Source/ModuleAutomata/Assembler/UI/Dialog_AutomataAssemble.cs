@@ -124,7 +124,7 @@ namespace ModuleAutomata
         {
             foreach (var setting in _building.AutomataAssembleUIExtension.defaultModuleSetting)
             {
-                Bill[setting.modulePartDef] = new AutomataModuleSpec()
+                Bill[setting.modulePartDef] = new AutomataModuleSpec_ThingDef()
                 {
                     modulePartDef = setting.modulePartDef,
                     moduleDef = setting.moduleDef,
@@ -172,7 +172,7 @@ namespace ModuleAutomata
                     case AutomataAssembleSummaryTab.PawnSkill:
                         #region PawnSkill
                         {
-                            var coreModule = Bill[PNAutomataModulePartDefOf.PN_Core];
+                            var coreModule = Bill[PNAutomataModulePartDefOf.PN_Core] as AutomataModuleSpec_Core;
                             if (coreModule?.thing == null)
                             {
                                 using (new TextBlock(TextAnchor.MiddleCenter))

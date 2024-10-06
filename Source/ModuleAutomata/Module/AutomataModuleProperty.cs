@@ -55,7 +55,7 @@ namespace ModuleAutomata
 
         public override void OnApplyPawn(Pawn pawn, AutomataModuleSpec moduleBill)
         {
-            var quality = moduleBill.moduleDef.IngredientWorker.HasQuality ? moduleBill.quality : QualityCategory.Normal;
+            var quality = moduleBill.moduleDef.IngredientWorker.HasQuality ? moduleBill.Quality : QualityCategory.Normal;
 
             var hediffDef = hediffs.FirstOrDefault(qh => qh.quality == quality)?.hediff;
             if (hediffDef != null)
@@ -71,7 +71,7 @@ namespace ModuleAutomata
 
         public override void OnApplyPawn(Pawn pawn, AutomataModuleSpec moduleBill)
         {
-            var quality = moduleBill.moduleDef.IngredientWorker.HasQuality ? moduleBill.quality : QualityCategory.Normal;
+            var quality = moduleBill.moduleDef.IngredientWorker.HasQuality ? moduleBill.Quality : QualityCategory.Normal;
 
             var hediffDef = hediffs.FirstOrDefault(qh => qh.quality == quality)?.hediff;
             if (hediffDef != null)

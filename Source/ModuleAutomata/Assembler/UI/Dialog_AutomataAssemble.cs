@@ -175,9 +175,10 @@ namespace ModuleAutomata
                             var coreModule = Bill[PNAutomataModulePartDefOf.PN_Core];
                             if (coreModule?.thing == null)
                             {
-                                Text.Anchor = TextAnchor.MiddleCenter;
-                                Widgets.Label(rtLeftTabGroup, PNLocale.PN_DialogTabNoSelectedCoreLabel.Translate());
-                                Text.Anchor = TextAnchor.UpperLeft;
+                                using (new TextBlock(TextAnchor.MiddleCenter))
+                                {
+                                    Widgets.Label(rtLeftTabGroup, PNLocale.PN_DialogTabNoSelectedCoreLabel.Translate());
+                                }
                             }
                             else
                             {
@@ -191,10 +192,10 @@ namespace ModuleAutomata
                                     var rtIcon = rtTitle.NewCol(64f, marginOverride: 0f);
                                     Widgets.DrawTextureFitted(rtIcon, comp.Props.SpecializationIcon, 1f);
 
-                                    Text.Anchor = TextAnchor.MiddleLeft;
-                                    Widgets.Label(rtTitle.Rect, coreModule.thing.LabelCap);
-
-                                    Text.Anchor = TextAnchor.UpperLeft;
+                                    using (new TextBlock(TextAnchor.MiddleLeft))
+                                    {
+                                        Widgets.Label(rtTitle.Rect, coreModule.thing.LabelCap);
+                                    }
                                 }
 
                                 var rtDivider = rtSkillSection.NewRow(2f);
@@ -215,23 +216,24 @@ namespace ModuleAutomata
                                         GUI.DrawTexture(rtRow, TexUI.HighlightTex);
                                     }
 
-                                    Text.Anchor = TextAnchor.MiddleLeft;
-                                    if (comp.IsDisabledSkill(skillDef))
+                                    using (new TextBlock(TextAnchor.MiddleLeft))
                                     {
-                                        GUI.color = new Color(1f, 1f, 1f, 0.5f);
-                                        Widgets.Label(rtRow.NewCol(columnWidth), skillDef.skillLabel.CapitalizeFirst());
-                                        Widgets.Label(rtRow, "-");
-                                    }
-                                    else
-                                    {
-                                        GUI.color = Color.white;
-                                        Widgets.Label(rtRow.NewCol(columnWidth), skillDef.skillLabel.CapitalizeFirst());
+                                        if (comp.IsDisabledSkill(skillDef))
+                                        {
+                                            GUI.color = new Color(1f, 1f, 1f, 0.5f);
+                                            Widgets.Label(rtRow.NewCol(columnWidth), skillDef.skillLabel.CapitalizeFirst());
+                                            Widgets.Label(rtRow, "-");
+                                        }
+                                        else
+                                        {
+                                            GUI.color = Color.white;
+                                            Widgets.Label(rtRow.NewCol(columnWidth), skillDef.skillLabel.CapitalizeFirst());
 
-                                        var fillPercent = Mathf.Max(0.01f, skillLevel / 20f);
-                                        Widgets.FillableBar(rtRow, fillPercent, ITab_AutomataCoreTexture.SkillBarFillTex, null, doBorder: false);
+                                            var fillPercent = Mathf.Max(0.01f, skillLevel / 20f);
+                                            Widgets.FillableBar(rtRow, fillPercent, ITab_AutomataCoreTexture.SkillBarFillTex, null, doBorder: false);
 
-                                        Text.Anchor = TextAnchor.MiddleLeft;
-                                        Widgets.Label(rtRow, skillLevel.ToStringCached());
+                                            Widgets.Label(rtRow, skillLevel.ToStringCached());
+                                        }
                                     }
                                 }
                             }
@@ -262,15 +264,15 @@ namespace ModuleAutomata
                                         }
                                     }
 
-                                    Text.Anchor = TextAnchor.MiddleLeft;
-                                    Widgets.Label(rtRow, capacityLabel);
+                                    using (new TextBlock(TextAnchor.MiddleLeft))
+                                    {
+                                        Widgets.Label(rtRow, capacityLabel);
+                                    }
 
-                                    Text.Anchor = TextAnchor.MiddleRight;
-                                    GUI.color = efficiencyColor;
-                                    Widgets.Label(rtRow, efficiencyLabel);
-
-                                    Text.Anchor = TextAnchor.UpperLeft;
-                                    GUI.color = Color.white;
+                                    using (new TextBlock(TextAnchor.MiddleRight, efficiencyColor))
+                                    {
+                                        Widgets.Label(rtRow, efficiencyLabel);
+                                    }
                                 }
                             }
 
@@ -291,13 +293,15 @@ namespace ModuleAutomata
                                     }
                                 }
 
-                                Text.Anchor = TextAnchor.MiddleLeft;
-                                Widgets.Label(rtRow, statLabel);
+                                using (new TextBlock(TextAnchor.MiddleLeft))
+                                {
+                                    Widgets.Label(rtRow, statLabel);
+                                }
 
-                                Text.Anchor = TextAnchor.MiddleRight;
-                                Widgets.Label(rtRow, valueLabel);
-
-                                Text.Anchor = TextAnchor.UpperLeft;
+                                using (new TextBlock(TextAnchor.MiddleRight))
+                                {
+                                    Widgets.Label(rtRow, valueLabel);
+                                }
                             }
                         }
                         #endregion
@@ -319,17 +323,9 @@ namespace ModuleAutomata
             var rtIconRect = rtBase.NewCol(80f);
             Widgets.DrawTextureFitted(rtIconRect, PNTitleIconTex, 1f);
 
-            try
+            using (new TextBlock(GameFont.Medium, TextAnchor.MiddleLeft))
             {
-                Text.Anchor = TextAnchor.MiddleLeft;
-                Text.Font = GameFont.Medium;
-
                 Widgets.Label(rtBase, PNLocale.PN_DialogAssembleTitleLabel.Translate());
-            }
-            finally
-            {
-                Text.Anchor = TextAnchor.UpperLeft;
-                Text.Font = GameFont.Small;
             }
         }
 
@@ -388,13 +384,15 @@ namespace ModuleAutomata
                     RefreshModuleUI();
                 }
 
-                Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(rtFaceSelector, PNLocale.PN_DialogHeadSelectorLabel.Translate());
+                using (new TextBlock(TextAnchor.MiddleLeft))
+                {
+                    Widgets.Label(rtFaceSelector, PNLocale.PN_DialogHeadSelectorLabel.Translate());
+                }
 
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(rtFaceSelector, _samplePawn.story.headType.LabelCap);
-
-                Text.Anchor = TextAnchor.UpperLeft;
+                using (new TextBlock(TextAnchor.MiddleCenter))
+                {
+                    Widgets.Label(rtFaceSelector, _samplePawn.story.headType.LabelCap);
+                }
             }
 
             var rtHairSelector = rtBase.NewRow(28f, VerticalJustification.Bottom);
@@ -423,13 +421,15 @@ namespace ModuleAutomata
                     RefreshModuleUI();
                 }
 
-                Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(rtHairSelector, PNLocale.PN_DialogHairSelectorLabel.Translate());
+                using (new TextBlock(TextAnchor.MiddleLeft))
+                {
+                    Widgets.Label(rtHairSelector, PNLocale.PN_DialogHairSelectorLabel.Translate());
+                }
 
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(rtHairSelector, ((char)('A' + Bill.HairAddonIndex)).ToString());
-
-                Text.Anchor = TextAnchor.UpperLeft;
+                using (new TextBlock(TextAnchor.MiddleCenter))
+                {
+                    Widgets.Label(rtHairSelector, ((char)('A' + Bill.HairAddonIndex)).ToString());
+                }
             }
         }
 
@@ -552,19 +552,20 @@ namespace ModuleAutomata
 
                 try
                 {
-                    Text.Anchor = TextAnchor.MiddleCenter;
-                    var label = element.nameLabel;
-                    if (Text.CalcSize(label).x > rtRow.Rect.width - 13f)
+                    using (new TextBlock(TextAnchor.MiddleCenter))
                     {
-                        Text.Font = GameFont.Tiny;
-                    }
+                        var label = element.nameLabel;
+                        if (Text.CalcSize(label).x > rtRow.Rect.width - 13f)
+                        {
+                            Text.Font = GameFont.Tiny;
+                        }
 
-                    TooltipHandler.TipRegion(rtRow, label);
-                    Widgets.Label(rtRow.Rect, label);
+                        TooltipHandler.TipRegion(rtRow, label);
+                        Widgets.Label(rtRow.Rect, label);
+                    }
                 }
                 finally
                 {
-                    Text.Anchor = TextAnchor.UpperLeft;
                     Text.Font = GameFont.Small;
                 }
             }

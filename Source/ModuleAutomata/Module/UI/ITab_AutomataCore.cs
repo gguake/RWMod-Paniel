@@ -91,27 +91,25 @@ namespace ModuleAutomata
             Widgets.BeginGroup(holdingRect);
             try
             {
-                Text.Anchor = TextAnchor.MiddleLeft;
+                using (new TextBlock(TextAnchor.MiddleLeft))
+                {
+                    var labelTextRect = new Rect(6f, 0f, levelLabelWidth + 6f, holdingRect.height);
+                    Widgets.Label(labelTextRect, skillDef.skillLabel.CapitalizeFirst());
 
-                var labelTextRect = new Rect(6f, 0f, levelLabelWidth + 6f, holdingRect.height);
-                Widgets.Label(labelTextRect, skillDef.skillLabel.CapitalizeFirst());
+                    var position = new Rect(labelTextRect.xMax, 0f, 24f, 24f);
+                    var fillBarRect = new Rect(position.xMax, 0f, holdingRect.width - position.xMax, holdingRect.height);
+                    var fillPercent = Mathf.Max(0.01f, (float)level / 20f);
+                    Widgets.FillableBar(fillBarRect, fillPercent, ITab_AutomataCoreTexture.SkillBarFillTex, null, doBorder: false);
 
-                var position = new Rect(labelTextRect.xMax, 0f, 24f, 24f);
-                var fillBarRect = new Rect(position.xMax, 0f, holdingRect.width - position.xMax, holdingRect.height);
-                var fillPercent = Mathf.Max(0.01f, (float)level / 20f);
-                Widgets.FillableBar(fillBarRect, fillPercent, ITab_AutomataCoreTexture.SkillBarFillTex, null, doBorder: false);
+                    var levelTextRect = new Rect(position.xMax + 4f, 0f, 999f, holdingRect.height);
+                    levelTextRect.yMin += 3f;
+                    var label = level.ToStringCached();
 
-                var levelTextRect = new Rect(position.xMax + 4f, 0f, 999f, holdingRect.height);
-                levelTextRect.yMin += 3f;
-                var label = level.ToStringCached();
-
-                Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(levelTextRect, label);
+                    Widgets.Label(levelTextRect, label);
+                }
             }
             finally
             {
-                GenUI.ResetLabelAlign();
-                GUI.color = Color.white;
                 Widgets.EndGroup();
             }
         }

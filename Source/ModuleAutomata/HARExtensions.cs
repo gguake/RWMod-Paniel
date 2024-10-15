@@ -5,7 +5,7 @@ using Verse;
 
 namespace ModuleAutomata
 {
-    public static class HARExtension
+    public static class HARExtensions
     {
         public static int GetBodyAddonIndex(this Pawn pawn, int addonIndex)
         {

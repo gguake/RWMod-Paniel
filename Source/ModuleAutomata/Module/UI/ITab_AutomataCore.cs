@@ -26,12 +26,15 @@ namespace ModuleAutomata
         {
             base.UpdateSize();
 
+            var automataCoreModExt = Find.Selector.SingleSelectedThing?.def.GetModExtension<AutomataCoreModExtension>();
+            if (automataCoreModExt == null) { return; }
+
             var compCore = Find.Selector.SingleSelectedThing?.TryGetComp<CompAutomataCore>();
             if (compCore == null) { return; }
 
             skillDefsInListOrderCached = DefDatabase<SkillDef>.AllDefsListForReading
                 .OrderByDescending(def => def.listOrder)
-                .Where(v => !compCore.IsDisabledSkill(v))
+                .Where(v => compCore.CoreInfo.sourceSkill.ContainsKey(v))
                 .ToList();
 
             size = new Vector2(280f, skillDefsInListOrderCached.Count * 27f + 20);
@@ -67,7 +70,7 @@ namespace ModuleAutomata
                 for (int i = 0; i < skillDefsInListOrderCached.Count; i++)
                 {
                     var skillDef = skillDefsInListOrderCached[i];
-                    DrawSkill(skillDef, compCore.GetSkillLevel(skillDef), new Vector2(0f, i * 27f));
+                    DrawSkill(skillDef, compCore.CoreInfo.sourceSkill[skillDef], new Vector2(0f, i * 27f));
                 }
             }
             finally

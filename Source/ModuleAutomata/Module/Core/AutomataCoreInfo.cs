@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using UnityEngine;
 using Verse;
 
 namespace ModuleAutomata
@@ -26,7 +27,7 @@ namespace ModuleAutomata
     public class AutomataCoreInfo : IExposable
     {
         public ThingDef coreDef;
-        public QualityCategory quality;
+        public QualityCategory quality = QualityCategory.Normal;
 
         public Name sourceName;
         public Dictionary<SkillDef, int> sourceSkill;
@@ -40,16 +41,30 @@ namespace ModuleAutomata
             Scribe_Collections.Look(ref sourceSkill, "sourceSkill", LookMode.Def, LookMode.Value);
         }
 
-        public void Initialize(ThingDef coreDef, QualityCategory quality, Pawn pawn)
+        public void Initialize(ThingDef coreDef, QualityCategory quality, Pawn pawn = null)
         {
             this.coreDef = coreDef;
             this.quality = quality;
 
-            sourceName = pawn.Name;
+            var automataCoreModExt = coreDef.GetModExtension<AutomataCoreModExtension>();
+
+            sourceName = pawn?.Name;
             sourceSkill = new Dictionary<SkillDef, int>();
-            foreach (var skillRecord in pawn.skills.skills)
+
+            foreach (var skillDef in DefDatabase<SkillDef>.AllDefsListForReading)
             {
-                sourceSkill.Add(skillRecord.def, skillRecord.Level);
+                if (skillDef.IsDisabled(automataCoreModExt.workDisables, automataCoreModExt.DisabledWorkTypeDefs)) { continue; }
+
+                var baseSkillLevel = automataCoreModExt.qualitySkillValues.FirstOrDefault(v => v.quality == quality).skillLevel;
+                var skillRecord = pawn?.skills.GetSkill(skillDef);
+
+                var skillLevel = baseSkillLevel;
+                if (skillRecord != null)
+                {
+                    skillLevel = (int)Mathf.Min(20f, baseSkillLevel + Mathf.FloorToInt(skillRecord.Level * automataCoreModExt.sourcePawnSkillMultiplier));
+                }
+
+                sourceSkill[skillDef] = skillLevel;
             }
         }
     }

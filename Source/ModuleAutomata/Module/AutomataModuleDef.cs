@@ -1,6 +1,6 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace ModuleAutomata
@@ -9,49 +9,84 @@ namespace ModuleAutomata
     {
         public List<AutomataModulePartDef> adaptParts;
 
-        public ThingDef ingredientThingDef;
-        public bool isSharedIngredient;
-        public Type ingredientWorkerClass;
+        public ThingDef mainIngredientDef;
+        public bool affectedByQuality;
+        public bool affectedByStuff;
+        public bool isCore;
 
-        private AutomataModuleIngredientWorker _ingredientWorker;
-        public AutomataModuleIngredientWorker IngredientWorker
+        public List<ThingDefCountClass> subIngredients;
+
+        public AutomataModuleWorker worker;
+
+        public IEnumerable<AutomataModuleSpec> GetCandidateSpecsFromMap(Map map)
         {
-            get
+            if (isCore)
             {
-                if (_ingredientWorker == null)
+                foreach (var thing in map.listerThings.ThingsOfDef(mainIngredientDef))
                 {
-                    _ingredientWorker = (AutomataModuleIngredientWorker)Activator.CreateInstance(ingredientWorkerClass, this);
+                    yield return new AutomataModuleSpec_Core()
+                    {
+                        moduleDef = this,
+                        coreThing = thing,
+                    };
                 }
-
-                return _ingredientWorker;
             }
-        }
-
-        public List<AutomataModuleProperty> properties;
-
-        public List<ThingDefCountClass> additionalIngredientsOnAssemble;
-        public List<ThingDefCountClass> additionalIngredientsOnModify;
-
-        public bool HasQuality => ingredientThingDef.HasComp<CompQuality>();
-        public bool HasStuff => ingredientThingDef.stuffCategories != null;
-
-        public override void PostLoad()
-        {
-            base.PostLoad();
-            LongEventHandler.ExecuteWhenFinished(() =>
+            else
             {
-                if (label == null && ingredientThingDef != null)
+                if (affectedByQuality)
                 {
-                    label = ingredientThingDef.label;
+                    if (affectedByStuff)
+                    {
+                        var things = map.listerThings.ThingsOfDef(mainIngredientDef);
+                        foreach (var tuple in things.Select(v => (v.TryGetComp<CompQuality>().Quality, v.Stuff)).Distinct())
+                        {
+                            yield return new AutomataModuleSpec_AnyOfThing()
+                            {
+                                moduleDef = this,
+                                quality = tuple.Quality,
+                                stuffDef = tuple.Stuff,
+                            };
+                        }
+                    }
+                    else
+                    {
+                        var things = map.listerThings.ThingsOfDef(mainIngredientDef);
+                        foreach (var quality in things.Select(v => v.TryGetComp<CompQuality>().Quality).Distinct())
+                        {
+                            yield return new AutomataModuleSpec_AnyOfThing()
+                            {
+                                moduleDef = this,
+                                quality = quality
+                            };
+                        }
+                    }
                 }
-
-                if (description == null && ingredientThingDef != null)
+                else
                 {
-                    description = ingredientThingDef.description;
+                    if (affectedByStuff)
+                    {
+                        var things = map.listerThings.ThingsOfDef(mainIngredientDef);
+                        foreach (var stuff in things.Select(v => v.Stuff).Distinct())
+                        {
+                            yield return new AutomataModuleSpec_AnyOfThing()
+                            {
+                                moduleDef = this,
+                                stuffDef = stuff
+                            };
+                        }
+                    }
+                    else
+                    {
+                        if (map.listerThings.AnyThingWithDef(mainIngredientDef))
+                        {
+                            yield return new AutomataModuleSpec_AnyOfThing()
+                            {
+                                moduleDef = this,
+                            };
+                        }
+                    }
                 }
-
-                cachedLabelCap = null;
-            });
+            }
         }
     }
 }

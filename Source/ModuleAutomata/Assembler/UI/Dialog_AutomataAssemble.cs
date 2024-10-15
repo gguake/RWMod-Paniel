@@ -44,7 +44,7 @@ namespace ModuleAutomata
         private Action<AutomataInfo> _callback;
         private Pawn _targetPawn;
 
-        public AutomataInfo Bill { get; private set; } = new AutomataInfo();
+        public AutomataAssemblePlan Plan { get; private set; }
 
         public Dialog_AutomataAssemble(Building_AutomataAssembler building, Pawn pawn, Action<AutomataInfo> callback)
         {
@@ -122,20 +122,22 @@ namespace ModuleAutomata
 
         private void InitializeBillFromDefaultSetting()
         {
+            Plan = new AutomataAssemblePlan();
+
             foreach (var setting in _building.AutomataAssembleUIExtension.defaultModuleSetting)
             {
-                Bill[setting.modulePartDef] = new AutomataModuleSpec_ThingDef()
+                Plan.modulePlans[setting.modulePartDef] = new AutomataModuleAssemblePlan(AutomataModuleAssemblePlanState.NewModule, new AutomataModuleSpec_ThingDef()
                 {
                     modulePartDef = setting.modulePartDef,
                     moduleDef = setting.moduleDef,
                     thingDef = setting.moduleDef.ingredientThingDef,
-                };
+                });
             }
         }
 
         private void InitializeBillFromPawn(Pawn pawn)
         {
-
+            Plan = new AutomataAssemblePlan(pawn);
         }
 
         private void DrawTabSection(Rect rect)
@@ -172,70 +174,79 @@ namespace ModuleAutomata
                     case AutomataAssembleSummaryTab.PawnSkill:
                         #region PawnSkill
                         {
-                            var coreModule = Bill[PNAutomataModulePartDefOf.PN_Core] as AutomataModuleSpec_Core;
-                            if (coreModule?.thing == null)
+                            var coreModulePlan = Plan.modulePlans.TryGetValue(PNAutomataModulePartDefOf.PN_Core);
+                            if (coreModulePlan.state == AutomataModuleAssemblePlanState.NewModule)
                             {
-                                using (new TextBlock(TextAnchor.MiddleCenter))
+                                var coreModuleSpec = coreModulePlan.spec as AutomataModuleSpec_Core;
+                                if (coreModuleSpec?.thing == null)
                                 {
-                                    Widgets.Label(rtLeftTabGroup, PNLocale.PN_DialogTabNoSelectedCoreLabel.Translate());
+                                    using (new TextBlock(TextAnchor.MiddleCenter))
+                                    {
+                                        Widgets.Label(rtLeftTabGroup, PNLocale.PN_DialogTabNoSelectedCoreLabel.Translate());
+                                    }
+                                }
+                                else
+                                {
+                                    var automataCoreModExt = coreModuleSpec.thing.def.GetModExtension<AutomataCoreModExtension>();
+                                    var comp = coreModuleSpec.thing.TryGetComp<CompAutomataCore>();
+                                    if (comp == null) { throw new NotImplementedException(); }
+
+                                    var rtSkillSection = new RectDivider(rtLeftTabGroup, 14797513);
+
+                                    var rtTitle = rtSkillSection.NewRow(64f);
+                                    {
+                                        var rtIcon = rtTitle.NewCol(64f, marginOverride: 0f);
+                                        Widgets.DrawTextureFitted(rtIcon, automataCoreModExt.SpecializationIcon, 1f);
+
+                                        using (new TextBlock(TextAnchor.MiddleLeft))
+                                        {
+                                            Widgets.Label(rtTitle.Rect, coreModuleSpec.thing.LabelCap);
+                                        }
+                                    }
+
+                                    var rtDivider = rtSkillSection.NewRow(2f);
+                                    {
+                                        Widgets.DrawLineHorizontal(rtDivider.Rect.xMin, rtDivider.Rect.yMin, rtDivider.Rect.width, new Color(0.3f, 0.3f, 0.3f, 1f));
+                                    }
+
+                                    _tmpSkillDefsInListOrder.Clear();
+                                    _tmpSkillDefsInListOrder.AddRange(DefDatabase<SkillDef>.AllDefsListForReading.OrderByDescending(sd => sd.listOrder));
+                                    var columnWidth = _tmpSkillDefsInListOrder.Max(def => Text.CalcSize(def.skillLabel.CapitalizeFirst()).x);
+
+                                    foreach (var skillDef in _tmpSkillDefsInListOrder)
+                                    {
+                                        var skillLevel = comp.CoreInfo.sourceSkill.TryGetValue(skillDef, -1);
+                                        var rtRow = rtSkillSection.NewRow(27f, marginOverride: 2f);
+                                        if (Mouse.IsOver(rtRow))
+                                        {
+                                            GUI.DrawTexture(rtRow, TexUI.HighlightTex);
+                                        }
+
+                                        using (new TextBlock(TextAnchor.MiddleLeft))
+                                        {
+                                            if (skillLevel < 0)
+                                            {
+                                                GUI.color = new Color(1f, 1f, 1f, 0.5f);
+                                                Widgets.Label(rtRow.NewCol(columnWidth), skillDef.skillLabel.CapitalizeFirst());
+                                                Widgets.Label(rtRow, "-");
+                                            }
+                                            else
+                                            {
+                                                GUI.color = Color.white;
+                                                Widgets.Label(rtRow.NewCol(columnWidth), skillDef.skillLabel.CapitalizeFirst());
+
+                                                var fillPercent = Mathf.Max(0.01f, skillLevel / 20f);
+                                                Widgets.FillableBar(rtRow, fillPercent, ITab_AutomataCoreTexture.SkillBarFillTex, null, doBorder: false);
+
+                                                Widgets.Label(rtRow, skillLevel.ToStringCached());
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             else
                             {
-                                var comp = coreModule.thing.TryGetComp<CompAutomataCore>();
-                                if (comp == null) { throw new NotImplementedException(); }
 
-                                var rtSkillSection = new RectDivider(rtLeftTabGroup, 14797513);
-
-                                var rtTitle = rtSkillSection.NewRow(64f);
-                                {
-                                    var rtIcon = rtTitle.NewCol(64f, marginOverride: 0f);
-                                    Widgets.DrawTextureFitted(rtIcon, comp.Props.SpecializationIcon, 1f);
-
-                                    using (new TextBlock(TextAnchor.MiddleLeft))
-                                    {
-                                        Widgets.Label(rtTitle.Rect, coreModule.thing.LabelCap);
-                                    }
-                                }
-
-                                var rtDivider = rtSkillSection.NewRow(2f);
-                                {
-                                    Widgets.DrawLineHorizontal(rtDivider.Rect.xMin, rtDivider.Rect.yMin, rtDivider.Rect.width, new Color(0.3f, 0.3f, 0.3f, 1f));
-                                }
-
-                                _tmpSkillDefsInListOrder.Clear();
-                                _tmpSkillDefsInListOrder.AddRange(DefDatabase<SkillDef>.AllDefsListForReading.OrderByDescending(sd => sd.listOrder));
-                                var columnWidth = _tmpSkillDefsInListOrder.Max(def => Text.CalcSize(def.skillLabel.CapitalizeFirst()).x);
-
-                                foreach (var skillDef in _tmpSkillDefsInListOrder)
-                                {
-                                    var skillLevel = comp.GetSkillLevel(skillDef);
-                                    var rtRow = rtSkillSection.NewRow(27f, marginOverride: 2f);
-                                    if (Mouse.IsOver(rtRow))
-                                    {
-                                        GUI.DrawTexture(rtRow, TexUI.HighlightTex);
-                                    }
-
-                                    using (new TextBlock(TextAnchor.MiddleLeft))
-                                    {
-                                        if (comp.IsDisabledSkill(skillDef))
-                                        {
-                                            GUI.color = new Color(1f, 1f, 1f, 0.5f);
-                                            Widgets.Label(rtRow.NewCol(columnWidth), skillDef.skillLabel.CapitalizeFirst());
-                                            Widgets.Label(rtRow, "-");
-                                        }
-                                        else
-                                        {
-                                            GUI.color = Color.white;
-                                            Widgets.Label(rtRow.NewCol(columnWidth), skillDef.skillLabel.CapitalizeFirst());
-
-                                            var fillPercent = Mathf.Max(0.01f, skillLevel / 20f);
-                                            Widgets.FillableBar(rtRow, fillPercent, ITab_AutomataCoreTexture.SkillBarFillTex, null, doBorder: false);
-
-                                            Widgets.Label(rtRow, skillLevel.ToStringCached());
-                                        }
-                                    }
-                                }
                             }
                         }
                         #endregion
@@ -363,7 +374,7 @@ namespace ModuleAutomata
                 Widgets.DrawMenuSection(rtFaceSelector);
 
                 var headTypes = _samplePawn.def.GetAvailableAlienHeadTypes();
-                var index = headTypes.IndexOf(Bill.HeadTypeDef);
+                var index = headTypes.IndexOf(Plan.headTypeDef);
 
                 var rtFaceSelectorArrowLeft = rtFaceSelector.NewCol(28f, marginOverride: 0f);
                 if (Widgets.ButtonImageFitted(rtFaceSelectorArrowLeft.Rect.ContractedBy(2f), ArrowLeftTex))
@@ -371,7 +382,7 @@ namespace ModuleAutomata
                     if (index == 0) { index = headTypes.Count - 1; }
                     else { index--; }
 
-                    Bill.HeadTypeDef = headTypes[index];
+                    Plan.headTypeDef = headTypes[index];
                     RefreshModuleUI();
                 }
 
@@ -380,7 +391,7 @@ namespace ModuleAutomata
                 {
                     index = (index + 1) % headTypes.Count;
 
-                    Bill.HeadTypeDef = headTypes[index];
+                    Plan.headTypeDef = headTypes[index];
                     RefreshModuleUI();
                 }
 
@@ -400,7 +411,7 @@ namespace ModuleAutomata
                 Widgets.DrawMenuSection(rtHairSelector);
 
                 var maxHairAddonIndex = _samplePawn.def.GetBodyAddonVariantCount(0);
-                var index = Bill.HairAddonIndex;
+                var index = Plan.hairAddonIndex;
 
                 var rtHairSelectorArrowLeft = rtHairSelector.NewCol(28f, marginOverride: 0f);
                 if (Widgets.ButtonImageFitted(rtHairSelectorArrowLeft.Rect.ContractedBy(2f), ArrowLeftTex))
@@ -408,7 +419,7 @@ namespace ModuleAutomata
                     if (index == 0) { index = maxHairAddonIndex - 1; }
                     else { index--; }
 
-                    Bill.HairAddonIndex = index;
+                    Plan.hairAddonIndex = index;
                     RefreshModuleUI();
                 }
 
@@ -417,7 +428,7 @@ namespace ModuleAutomata
                 {
                     index = (index + 1) % maxHairAddonIndex;
 
-                    Bill.HairAddonIndex = index;
+                    Plan.hairAddonIndex = index;
                     RefreshModuleUI();
                 }
 
@@ -428,7 +439,7 @@ namespace ModuleAutomata
 
                 using (new TextBlock(TextAnchor.MiddleCenter))
                 {
-                    Widgets.Label(rtHairSelector, ((char)('A' + Bill.HairAddonIndex)).ToString());
+                    Widgets.Label(rtHairSelector, ((char)('A' + Plan.hairAddonIndex)).ToString());
                 }
             }
         }
@@ -438,7 +449,7 @@ namespace ModuleAutomata
         {
             ModuleElementUIInfo GenerateModuleElementUIInfo(AutomataModulePartDef modulePartDef)
             {
-                var moduleSpec = Bill[modulePartDef];
+                var moduleSpec = Plan[modulePartDef].spec;
 
                 return new ModuleElementUIInfo()
                 {
@@ -451,7 +462,7 @@ namespace ModuleAutomata
                         {
                             _tmpFloatMenuOptions.AddRange(moduleDef.IngredientWorker.GetCandidateFloatMenuOptions(modulePartDef, _building.Map, (selection) =>
                             {
-                                Bill[modulePartDef] = selection;
+                                Plan[modulePartDef] = new AutomataModuleAssemblePlan(AutomataModuleAssemblePlanState.NewModule, selection);
                                 RefreshModuleUI();
                             }));
                         }
@@ -459,9 +470,9 @@ namespace ModuleAutomata
                         if (_tmpFloatMenuOptions.Count == 0)
                         {
                             Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>()
-                        {
-                            new FloatMenuOption(PNLocale.PN_DialogFloatMenuOptionNoModuleCandidate.Translate(), null)
-                        }));
+                            {
+                                new FloatMenuOption(PNLocale.PN_DialogFloatMenuOptionNoModuleCandidate.Translate(), null)
+                            }));
                         }
                         else
                         {
@@ -516,7 +527,7 @@ namespace ModuleAutomata
                 _samplePawn.story.traits.RemoveTrait(trait);
             }
 
-            Bill.ApplyPawn(_samplePawn);
+            Plan.ApplyPawn(_samplePawn);
 
             _samplePawn.Drawer.renderer.SetAllGraphicsDirty();
         }

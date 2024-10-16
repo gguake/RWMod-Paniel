@@ -1,9 +1,4 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using UnityEngine;
 using Verse;
 
 namespace ModuleAutomata
@@ -32,7 +27,12 @@ namespace ModuleAutomata
         {
             if (CoreInfo == null || parent is Pawn) { return label; }
 
-            return PNLocale.PN_AutomataCoreItemLabel.Translate(label, CoreInfo.sourceName.ToStringShort).Resolve();
+            if (CoreInfo.sourceName != null)
+            {
+                return $"{label} ({CoreInfo.sourceName.ToStringShort})";
+            }
+
+            return label;
         }
 
         public void InitializePawnInfo(ThingDef thingDef, QualityCategory quality, Pawn pawn)

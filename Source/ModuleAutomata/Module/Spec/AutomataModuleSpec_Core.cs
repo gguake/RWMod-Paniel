@@ -14,10 +14,7 @@ namespace ModuleAutomata
                 var comp = coreThing.TryGetComp<CompAutomataCore>();
                 if (comp == null || comp.CoreInfo == null) { return moduleDef.mainIngredientDef.LabelCap; }
 
-                return PNLocale.PN_AutomataCoreItemLabel.Translate(
-                    moduleDef.mainIngredientDef.LabelCap,
-                    QualityUtility.GetLabelShort(comp.CoreInfo.quality),
-                    comp.CoreInfo.sourceName.ToStringShort).Resolve();
+                return $"{moduleDef.mainIngredientDef.LabelCap} {comp.CoreInfo.quality.GetLabelShort()} {comp.CoreInfo.sourceName.ToStringShort}";
             }
         }
 

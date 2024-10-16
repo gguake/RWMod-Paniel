@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Xml;
 using UnityEngine;
 using Verse;
@@ -31,6 +32,10 @@ namespace ModuleAutomata
 
         public Name sourceName;
         public Dictionary<SkillDef, int> sourceSkill;
+
+        public string Label => sourceName != null ? 
+            $"{coreDef.LabelCap} ({quality.GetLabelShort()})" :
+            $"{coreDef.LabelCap} ({quality.GetLabelShort()}) ({sourceName.ToStringShort})";
 
         public void ExposeData()
         {

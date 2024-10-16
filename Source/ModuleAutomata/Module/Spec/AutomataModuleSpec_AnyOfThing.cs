@@ -25,7 +25,7 @@ namespace ModuleAutomata
                 if (quality != null)
                 {
                     sb.Append(" ");
-                    sb.Append($"({QualityUtility.GetLabelShort(quality.Value)})");
+                    sb.Append($"({quality.Value.GetLabelShort()})");
                 }
 
                 return sb.ToString();

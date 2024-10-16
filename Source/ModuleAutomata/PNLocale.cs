@@ -2,8 +2,6 @@
 {
     public static class PNLocale
     {
-        public const string PN_AutomataCoreItemLabel = nameof(PN_AutomataCoreItemLabel);
-
         public const string PN_CommandCancelAssembleLabel = nameof(PN_CommandCancelAssembleLabel);
         public const string PN_CommandCancelAssembleDesc = nameof(PN_CommandCancelAssembleDesc);
 
@@ -26,6 +24,8 @@
         public const string PN_DialogHeadSelectorLabel = nameof(PN_DialogHeadSelectorLabel);
 
         public const string PN_DialogEmptyModuleElementLabel = nameof(PN_DialogEmptyModuleElementLabel);
+        public const string PN_DialogCancelInstallModuleOption = nameof(PN_DialogCancelInstallModuleOption);
+        public const string PN_DialogCancelInstallModuleIfEmptyOption = nameof(PN_DialogCancelInstallModuleIfEmptyOption);
 
         public const string PN_DialogFloatMenuOptionNoModuleCandidate = nameof(PN_DialogFloatMenuOptionNoModuleCandidate);
     }

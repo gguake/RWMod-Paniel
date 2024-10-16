@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using System;
+using Verse;
 
 namespace ModuleAutomata
 {
@@ -17,6 +18,13 @@ namespace ModuleAutomata
         public static bool IsAutomata(this Pawn pawn)
         {
             return pawn.def == PNThingDefOf.Paniel_Race;
+        }
+
+        public static AutomataModuleSpec GetModuleSpec(this Pawn pawn, AutomataModulePartDef partDef)
+        {
+            if (!pawn.IsAutomata()) { return null; }
+
+            throw new NotImplementedException();
         }
     }
 }

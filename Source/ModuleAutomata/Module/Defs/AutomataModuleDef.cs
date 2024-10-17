@@ -27,7 +27,7 @@ namespace ModuleAutomata
                     yield return new AutomataModuleSpec_Core()
                     {
                         moduleDef = this,
-                        coreThing = thing,
+                        thing = thing,
                     };
                 }
             }

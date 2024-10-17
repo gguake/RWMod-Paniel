@@ -5,13 +5,13 @@ namespace ModuleAutomata
 {
     public class AutomataModuleSpec_Core : AutomataModuleSpec
     {
-        public Thing coreThing;
+        public Thing thing;
 
         public override string Label
         {
             get
             {
-                var comp = coreThing.TryGetComp<CompAutomataCore>();
+                var comp = thing.TryGetComp<CompAutomataCore>();
                 if (comp == null || comp.CoreInfo == null) { return moduleDef.mainIngredientDef.LabelCap; }
 
                 return $"{moduleDef.mainIngredientDef.LabelCap} {comp.CoreInfo.quality.GetLabelShort()} {comp.CoreInfo.sourceName.ToStringShort}";
@@ -22,7 +22,7 @@ namespace ModuleAutomata
         {
             get
             {
-                var comp = coreThing.TryGetComp<CompAutomataCore>();
+                var comp = thing.TryGetComp<CompAutomataCore>();
                 if (comp == null) { return QualityCategory.Normal; }
 
                 return comp.CoreInfo.quality;
@@ -33,17 +33,19 @@ namespace ModuleAutomata
         {
             base.ExposeData();
 
-            Scribe_References.Look(ref coreThing, "coreThing");
+            Scribe_References.Look(ref thing, "thing");
         }
 
         public override bool Equals(object obj)
-            => obj is AutomataModuleSpec_Core other && moduleDef == other.moduleDef && coreThing == other.coreThing;
+            => obj is AutomataModuleSpec_Core other && 
+            moduleDef == other.moduleDef && 
+            thing == other.thing;
 
         public override int GetHashCode()
         {
             int hashCode = -1377030798;
-            hashCode = hashCode * -1521134295 + moduleDef.GetHashCode();
-            hashCode = hashCode * -1521134295 + coreThing.GetHashCode();
+            hashCode = hashCode * -1521134295 + (moduleDef?.GetHashCode() ?? 0);
+            hashCode = hashCode * -1521134295 + (thing?.GetHashCode() ?? 0);
             return hashCode;
         }
     }

@@ -19,10 +19,12 @@ namespace ModuleAutomata
     {
         public struct ModuleElementUIInfo
         {
+            public string nameLabel;
+
+            public bool selectButtonVisible;
             public string selectButtonLabel;
             public Action onSelectButtonClicked;
 
-            public string nameLabel;
             public bool descButtonVisible;
             public Action onDescButtonClicked;
         }
@@ -142,7 +144,7 @@ namespace ModuleAutomata
 
             foreach (var partDef in DefDatabase<AutomataModulePartDef>.AllDefsListForReading)
             {
-                var spec = pawn.GetModuleSpec(partDef);
+                var spec = pawn.TryGetModuleSpec(partDef);
                 if (spec != null)
                 {
                     _plan[partDef] = new AutomataModuleModificationPlan()
@@ -204,7 +206,7 @@ namespace ModuleAutomata
                                 var coreModulePlan = _plan[PNAutomataModulePartDefOf.PN_Core];
                                 var coreModuleSpec = coreModulePlan.spec as AutomataModuleSpec_Core;
 
-                                coreInfo = coreModuleSpec?.coreThing?.TryGetComp<CompAutomataCore>()?.CoreInfo;
+                                coreInfo = coreModuleSpec?.thing?.TryGetComp<CompAutomataCore>()?.CoreInfo;
 
                                 _tmpSkillInfoInListOrder.AddRange(DefDatabase<SkillDef>.AllDefsListForReading
                                     .OrderByDescending(sd => sd.listOrder)
@@ -217,7 +219,7 @@ namespace ModuleAutomata
                             }
                             else
                             {
-                                var coreModExt = coreInfo.coreDef.GetModExtension<AutomataCoreModExtension>();
+                                var coreModExt = coreInfo.coreModuleDef.GetModExtension<AutomataCoreModExtension>();
 
                                 var rtSkillSection = new RectDivider(rtLeftTabGroup, 14797513);
                                 var rtTitle = rtSkillSection.NewRow(64f);
@@ -490,7 +492,7 @@ namespace ModuleAutomata
 
                 if (_tmpFloatMenuOptions.Count > 0 && _targetPawn != null)
                 {
-                    var currentModuleSpec = _targetPawn.GetModuleSpec(modulePartDef);
+                    var currentModuleSpec = _targetPawn.TryGetModuleSpec(modulePartDef);
                     if (currentModuleSpec != null)
                     {
                         _tmpFloatMenuOptions.Insert(0, new FloatMenuOption(PNLocale.PN_DialogCancelInstallModuleOption.Translate(currentModuleSpec.Label), () =>
@@ -523,8 +525,10 @@ namespace ModuleAutomata
 
                 return new ModuleElementUIInfo()
                 {
+                    nameLabel = curModulePlan.spec != null ? curModulePlan.spec.Label : PNLocale.PN_DialogEmptyModuleElementLabel.Translate().ToString(),
+
+                    selectButtonVisible = modulePartDef != PNAutomataModulePartDefOf.PN_Core || _targetPawn == null,
                     selectButtonLabel = modulePartDef.LabelCap,
-                    nameLabel = curModulePlan.plan != AutomataModuleModificationPlanType.None ? curModulePlan.spec.Label : PNLocale.PN_DialogEmptyModuleElementLabel.Translate().ToString(),
                     onSelectButtonClicked = () =>
                     {
                         if (_tmpFloatMenuOptions.Count == 0)
@@ -539,10 +543,10 @@ namespace ModuleAutomata
                             Find.WindowStack.Add(new FloatMenu(_tmpFloatMenuOptions));
                         }
                     },
-                    descButtonVisible = curModulePlan.plan != AutomataModuleModificationPlanType.None,
+                    descButtonVisible = curModulePlan.spec?.moduleDef != null,
                     onDescButtonClicked = () =>
                     {
-
+                        Find.WindowStack.Add(new Dialog_InfoCard(curModulePlan.spec.moduleDef));
                     }
                 };
             }
@@ -599,32 +603,35 @@ namespace ModuleAutomata
             _samplePawn.Drawer.renderer.SetAllGraphicsDirty();
         }
 
-        private void DrawModuleSection(Rect rect, ModuleElementUIInfo[] elementInfos)
+        private void DrawModuleSection(Rect rect, ModuleElementUIInfo[] uiInfos)
         {
             Widgets.DrawMenuSection(rect);
 
             var rtSystemModuleDivider = new RectDivider(rect.ContractedBy(4f), 9817340, new Vector2(0f, 0f));
-            var rowHeight = rtSystemModuleDivider.Rect.height / elementInfos.Length;
+            var rowHeight = rtSystemModuleDivider.Rect.height / uiInfos.Length;
 
-            foreach (var element in elementInfos)
+            foreach (var uiInfo in uiInfos)
             {
                 var rtRow = rtSystemModuleDivider.NewRow(rowHeight);
                 var rtInnerRowRect = new Rect(rtRow);
 
                 var rtSelectButton = new Rect(0f, 0f, 85f, 32f);
                 rtSelectButton.center = rtRow.NewCol(85f, marginOverride: 2f).Rect.center;
-                if (Widgets.ButtonText(rtSelectButton, element.selectButtonLabel))
+                if (uiInfo.selectButtonVisible)
                 {
-                    element.onSelectButtonClicked();
+                    if (Widgets.ButtonText(rtSelectButton, uiInfo.selectButtonLabel))
+                    {
+                        uiInfo.onSelectButtonClicked();
+                    }
                 }
 
                 var rtDetailButton = new Rect(0f, 0f, 20f, 20f);
                 rtDetailButton = rtRow.NewCol(20f, HorizontalJustification.Right, marginOverride: 2f);
-                if (element.descButtonVisible)
+                if (uiInfo.descButtonVisible)
                 {
                     if (Widgets.ButtonImage(new Rect(0f, 0f, 20f, 20f).CenteredOnXIn(rtDetailButton).CenteredOnYIn(rtDetailButton), OpenStatsReportTex))
                     {
-                        element.onDescButtonClicked();
+                        uiInfo.onDescButtonClicked();
                     }
                 }
 
@@ -632,7 +639,7 @@ namespace ModuleAutomata
                 {
                     using (new TextBlock(TextAnchor.MiddleCenter))
                     {
-                        var label = element.nameLabel;
+                        var label = uiInfo.nameLabel;
                         if (Text.CalcSize(label).x > rtRow.Rect.width - 13f)
                         {
                             Text.Font = GameFont.Tiny;

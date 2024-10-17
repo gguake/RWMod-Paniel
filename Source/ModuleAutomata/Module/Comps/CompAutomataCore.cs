@@ -35,10 +35,16 @@ namespace ModuleAutomata
             return label;
         }
 
-        public void InitializePawnInfo(ThingDef thingDef, QualityCategory quality, Pawn pawn)
+        public void InitializePawnInfo(AutomataModuleDef moduleDef, QualityCategory quality, Pawn pawn)
         {
             _coreInfo = new AutomataCoreInfo();
-            _coreInfo.Initialize(thingDef, quality, pawn);
+            _coreInfo.Initialize(moduleDef, quality, pawn);
+        }
+
+        public override void Notify_DuplicatedFrom(Pawn source)
+        {
+            var sourceComp = source.GetComp<CompAutomataCore>();
+            _coreInfo = sourceComp._coreInfo.Clone();
         }
     }
 }

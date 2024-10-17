@@ -6,7 +6,7 @@ namespace ModuleAutomata
 {
     public class MakeAutomatonCoreRecipeExtension : DefModExtension
     {
-        public ThingDef targetCoreDef;
+        public AutomataModuleDef targetCoreModuleDef;
     }
 
     public class Recipe_MakeAutomatonCore : Recipe_Surgery
@@ -50,8 +50,10 @@ namespace ModuleAutomata
                 OnSurgerySuccess(pawn, part, billDoer, ingredients, bill);
 
                 var quality = QualityUtility.GenerateQualityCreatedByPawn(billDoerSkillLevel, billDoerInspired);
-                var automatonCore = ThingMaker.MakeThing(recipe.GetModExtension<MakeAutomatonCoreRecipeExtension>().targetCoreDef);
-                automatonCore.TryGetComp<CompAutomataCore>().InitializePawnInfo(automatonCore.def, quality, pawn);
+                var moduleDef = recipe.GetModExtension<MakeAutomatonCoreRecipeExtension>().targetCoreModuleDef;
+
+                var automatonCore = ThingMaker.MakeThing(moduleDef.mainIngredientDef);
+                automatonCore.TryGetComp<CompAutomataCore>().InitializePawnInfo(moduleDef, quality, pawn);
                 automatonCore.TryGetComp<CompQuality>()?.SetQuality(quality, null);
 
                 GenSpawn.Spawn(automatonCore, billDoer.Position, billDoer.Map);

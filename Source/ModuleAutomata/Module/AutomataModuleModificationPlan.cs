@@ -5,7 +5,6 @@ namespace ModuleAutomata
 {
     public enum AutomataModuleModificationPlanType
     {
-        None,
         Preserve,
         Replace,
     }
@@ -54,6 +53,30 @@ namespace ModuleAutomata
 
         public void ApplyPawn(Pawn pawn)
         {
+            foreach (var plan in _plans)
+            {
+                var part = plan.Key;
+                var planType = plan.Value.plan;
+
+                var currentSpec = pawn.TryGetModuleSpec(part);
+                var spec = plan.Value.spec;
+
+                if (planType == AutomataModuleModificationPlanType.Replace)
+                {
+                    if (currentSpec != null)
+                    {
+                        currentSpec.moduleDef.worker.OnUninstallFromPawn(pawn, part, currentSpec);
+                    }
+
+                    if (spec != null)
+                    {
+                        spec.moduleDef.worker.OnInstallToPawn(pawn, part, spec);
+                    }
+                }
+            }
+
+            pawn.SetBodyAddonIndex(0, hairAddonIndex);
+            pawn.story.headType = headType;
         }
     }
 }

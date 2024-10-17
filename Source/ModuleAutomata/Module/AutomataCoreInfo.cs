@@ -27,31 +27,30 @@ namespace ModuleAutomata
 
     public class AutomataCoreInfo : IExposable
     {
-        public ThingDef coreDef;
+        public AutomataModuleDef coreModuleDef;
         public QualityCategory quality = QualityCategory.Normal;
-
         public Name sourceName;
         public Dictionary<SkillDef, int> sourceSkill;
 
         public string Label => sourceName != null ? 
-            $"{coreDef.LabelCap} ({quality.GetLabelShort()})" :
-            $"{coreDef.LabelCap} ({quality.GetLabelShort()}) ({sourceName.ToStringShort})";
+            $"{coreModuleDef.mainIngredientDef.LabelCap} ({quality.GetLabelShort()})" :
+            $"{coreModuleDef.mainIngredientDef.LabelCap} ({quality.GetLabelShort()}) ({sourceName.ToStringShort})";
 
         public void ExposeData()
         {
-            Scribe_Defs.Look(ref coreDef, "coreDef");
+            Scribe_Defs.Look(ref coreModuleDef, "coreModuleDef");
             Scribe_Values.Look(ref quality, "quality");
 
             Scribe_Deep.Look(ref sourceName, "sourceName");
             Scribe_Collections.Look(ref sourceSkill, "sourceSkill", LookMode.Def, LookMode.Value);
         }
 
-        public void Initialize(ThingDef coreDef, QualityCategory quality, Pawn pawn = null)
+        public void Initialize(AutomataModuleDef moduleDef, QualityCategory quality, Pawn pawn = null)
         {
-            this.coreDef = coreDef;
+            this.coreModuleDef = moduleDef;
             this.quality = quality;
 
-            var automataCoreModExt = coreDef.GetModExtension<AutomataCoreModExtension>();
+            var automataCoreModExt = coreModuleDef.GetModExtension<AutomataCoreModExtension>();
 
             sourceName = pawn?.Name;
             sourceSkill = new Dictionary<SkillDef, int>();
@@ -71,6 +70,17 @@ namespace ModuleAutomata
 
                 sourceSkill[skillDef] = skillLevel;
             }
+        }
+
+        public AutomataCoreInfo Clone()
+        {
+            return new AutomataCoreInfo()
+            {
+                coreModuleDef = coreModuleDef,
+                quality = quality,
+                sourceName = sourceName,
+                sourceSkill = new Dictionary<SkillDef, int>(sourceSkill)
+            };
         }
     }
 }

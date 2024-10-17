@@ -51,7 +51,7 @@ namespace ModuleAutomata
         public override int GetHashCode()
         {
             int hashCode = 1303672492;
-            hashCode = hashCode * -1521134295 + moduleDef.GetHashCode();
+            hashCode = hashCode * -1521134295 + (moduleDef?.GetHashCode() ?? 0);
             hashCode = hashCode * -1521134295 + (quality?.GetHashCode() ?? 0);
             hashCode = hashCode * -1521134295 + (stuffDef?.GetHashCode() ?? 0);
             return hashCode;

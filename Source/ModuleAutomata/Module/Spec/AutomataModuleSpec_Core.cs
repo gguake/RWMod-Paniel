@@ -29,6 +29,8 @@ namespace ModuleAutomata
             }
         }
 
+        public override ThingDef Stuff => null;
+
         public override void ExposeData()
         {
             base.ExposeData();

@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assembler\AutomataAssembleBill.cs" />
     <Compile Include="Assembler\AutomataAssembleUIModExtension.cs" />
     <Compile Include="Module\AutomataModuleModificationPlan.cs" />
     <Compile Include="Assembler\UI\Dialog_AutomataAssemble.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="QualityHediff.cs" />
     <Compile Include="QualityMultiplier.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Assembler\AI\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

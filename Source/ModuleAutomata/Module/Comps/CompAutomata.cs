@@ -47,6 +47,7 @@ namespace ModuleAutomata
 
             if (_shellModule != null && _shellModule.moduleDef.worker is AutomataModuleWorker_Shell shellWorker)
             {
+                var qualityMultiplier = shellWorker.qualityMultiplier.FirstOrDefault(v => v.quality == _shellModule.Quality)?.multiplier ?? 1f;
                 foreach (var statMod in shellWorker.statOffsets)
                 {
                     var offset = statMod.value;
@@ -63,11 +64,11 @@ namespace ModuleAutomata
 
                     if (_statOffsetCache.TryGetValue(statMod.stat, out var currentValue))
                     {
-                        _statOffsetCache[statMod.stat] = currentValue + offset;
+                        _statOffsetCache[statMod.stat] = currentValue + offset * qualityMultiplier;
                     }
                     else
                     {
-                        _statOffsetCache[statMod.stat] = offset;
+                        _statOffsetCache[statMod.stat] = offset * qualityMultiplier;
                     }
                 }
             }

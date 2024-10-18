@@ -359,7 +359,14 @@ namespace ModuleAutomata
 
             using (new TextBlock(GameFont.Medium, TextAnchor.MiddleLeft))
             {
-                Widgets.Label(rtBase, PNLocale.PN_DialogAssembleTitleLabel.Translate());
+                if (_targetPawn == null)
+                {
+                    Widgets.Label(rtBase, PNLocale.PN_DialogAssembleTitleLabel.Translate());
+                }
+                else
+                {
+                    Widgets.Label(rtBase, PNLocale.PN_DialogModifyTitleLabel.Translate());
+                }
             }
         }
 
@@ -378,7 +385,14 @@ namespace ModuleAutomata
             var rtButtonSection = rtSummaryRight.LeftPartPixels(300f).RightPartPixels(290f);
             Widgets.DrawMenuSection(rtButtonSection);
             {
+                var rtButton = new Rect(0f, 0f, 80f, 30f);
+                rtButton.center = rtButtonSection.center;
 
+                if (Widgets.ButtonText(rtButton, "ok"))
+                {
+                    _callback(_plan);
+                    Close();
+                }
             }
         }
 

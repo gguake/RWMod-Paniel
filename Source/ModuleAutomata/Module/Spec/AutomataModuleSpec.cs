@@ -9,6 +9,7 @@ namespace ModuleAutomata
 
         public abstract string Label { get; }
         public abstract QualityCategory Quality { get; }
+        public abstract ThingDef Stuff { get; }
 
         public virtual void ExposeData()
         {

@@ -10,6 +10,8 @@ namespace ModuleAutomata
     {
         private ThingOwner _innerContainer;
 
+        private AutomataAssembleBill _bill;
+
         public AutomataAssembleUIModExtension AutomataAssembleUIExtension => def.GetModExtension<AutomataAssembleUIModExtension>();
 
         public Building_AutomataAssembler()
@@ -28,16 +30,19 @@ namespace ModuleAutomata
         {
             if (Spawned && Faction == Faction.OfPlayer)
             {
-                if (true)
+                if (_bill == null)
                 {
                     var commandAssembleNew = new Command_Action();
                     commandAssembleNew.defaultLabel = PNLocale.PN_CommandAssembleNewLabel.Translate();
                     commandAssembleNew.defaultDesc = PNLocale.PN_CommandAssembleNewDesc.Translate();
                     commandAssembleNew.action = () =>
                     {
-                        Find.WindowStack.Add(new Dialog_AutomataAssemble(this, (bill) =>
+                        Find.WindowStack.Add(new Dialog_AutomataAssemble(this, (plan) =>
                         {
-
+                            _bill = new AutomataAssembleBill()
+                            {
+                                plan = plan,
+                            };
                         }));
                     };
                     yield return commandAssembleNew;
@@ -53,9 +58,13 @@ namespace ModuleAutomata
                             pawn.Name.ToStringShort,
                             () =>
                             {
-                                Find.WindowStack.Add(new Dialog_AutomataAssemble(this, pawn, (bill) =>
+                                Find.WindowStack.Add(new Dialog_AutomataAssemble(this, pawn, (plan) =>
                                 {
-
+                                    _bill = new AutomataAssembleBill()
+                                    {
+                                        pawn = pawn,
+                                        plan = plan,
+                                    };
                                 }));
                             },
                             pawn,
@@ -71,6 +80,8 @@ namespace ModuleAutomata
                     commandCancel.action = () =>
                     {
                         EjectContents();
+
+                        _bill = null;
                     };
                     yield return commandCancel;
                 }

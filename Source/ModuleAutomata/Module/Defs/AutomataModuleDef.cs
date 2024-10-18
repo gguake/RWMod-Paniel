@@ -16,6 +16,8 @@ namespace ModuleAutomata
 
         public List<ThingDefCountClass> subIngredients;
 
+        public int installWorkAmount;
+
         public AutomataModuleWorker worker;
 
         public IEnumerable<AutomataModuleSpec> GetCandidateSpecsFromMap(Map map)

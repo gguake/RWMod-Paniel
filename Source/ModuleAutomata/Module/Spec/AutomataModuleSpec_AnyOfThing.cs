@@ -34,6 +34,8 @@ namespace ModuleAutomata
 
         public override QualityCategory Quality => quality ?? QualityCategory.Normal;
 
+        public override ThingDef Stuff => stuffDef;
+
         public override void ExposeData()
         {
             base.ExposeData();

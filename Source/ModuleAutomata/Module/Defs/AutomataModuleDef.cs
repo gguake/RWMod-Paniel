@@ -1,6 +1,8 @@
 ﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace ModuleAutomata
@@ -89,6 +91,22 @@ namespace ModuleAutomata
                     }
                 }
             }
+        }
+
+        public override void PostLoad()
+        {
+            LongEventHandler.ExecuteWhenFinished(delegate
+            {
+                if (affectedByQuality && !mainIngredientDef.HasComp<CompQuality>())
+                {
+                    throw new NotImplementedException("module uses quality but main ingredient has not CompQuality.");
+                }
+
+                if (affectedByStuff && !mainIngredientDef.MadeFromStuff)
+                {
+                    throw new NotImplementedException("module uses stuff but main ingredient has not stuffcategories.");
+                }
+            });
         }
     }
 }

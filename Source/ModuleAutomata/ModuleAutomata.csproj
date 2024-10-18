@@ -67,7 +67,6 @@
     <Compile Include="Assembler\UI\Dialog_AutomataAssemble.cs" />
     <Compile Include="Module\Comps\CompAutomata.cs" />
     <Compile Include="Utility\HARExtensions.cs" />
-    <Compile Include="AutomataModExtension.cs" />
     <Compile Include="Module\Spec\AutomataModuleSpec.cs" />
     <Compile Include="Module\Defs\AutomataModuleDef.cs" />
     <Compile Include="Module\Defs\AutomataModulePartDef.cs" />

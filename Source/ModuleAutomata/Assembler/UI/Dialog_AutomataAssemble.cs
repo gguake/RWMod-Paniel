@@ -136,6 +136,9 @@ namespace ModuleAutomata
                     }
                 };
             }
+
+            _plan.hairAddonIndex = Rand.Range(0, PNThingDefOf.Paniel_Race.GetBodyAddonVariantCount(0));
+            _plan.headType = PNThingDefOf.Paniel_Race.GetAvailableAlienHeadTypes().RandomElement();
         }
 
         private void InitializeBillFromPawn(Pawn pawn)
@@ -210,12 +213,15 @@ namespace ModuleAutomata
 
                                 _tmpSkillInfoInListOrder.AddRange(DefDatabase<SkillDef>.AllDefsListForReading
                                     .OrderByDescending(sd => sd.listOrder)
-                                    .Select(def => (def, coreInfo.sourceSkill.TryGetValue(def, -1))));
+                                    .Select(def => (def, coreInfo?.sourceSkill.TryGetValue(def, -1) ?? -1)));
                             }
 
                             if (coreInfo == null)
                             {
-                                Widgets.Label(rtLeftTabGroup, PNLocale.PN_DialogTabNoSelectedCoreLabel.Translate());
+                                using (new TextBlock(TextAnchor.MiddleCenter))
+                                {
+                                    Widgets.Label(rtLeftTabGroup, PNLocale.PN_DialogTabNoSelectedCoreLabel.Translate());
+                                }
                             }
                             else
                             {

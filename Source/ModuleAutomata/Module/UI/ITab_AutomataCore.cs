@@ -26,11 +26,11 @@ namespace ModuleAutomata
         {
             base.UpdateSize();
 
-            var automataCoreModExt = Find.Selector.SingleSelectedThing?.def.GetModExtension<AutomataCoreModExtension>();
-            if (automataCoreModExt == null) { return; }
-
             var compCore = Find.Selector.SingleSelectedThing?.TryGetComp<CompAutomataCore>();
             if (compCore == null) { return; }
+
+            var automataCoreModExt = compCore.CoreInfo?.coreModuleDef.GetModExtension<AutomataCoreModExtension>();
+            if (automataCoreModExt == null) { return; }
 
             skillDefsInListOrderCached = DefDatabase<SkillDef>.AllDefsListForReading
                 .OrderByDescending(def => def.listOrder)

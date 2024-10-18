@@ -9,6 +9,8 @@ namespace ModuleAutomata
 {
     public class AutomataModuleDef : Def
     {
+        public int uiOrder;
+
         public List<AutomataModulePartDef> adaptParts;
 
         public ThingDef mainIngredientDef;
@@ -106,6 +108,9 @@ namespace ModuleAutomata
                 {
                     throw new NotImplementedException("module uses stuff but main ingredient has not stuffcategories.");
                 }
+
+                if (label == null) { label = mainIngredientDef.label; }
+                if (description == null) { description = mainIngredientDef.description; }
             });
         }
     }

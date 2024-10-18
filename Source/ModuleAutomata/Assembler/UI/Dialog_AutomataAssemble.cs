@@ -492,55 +492,6 @@ namespace ModuleAutomata
         {
             ModuleElementUIInfo GenerateModuleElementUIInfo(AutomataModulePartDef modulePartDef)
             {
-                _tmpFloatMenuOptions.Clear();
-                foreach (var moduleDef in modulePartDef.ModuleDefs)
-                {
-                    foreach (var candidateSpec in moduleDef.GetCandidateSpecsFromMap(_building.Map))
-                    {
-                        _tmpFloatMenuOptions.Add(new FloatMenuOption(candidateSpec.Label, () =>
-                        {
-                            _plan[modulePartDef] = new AutomataModuleModificationPlan()
-                            {
-                                plan = AutomataModuleModificationPlanType.Replace,
-                                spec = candidateSpec,
-                            };
-
-                            RefreshModuleUI();
-                        }));
-                    }
-                }
-
-                if (_tmpFloatMenuOptions.Count > 0 && _targetPawn != null)
-                {
-                    var currentModuleSpec = _targetPawn.TryGetModuleSpec(modulePartDef);
-                    if (currentModuleSpec != null)
-                    {
-                        _tmpFloatMenuOptions.Insert(0, new FloatMenuOption(PNLocale.PN_DialogCancelInstallModuleOption.Translate(currentModuleSpec.Label), () =>
-                        {
-                            _plan[modulePartDef] = new AutomataModuleModificationPlan()
-                            {
-                                plan = AutomataModuleModificationPlanType.Preserve,
-                                spec = currentModuleSpec,
-                            };
-
-                            RefreshModuleUI();
-                        }));
-                    }
-                    else
-                    {
-                        _tmpFloatMenuOptions.Insert(0, new FloatMenuOption(PNLocale.PN_DialogCancelInstallModuleIfEmptyOption.Translate(), () =>
-                        {
-                            _plan[modulePartDef] = new AutomataModuleModificationPlan()
-                            {
-                                plan = AutomataModuleModificationPlanType.Preserve,
-                                spec = null,
-                            };
-
-                            RefreshModuleUI();
-                        }));
-                    }
-                }
-
                 var curModulePlan = _plan[modulePartDef];
 
                 return new ModuleElementUIInfo()
@@ -551,6 +502,54 @@ namespace ModuleAutomata
                     selectButtonLabel = modulePartDef.LabelCap,
                     onSelectButtonClicked = () =>
                     {
+                        _tmpFloatMenuOptions.Clear();
+                        foreach (var candidateSpec in modulePartDef.ModuleDefs
+                            .SelectMany(def => def.GetCandidateSpecsFromMap(_building.Map))
+                            .OrderBy(spec => (spec.moduleDef.uiOrder, spec.Stuff?.shortHash ?? 0, (int)spec.Quality)))
+                        {
+                            _tmpFloatMenuOptions.Add(new FloatMenuOption(candidateSpec.Label, () =>
+                            {
+                                _plan[modulePartDef] = new AutomataModuleModificationPlan()
+                                {
+                                    plan = AutomataModuleModificationPlanType.Replace,
+                                    spec = candidateSpec,
+                                };
+
+                                RefreshModuleUI();
+                            }));
+                        }
+
+                        if (_tmpFloatMenuOptions.Count > 0 && _targetPawn != null)
+                        {
+                            var currentModuleSpec = _targetPawn.TryGetModuleSpec(modulePartDef);
+                            if (currentModuleSpec != null)
+                            {
+                                _tmpFloatMenuOptions.Insert(0, new FloatMenuOption(PNLocale.PN_DialogCancelInstallModuleOption.Translate(currentModuleSpec.Label), () =>
+                                {
+                                    _plan[modulePartDef] = new AutomataModuleModificationPlan()
+                                    {
+                                        plan = AutomataModuleModificationPlanType.Preserve,
+                                        spec = currentModuleSpec,
+                                    };
+
+                                    RefreshModuleUI();
+                                }));
+                            }
+                            else
+                            {
+                                _tmpFloatMenuOptions.Insert(0, new FloatMenuOption(PNLocale.PN_DialogCancelInstallModuleIfEmptyOption.Translate(), () =>
+                                {
+                                    _plan[modulePartDef] = new AutomataModuleModificationPlan()
+                                    {
+                                        plan = AutomataModuleModificationPlanType.Preserve,
+                                        spec = null,
+                                    };
+
+                                    RefreshModuleUI();
+                                }));
+                            }
+                        }
+
                         if (_tmpFloatMenuOptions.Count == 0)
                         {
                             Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>()

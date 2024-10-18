@@ -24,6 +24,7 @@ namespace ModuleAutomata
             base.ExposeData();
 
             Scribe_Deep.Look(ref _innerContainer, "innerContainer", this);
+            Scribe_Deep.Look(ref _bill, "bill", this);
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
@@ -39,7 +40,7 @@ namespace ModuleAutomata
                     {
                         Find.WindowStack.Add(new Dialog_AutomataAssemble(this, (plan) =>
                         {
-                            _bill = new AutomataAssembleBill()
+                            _bill = new AutomataAssembleBill(this)
                             {
                                 plan = plan,
                             };
@@ -60,7 +61,7 @@ namespace ModuleAutomata
                             {
                                 Find.WindowStack.Add(new Dialog_AutomataAssemble(this, pawn, (plan) =>
                                 {
-                                    _bill = new AutomataAssembleBill()
+                                    _bill = new AutomataAssembleBill(this)
                                     {
                                         pawn = pawn,
                                         plan = plan,

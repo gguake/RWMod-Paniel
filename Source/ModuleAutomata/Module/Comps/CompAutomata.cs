@@ -52,13 +52,16 @@ namespace ModuleAutomata
                 {
                     var offset = statMod.value;
 
-                    var statPartStuff = statMod.stat.GetStatPart<StatPart_Stuff>();
-                    if (statPartStuff != null)
+                    if (statMod.stat.parts != null)
                     {
-                        var stuffStatMod = shellWorker.GetStatOffset(statPartStuff.multiplierStat);
-                        if (stuffStatMod != null && _shellModule.stuffDef != null)
+                        var statPartStuff = statMod.stat.GetStatPart<StatPart_Stuff>();
+                        if (statPartStuff != null)
                         {
-                            offset += stuffStatMod.value * _shellModule.stuffDef.GetStatValueAbstract(statPartStuff.stuffPowerStat);
+                            var stuffStatMod = shellWorker.GetStatOffset(statPartStuff.multiplierStat);
+                            if (stuffStatMod != null && _shellModule.stuffDef != null)
+                            {
+                                offset += stuffStatMod.value * _shellModule.stuffDef.GetStatValueAbstract(statPartStuff.stuffPowerStat);
+                            }
                         }
                     }
 
@@ -86,13 +89,13 @@ namespace ModuleAutomata
                         {
                             case AutomataModuleSpec_Core core:
                                 {
-                                    offset += marketValueStat.Worker.GetValue(StatRequest.For(core.moduleDef.mainIngredientDef, null, core.Quality));
+                                    offset += marketValueStat.Worker.GetValue(StatRequest.For(core.moduleDef.mainIngredientDef, null, core.Quality)) * 0.5f;
                                 }
                                 break;
 
                             case AutomataModuleSpec_AnyOfThing anyOfThing:
                                 {
-                                    offset += marketValueStat.Worker.GetValue(StatRequest.For(anyOfThing.moduleDef.mainIngredientDef, anyOfThing.stuffDef, anyOfThing.Quality));
+                                    offset += marketValueStat.Worker.GetValue(StatRequest.For(anyOfThing.moduleDef.mainIngredientDef, anyOfThing.stuffDef, anyOfThing.Quality)) * 0.5f;
                                 }
                                 break;
                         }

@@ -61,7 +61,6 @@ namespace ModuleAutomata
             }
         }
         private Dictionary<AutomataModulePartDef, AutomataModuleModificationPlan> _plans = new Dictionary<AutomataModulePartDef, AutomataModuleModificationPlan>();
-
         public int hairAddonIndex;
         public HeadTypeDef headType;
 
@@ -142,7 +141,7 @@ namespace ModuleAutomata
         {
             Scribe_Collections.Look(ref _plans, "plans", LookMode.Def, LookMode.Deep);
             Scribe_Values.Look(ref hairAddonIndex, "hairAddonIndex");
-            Scribe_Deep.Look(ref headType, "headType");
+            Scribe_Defs.Look(ref headType, "headType");
         }
 
         public void ApplyPawn(Pawn pawn)

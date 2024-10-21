@@ -9,28 +9,7 @@ namespace ModuleAutomata
         public QualityCategory? quality;
         public ThingDef stuffDef;
 
-        public override string Label
-        {
-            get
-            {
-                var sb = new StringBuilder();
-                if (stuffDef != null)
-                {
-                    sb.Append(stuffDef.LabelAsStuff);
-                    sb.Append(" ");
-                }
-
-                sb.Append(moduleDef.LabelCap);
-
-                if (quality != null)
-                {
-                    sb.Append(" ");
-                    sb.Append($"({quality.Value.GetLabelShort()})");
-                }
-
-                return sb.ToString();
-            }
-        }
+        public override string Label => PNLocale.MakeModuleLabel(moduleDef, quality, stuffDef);
 
         public override QualityCategory Quality => quality ?? QualityCategory.Normal;
 

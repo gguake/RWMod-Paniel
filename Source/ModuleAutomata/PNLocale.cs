@@ -1,4 +1,8 @@
-﻿namespace ModuleAutomata
+﻿using RimWorld;
+using System.Text;
+using Verse;
+
+namespace ModuleAutomata
 {
     public static class PNLocale
     {
@@ -28,5 +32,25 @@
         public const string PN_DialogCancelInstallModuleIfEmptyOption = nameof(PN_DialogCancelInstallModuleIfEmptyOption);
 
         public const string PN_DialogFloatMenuOptionNoModuleCandidate = nameof(PN_DialogFloatMenuOptionNoModuleCandidate);
+
+        public static string MakeModuleLabel(Def moduleDef, QualityCategory? quality, ThingDef stuffDef)
+        {
+            var sb = new StringBuilder();
+            if (stuffDef != null)
+            {
+                sb.Append(stuffDef.LabelAsStuff);
+                sb.Append(" ");
+            }
+
+            sb.Append(moduleDef.LabelCap);
+
+            if (quality != null)
+            {
+                sb.Append(" ");
+                sb.Append($" ({quality.Value.GetLabelShort()})");
+            }
+
+            return sb.ToString();
+        }
     }
 }

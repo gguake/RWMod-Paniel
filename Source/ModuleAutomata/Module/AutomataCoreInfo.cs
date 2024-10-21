@@ -32,9 +32,9 @@ namespace ModuleAutomata
         public Name sourceName;
         public Dictionary<SkillDef, int> sourceSkill;
 
-        public string Label => sourceName != null ? 
-            $"{coreModuleDef.mainIngredientDef.LabelCap} ({quality.GetLabelShort()})" :
-            $"{coreModuleDef.mainIngredientDef.LabelCap} ({quality.GetLabelShort()}) ({sourceName.ToStringShort})";
+        public string Label => sourceName != null ?
+            PNLocale.MakeModuleLabel(coreModuleDef, quality, null) :
+            $"{PNLocale.MakeModuleLabel(coreModuleDef, quality, null)} ({sourceName.ToStringShort})";
 
         public void ExposeData()
         {

@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using Verse;
 
@@ -13,6 +14,31 @@ namespace ModuleAutomata
         private AutomataAssembleBill _bill;
 
         public AutomataAssembleUIModExtension AutomataAssembleUIExtension => def.GetModExtension<AutomataAssembleUIModExtension>();
+
+        public IEnumerable<(AutomataModuleIngredientInfo info, int count)> RequiredIngredients
+        {
+            get
+            {
+                if (_bill == null) { yield break; }
+
+                foreach (var tuple in _bill.plan.TotalIngredients)
+                {
+                    var ingredientInfo = tuple.info;
+                    var requiredCount = tuple.count;
+
+                    var innerThing = _innerContainer.FirstOrDefault(thing => ingredientInfo.Match(thing));
+                    if (innerThing != null)
+                    {
+                        requiredCount -= innerThing.stackCount;
+                    }
+
+                    if (requiredCount > 0)
+                    {
+                        yield return (ingredientInfo, requiredCount);
+                    }
+                }
+            }
+        }
 
         public Building_AutomataAssembler()
         {
@@ -38,13 +64,7 @@ namespace ModuleAutomata
                     commandAssembleNew.defaultDesc = PNLocale.PN_CommandAssembleNewDesc.Translate();
                     commandAssembleNew.action = () =>
                     {
-                        Find.WindowStack.Add(new Dialog_AutomataAssemble(this, (plan) =>
-                        {
-                            _bill = new AutomataAssembleBill(this)
-                            {
-                                plan = plan,
-                            };
-                        }));
+                        OpenAssembleDialog(null);
                     };
                     yield return commandAssembleNew;
 
@@ -59,14 +79,7 @@ namespace ModuleAutomata
                             pawn.Name.ToStringShort,
                             () =>
                             {
-                                Find.WindowStack.Add(new Dialog_AutomataAssemble(this, pawn, (plan) =>
-                                {
-                                    _bill = new AutomataAssembleBill(this)
-                                    {
-                                        pawn = pawn,
-                                        plan = plan,
-                                    };
-                                }));
+                                OpenAssembleDialog(pawn);
                             },
                             pawn,
                             Color.white)).ToList()));
@@ -97,7 +110,7 @@ namespace ModuleAutomata
                 {
                     Find.WindowStack.Add(new Dialog_AutomataAssemble(this, selPawn, (bill) =>
                     {
-
+                        OpenAssembleDialog(selPawn);
                     }));
                 });
             }
@@ -107,6 +120,22 @@ namespace ModuleAutomata
         {
             EjectContents();
             base.DeSpawn(mode);
+        }
+
+        public override string GetInspectString()
+        {
+            var sb = new StringBuilder(base.GetInspectString());
+
+            if (_bill != null && !_bill.IsStarted)
+            {
+                foreach (var tuple in RequiredIngredients)
+                {
+                    var totalCount = _bill.plan.GetIngredientCount(tuple.info);
+                    sb.AppendInNewLine($"{tuple.info.Label}: {tuple.count} / {totalCount}");
+                }
+            }
+
+            return sb.ToString();
         }
 
         public override void Tick()
@@ -155,6 +184,36 @@ namespace ModuleAutomata
 
         public void Notify_HauledTo(Pawn hauler, Thing thing, int count)
         {
+            if (_bill == null)
+            {
+                _innerContainer.TryDropAll(Position, Map, ThingPlaceMode.Near);
+                return;
+            }
+        }
+
+        private void OpenAssembleDialog(Pawn targetPawn)
+        {
+            if (targetPawn == null)
+            {
+                Find.WindowStack.Add(new Dialog_AutomataAssemble(this, (plan) =>
+                {
+                    _bill = new AutomataAssembleBill(this)
+                    {
+                        plan = plan,
+                    };
+                }));
+            }
+            else
+            {
+                Find.WindowStack.Add(new Dialog_AutomataAssemble(this, targetPawn, (plan) =>
+                {
+                    _bill = new AutomataAssembleBill(this)
+                    {
+                        pawn = targetPawn,
+                        plan = plan,
+                    };
+                }));
+            }
         }
     }
 }

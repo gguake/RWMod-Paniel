@@ -14,7 +14,7 @@ namespace ModuleAutomata
                 var comp = thing.TryGetComp<CompAutomataCore>();
                 if (comp == null || comp.CoreInfo == null) { return moduleDef.mainIngredientDef.LabelCap; }
 
-                return $"{moduleDef.mainIngredientDef.LabelCap} ({comp.CoreInfo.quality.GetLabelShort()}) ({comp.CoreInfo.sourceName.ToStringShort})";
+                return $"{PNLocale.MakeModuleLabel(moduleDef, Quality, null)} ({comp.CoreInfo.sourceName.ToStringShort})";
             }
         }
 

@@ -7,6 +7,8 @@ namespace ModuleAutomata
     public static class PNThingDefOf
     {
         public static ThingDef Paniel_Race;
+
+        public static ThingDef PN_AutomatonAssembleBench;
     }
 
     [DefOf]
@@ -41,5 +43,12 @@ namespace ModuleAutomata
 
         public static AutomataModulePartDef PN_LeftLeg;
         public static AutomataModulePartDef PN_RightLeg;
+    }
+
+    [DefOf]
+    public static class PNJobDefOf
+    {
+        public static JobDef PN_DoAssembleBill;
+        public static JobDef PN_EnterAssembler;
     }
 }

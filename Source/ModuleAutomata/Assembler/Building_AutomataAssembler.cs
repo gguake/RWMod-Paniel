@@ -11,32 +11,55 @@ namespace ModuleAutomata
     {
         private ThingOwner _innerContainer;
 
+        public AutomataAssembleBill Bill => _bill;
         private AutomataAssembleBill _bill;
 
         public AutomataAssembleUIModExtension AutomataAssembleUIExtension => def.GetModExtension<AutomataAssembleUIModExtension>();
 
-        public IEnumerable<(AutomataModuleIngredientInfo info, int count)> RequiredIngredients
+        public Pawn RequiredPawn
         {
             get
             {
-                if (_bill == null) { yield break; }
-
-                foreach (var tuple in _bill.plan.TotalIngredients)
+                if (_bill?.pawn != null)
                 {
-                    var ingredientInfo = tuple.info;
-                    var requiredCount = tuple.count;
-
-                    var innerThing = _innerContainer.FirstOrDefault(thing => ingredientInfo.Match(thing));
-                    if (innerThing != null)
-                    {
-                        requiredCount -= innerThing.stackCount;
-                    }
-
-                    if (requiredCount > 0)
-                    {
-                        yield return (ingredientInfo, requiredCount);
-                    }
+                    return _innerContainer.Any(v => v is Pawn pawn && pawn == _bill.pawn) ? _bill.pawn : null;
                 }
+
+                return null;
+            }
+        }
+
+        private bool _requiredIngredientCacheDirty = true;
+        private Dictionary<AutomataModuleIngredientInfo, int> _requiredIngredientsCache = new Dictionary<AutomataModuleIngredientInfo, int>();
+        public IReadOnlyDictionary<AutomataModuleIngredientInfo, int> RequiredIngredients
+        {
+            get
+            {
+                if (_bill == null) { return null; }
+                if (_requiredIngredientCacheDirty)
+                {
+                    _requiredIngredientsCache.Clear();
+                    foreach (var tuple in _bill.plan.TotalIngredients)
+                    {
+                        var ingredientInfo = tuple.info;
+                        var requiredCount = tuple.count;
+
+                        var innerThing = _innerContainer.FirstOrDefault(thing => ingredientInfo.Match(thing));
+                        if (innerThing != null)
+                        {
+                            requiredCount -= innerThing.stackCount;
+                        }
+
+                        if (requiredCount > 0)
+                        {
+                            _requiredIngredientsCache.Add(ingredientInfo, requiredCount);
+                        }
+                    }
+
+                    _requiredIngredientCacheDirty = false;
+                }
+
+                return _requiredIngredientsCache;
             }
         }
 
@@ -96,6 +119,7 @@ namespace ModuleAutomata
                         EjectContents();
 
                         _bill = null;
+                        _requiredIngredientCacheDirty = true;
                     };
                     yield return commandCancel;
                 }
@@ -128,10 +152,10 @@ namespace ModuleAutomata
 
             if (_bill != null && !_bill.IsStarted)
             {
-                foreach (var tuple in RequiredIngredients)
+                foreach (var kv in RequiredIngredients)
                 {
-                    var totalCount = _bill.plan.GetIngredientCount(tuple.info);
-                    sb.AppendInNewLine($"{tuple.info.Label}: {tuple.count} / {totalCount}");
+                    var totalCount = _bill.plan.GetIngredientCount(kv.Key);
+                    sb.AppendInNewLine($"{kv.Key.Label}: {totalCount - kv.Value} / {totalCount}");
                 }
             }
 
@@ -189,6 +213,22 @@ namespace ModuleAutomata
                 _innerContainer.TryDropAll(Position, Map, ThingPlaceMode.Near);
                 return;
             }
+
+            _requiredIngredientCacheDirty = true;
+        }
+
+        public void CompleteBill()
+        {
+            if (_bill == null) { return; }
+
+            var innerPawn = _innerContainer.FirstOrDefault(t => t is Pawn);
+            if (innerPawn != null)
+            {
+                _innerContainer.TryDrop(innerPawn, ThingPlaceMode.Near, 1, out _);
+            }
+
+            _innerContainer.ClearAndDestroyContents();
+            _bill = null;
         }
 
         private void OpenAssembleDialog(Pawn targetPawn)
@@ -201,6 +241,8 @@ namespace ModuleAutomata
                     {
                         plan = plan,
                     };
+
+                    _requiredIngredientCacheDirty = true;
                 }));
             }
             else
@@ -212,6 +254,8 @@ namespace ModuleAutomata
                         pawn = targetPawn,
                         plan = plan,
                     };
+
+                    _requiredIngredientCacheDirty = true;
                 }));
             }
         }

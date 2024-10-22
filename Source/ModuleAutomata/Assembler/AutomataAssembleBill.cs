@@ -8,7 +8,7 @@ namespace ModuleAutomata
 
         public AutomataModificationPlan plan;
         public Pawn pawn;
-        public int lastWorkAmount = -1;
+        public float lastWorkAmount = -1;
 
         public bool IsStarted => lastWorkAmount >= 0;
 

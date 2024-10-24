@@ -61,10 +61,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assembler\AI\JobDriver_AssembleAutomata.cs" />
+    <Compile Include="Assembler\AI\JobDriver_EnterAssembler.cs" />
+    <Compile Include="Assembler\AI\WorkGiver_AssembleAutomata.cs" />
+    <Compile Include="Assembler\AI\WorkGiver_HaulIngredientsToAssembler.cs" />
+    <Compile Include="Assembler\AI\WorkGiver_HaulAutomataToAssembler.cs" />
     <Compile Include="Assembler\AutomataAssembleBill.cs" />
     <Compile Include="Assembler\AutomataAssembleUIModExtension.cs" />
-    <Compile Include="Module\AutomataModuleModificationPlan.cs" />
+    <Compile Include="Module\AutomataModificationPlan.cs" />
     <Compile Include="Assembler\UI\Dialog_AutomataAssemble.cs" />
+    <Compile Include="Module\AutomataModuleIngredientInfo.cs" />
+    <Compile Include="Module\AutomataModuleModificationPlan.cs" />
     <Compile Include="Module\Comps\CompAutomata.cs" />
     <Compile Include="Utility\HARExtensions.cs" />
     <Compile Include="Module\Spec\AutomataModuleSpec.cs" />
@@ -90,8 +97,6 @@
     <Compile Include="QualityHediff.cs" />
     <Compile Include="QualityMultiplier.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assembler\AI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

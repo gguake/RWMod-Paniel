@@ -221,6 +221,8 @@ namespace ModuleAutomata
         {
             if (_bill == null) { return; }
 
+            _bill.Complete();
+
             var innerPawn = _innerContainer.FirstOrDefault(t => t is Pawn);
             if (innerPawn != null)
             {

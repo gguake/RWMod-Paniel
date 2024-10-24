@@ -376,6 +376,7 @@ namespace ModuleAutomata
             }
         }
 
+        private List<GenUI.AnonymousStackElement> _tmpIngredientStackElements = new List<GenUI.AnonymousStackElement>();
         private void DrawSummarySection(Rect rect)
         {
             var rtBase = new RectDivider(rect, 2239155);
@@ -385,16 +386,62 @@ namespace ModuleAutomata
             var rtIngredientsSection = rtSummaryLeft.RightPartPixels(300f).LeftPartPixels(290f);
             Widgets.DrawMenuSection(rtIngredientsSection);
             {
+                _tmpIngredientStackElements.Clear();
 
+                var ingredients = _plan.SubIngredients;
+                foreach (var tuple in _plan.SubIngredients)
+                {
+                    var icon = tuple.info.thingDef.uiIcon;
+                    var label = tuple.count > 1 ? 
+                        $"{tuple.info.Label} x{tuple.count}" : 
+                        tuple.info.Label;
+
+                    _tmpIngredientStackElements.Add(new GenUI.AnonymousStackElement()
+                    {
+                        width = Text.CalcSize(label).x + 12f + 22f + 2f,
+                        drawer = (r) =>
+                        {
+                            Widgets.DrawHighlight(r);
+
+                            var innerRect = r.ContractedBy(6f, 1f);
+                            if (Mouse.IsOver(r))
+                            {
+                                Widgets.DrawHighlight(r);
+                                TaggedString taggedString = tuple.info.thingDef.DescriptionDetailed + "\n\n" + "ClickForMoreInfo".Translate().Colorize(ColoredText.SubtleGrayColor);
+                                TooltipHandler.TipRegion(r, taggedString);
+                            }
+
+                            Widgets.ThingIcon(new Rect(innerRect.x, innerRect.y, 22f, 22f), tuple.info.thingDef, tuple.info.stuffDef);
+
+                            var labelRect = innerRect;
+                            labelRect.xMin += 24f;
+                            Widgets.Label(labelRect, label);
+                            if (Widgets.ButtonInvisible(r))
+                            {
+                                Find.WindowStack.Add(new Dialog_InfoCard(tuple.info.thingDef, tuple.info.stuffDef));
+                            }
+                        }
+                    });
+                }
+
+                GenUI.DrawElementStack(
+                    rtIngredientsSection.ContractedBy(2f),
+                    24f,
+                    _tmpIngredientStackElements,
+                    (r, element) => element.drawer(r),
+                    element => element.width, 
+                    allowOrderOptimization: false);
             }
 
             var rtButtonSection = rtSummaryRight.LeftPartPixels(300f).RightPartPixels(290f);
             Widgets.DrawMenuSection(rtButtonSection);
             {
+                var canAssemble = _targetPawn != null || DefDatabase<AutomataModulePartDef>.AllDefsListForReading.Where(def => def.required).All(def => _plan[def].spec != null);
+
                 var rtButton = new Rect(0f, 0f, 80f, 30f);
                 rtButton.center = rtButtonSection.center;
 
-                if (Widgets.ButtonText(rtButton, "ok"))
+                if (Widgets.ButtonText(rtButton, "ok", active: canAssemble))
                 {
                     _callback(_plan);
                     Close();
@@ -606,7 +653,9 @@ namespace ModuleAutomata
                     forcedTraits: new List<TraitDef>() { },
                     forceNoIdeo: true,
                     forceNoBackstory: true,
-                    forceNoGear: true));
+                    forceNoGear: true,
+                    fixedBiologicalAge: 0,
+                    fixedChronologicalAge: 0));
 
                 _samplePawn.inventory.DestroyAll();
                 _samplePawn.apparel.DestroyAll();

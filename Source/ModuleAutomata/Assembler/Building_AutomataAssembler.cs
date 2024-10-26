@@ -22,7 +22,7 @@ namespace ModuleAutomata
             {
                 if (_bill?.Pawn != null)
                 {
-                    return _innerContainer.Any(v => v is Pawn pawn && pawn == _bill.Pawn) ? _bill.Pawn : null;
+                    return _innerContainer.Any(v => v is Pawn pawn && pawn == _bill.Pawn) ? null : _bill.Pawn;
                 }
 
                 return null;

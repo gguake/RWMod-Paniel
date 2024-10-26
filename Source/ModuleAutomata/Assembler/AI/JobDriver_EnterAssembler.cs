@@ -28,7 +28,7 @@ namespace ModuleAutomata
                 var innerContainer = Building.TryGetInnerInteractableThingOwner();
 
                 var selected = pawn.DeSpawnOrDeselect();
-                innerContainer.TryAddOrTransfer(pawn);
+                innerContainer.TryAdd(pawn);
 
                 if (selected)
                 {

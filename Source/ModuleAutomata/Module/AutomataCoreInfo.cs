@@ -57,7 +57,19 @@ namespace ModuleAutomata
 
             foreach (var skillDef in DefDatabase<SkillDef>.AllDefsListForReading)
             {
-                if (skillDef.IsDisabled(automataCoreModExt.workDisables, automataCoreModExt.DisabledWorkTypeDefs)) { continue; }
+                if (automataCoreModExt.childhoodBackstory != null)
+                {
+                    if (skillDef.IsDisabled(
+                        automataCoreModExt.childhoodBackstory.workDisables, 
+                        automataCoreModExt.childhoodBackstory.DisabledWorkTypes)) { continue; }
+                }
+
+                if (automataCoreModExt.adulthoodBackstory != null)
+                {
+                    if (skillDef.IsDisabled(
+                        automataCoreModExt.adulthoodBackstory.workDisables,
+                        automataCoreModExt.adulthoodBackstory.DisabledWorkTypes)) { continue; }
+                }
 
                 var baseSkillLevel = automataCoreModExt.qualitySkillValues.FirstOrDefault(v => v.quality == quality).skillLevel;
                 var skillRecord = pawn?.skills.GetSkill(skillDef);

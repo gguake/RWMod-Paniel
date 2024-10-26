@@ -38,12 +38,13 @@ namespace ModuleAutomata
             this.FailOn(() => Building.Bill == null);
 
             yield return Toils_Goto.GotoThing(BuildingIndex, PathEndMode.InteractionCell);
+
             var toil = ToilMaker.MakeToil(nameof(JobDriver_AssembleAutomata));
             toil.handlingFacing = true;
             toil.defaultCompleteMode = ToilCompleteMode.Never;
             toil.FailOnCannotTouch(BuildingIndex, PathEndMode.Touch);
             toil.WithEffect(EffecterDefOf.ConstructMetal, TargetIndex.A);
-            toil.WithProgressBar(BuildingIndex, () => (Building.Bill.plan.TotalWorkAmount - Building.Bill.lastWorkAmount) / Building.Bill.plan.TotalWorkAmount);
+            toil.WithProgressBar(BuildingIndex, () => (Building.Bill.Plan.TotalWorkAmount - Building.Bill.lastWorkAmount) / Building.Bill.Plan.TotalWorkAmount);
             toil.tickAction = () =>
             {
                 pawn.rotationTracker.FaceTarget(Building);
@@ -57,7 +58,7 @@ namespace ModuleAutomata
                     ReadyForNextToil();
                 }
             };
-
+            yield return toil;
         }
     }
 }

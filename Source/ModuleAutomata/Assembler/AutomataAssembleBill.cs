@@ -6,34 +6,35 @@ namespace ModuleAutomata
 {
     public class AutomataAssembleBill : IExposable
     {
-        public Building_AutomataAssembler building;
+        private Building_AutomataAssembler _building;
 
-        public AutomataModificationPlan plan;
-        public Pawn pawn;
+        public AutomataModificationPlan Plan => _plan;
+        private AutomataModificationPlan _plan;
+
+        public Pawn Pawn => _pawn;
+        private Pawn _pawn;
+
         public float lastWorkAmount = -1;
 
-        public bool IsStarted => lastWorkAmount >= 0;
-
-        public AutomataAssembleBill(Building_AutomataAssembler building)
+        public AutomataAssembleBill(Building_AutomataAssembler building, AutomataModificationPlan plan, Pawn pawn = null)
         {
-            this.building = building;
+            _building = building;
+            _plan = plan;
+            _pawn = pawn;
+
+            lastWorkAmount = plan.TotalWorkAmount;
         }
 
         public void ExposeData()
         {
-            Scribe_Deep.Look(ref plan, "plan");
-            Scribe_References.Look(ref pawn, "pawn");
+            Scribe_Deep.Look(ref _plan, "plan");
+            Scribe_References.Look(ref _pawn, "pawn");
             Scribe_Values.Look(ref lastWorkAmount, "lastWorkAmount");
-        }
-
-        public void Start()
-        {
-            lastWorkAmount = plan.TotalWorkAmount;
         }
 
         public void Complete()
         {
-            var targetPawn = pawn;
+            var targetPawn = _pawn;
             if (targetPawn == null)
             {
                 targetPawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(
@@ -49,7 +50,6 @@ namespace ModuleAutomata
                     relationWithExtraPawnChanceFactor: 0f,
                     forcedTraits: new List<TraitDef>() { },
                     forceNoIdeo: true,
-                    forceNoBackstory: true,
                     forceNoGear: true,
                     fixedBiologicalAge: 0,
                     fixedChronologicalAge: 0));
@@ -57,10 +57,12 @@ namespace ModuleAutomata
                 targetPawn.inventory.DestroyAll();
                 targetPawn.apparel.DestroyAll();
 
-                building.GetDirectlyHeldThings().TryAdd(targetPawn);
+                targetPawn.SetFaction(Faction.OfPlayer);
+
+                _building.GetDirectlyHeldThings().TryAdd(targetPawn);
             }
 
-            plan.ApplyPawn(targetPawn);
+            _plan.ApplyPawn(targetPawn);
             targetPawn.Drawer.renderer.SetAllGraphicsDirty();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -27,24 +28,8 @@ namespace ModuleAutomata
         public List<QualitySkill> qualitySkillValues;
         public float sourcePawnSkillMultiplier = 1f;
 
-        public WorkTags workDisables;
-
-        private List<WorkTypeDef> _disabledWorkTypeDefs;
-        public List<WorkTypeDef> DisabledWorkTypeDefs
-        {
-            get
-            {
-                if (_disabledWorkTypeDefs == null)
-                {
-                    _disabledWorkTypeDefs = DefDatabase<WorkTypeDef>.AllDefsListForReading
-                        .Where(def => (def.workTags & workDisables) != 0)
-                        .ToList();
-                }
-
-                return _disabledWorkTypeDefs;
-            }
-        }
+        public BackstoryDef childhoodBackstory;
+        public BackstoryDef adulthoodBackstory;
 
     }
-
 }

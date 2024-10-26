@@ -47,6 +47,19 @@ namespace ModuleAutomata
         private Pawn _targetPawn;
         private AutomataModificationPlan _plan;
 
+        public Dialog_AutomataAssemble(Building_AutomataAssembler building, Action<AutomataModificationPlan> callback)
+        {
+            _building = building;
+            _callback = callback;
+
+            doCloseX = true;
+            forcePause = true;
+            absorbInputAroundWindow = true;
+
+            InitializeBillFromDefaultSetting();
+            RefreshModuleUI();
+        }
+
         public Dialog_AutomataAssemble(Building_AutomataAssembler building, Pawn pawn, Action<AutomataModificationPlan> callback)
         {
             _building = building;
@@ -58,19 +71,6 @@ namespace ModuleAutomata
             absorbInputAroundWindow = true;
 
             InitializeBillFromPawn(pawn);
-            RefreshModuleUI();
-        }
-
-        public Dialog_AutomataAssemble(Building_AutomataAssembler building, Action<AutomataModificationPlan> callback)
-        {
-            _building = building;
-            _callback = callback;
-
-            doCloseX = true;
-            forcePause = true;
-            absorbInputAroundWindow = true;
-
-            InitializeBillFromDefaultSetting();
             RefreshModuleUI();
         }
 
@@ -157,6 +157,9 @@ namespace ModuleAutomata
                     };
                 }
             }
+
+            _plan.hairAddonIndex = pawn.GetBodyAddonIndex(0);
+            _plan.headType = pawn.story.headType;
         }
 
         private void DrawTabSection(Rect rect)

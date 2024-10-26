@@ -20,9 +20,9 @@ namespace ModuleAutomata
         {
             get
             {
-                if (_bill?.pawn != null)
+                if (_bill?.Pawn != null)
                 {
-                    return _innerContainer.Any(v => v is Pawn pawn && pawn == _bill.pawn) ? _bill.pawn : null;
+                    return _innerContainer.Any(v => v is Pawn pawn && pawn == _bill.Pawn) ? _bill.Pawn : null;
                 }
 
                 return null;
@@ -39,7 +39,7 @@ namespace ModuleAutomata
                 if (_requiredIngredientCacheDirty)
                 {
                     _requiredIngredientsCache.Clear();
-                    foreach (var tuple in _bill.plan.TotalIngredients)
+                    foreach (var tuple in _bill.Plan.TotalIngredients)
                     {
                         var ingredientInfo = tuple.info;
                         var requiredCount = tuple.count;
@@ -132,10 +132,7 @@ namespace ModuleAutomata
             {
                 yield return new FloatMenuOption(PNLocale.PN_FloatMenuReassembleLabel.Translate(), () =>
                 {
-                    Find.WindowStack.Add(new Dialog_AutomataAssemble(this, selPawn, (bill) =>
-                    {
-                        OpenAssembleDialog(selPawn);
-                    }));
+                    OpenAssembleDialog(selPawn);
                 });
             }
         }
@@ -150,11 +147,13 @@ namespace ModuleAutomata
         {
             var sb = new StringBuilder(base.GetInspectString());
 
-            if (_bill != null && !_bill.IsStarted)
+            if (_bill != null)
             {
+                sb.AppendInNewLine("WorkLeft".Translate() + ": " + _bill.lastWorkAmount.ToStringWorkAmount());
+
                 foreach (var kv in RequiredIngredients)
                 {
-                    var totalCount = _bill.plan.GetIngredientCount(kv.Key);
+                    var totalCount = _bill.Plan.GetIngredientCount(kv.Key);
                     sb.AppendInNewLine($"{kv.Key.Label}: {totalCount - kv.Value} / {totalCount}");
                 }
             }
@@ -239,10 +238,7 @@ namespace ModuleAutomata
             {
                 Find.WindowStack.Add(new Dialog_AutomataAssemble(this, (plan) =>
                 {
-                    _bill = new AutomataAssembleBill(this)
-                    {
-                        plan = plan,
-                    };
+                    _bill = new AutomataAssembleBill(this, plan);
 
                     _requiredIngredientCacheDirty = true;
                 }));
@@ -251,11 +247,7 @@ namespace ModuleAutomata
             {
                 Find.WindowStack.Add(new Dialog_AutomataAssemble(this, targetPawn, (plan) =>
                 {
-                    _bill = new AutomataAssembleBill(this)
-                    {
-                        pawn = targetPawn,
-                        plan = plan,
-                    };
+                    _bill = new AutomataAssembleBill(this, plan, targetPawn);
 
                     _requiredIngredientCacheDirty = true;
                 }));

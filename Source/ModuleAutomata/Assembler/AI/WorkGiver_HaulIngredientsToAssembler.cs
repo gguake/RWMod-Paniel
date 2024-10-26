@@ -64,14 +64,11 @@ namespace ModuleAutomata
             if (building.RequiredIngredients.Count == 0) { return null; }
 
             var tc = FindIngredients(pawn, building);
-            if (tc.Thing == null)
-            {
-                var job = HaulAIUtility.HaulToContainerJob(pawn, tc.Thing, building);
-                job.count = Mathf.Min(job.count, tc.Count);
-                return job;
-            }
+            if (tc.Thing == null) { return null; }
 
-            return null;
+            var job = HaulAIUtility.HaulToContainerJob(pawn, tc.Thing, building);
+            job.count = Mathf.Min(job.count, tc.Count);
+            return job;
         }
 
         private ThingCount FindIngredients(Pawn pawn, Building_AutomataAssembler building)

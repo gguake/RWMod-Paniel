@@ -35,6 +35,11 @@ namespace ModuleAutomata
             return label;
         }
 
+        public void InitializeFrom(AutomataCoreInfo coreInfo)
+        {
+            _coreInfo = coreInfo;
+        }
+
         public void InitializePawnInfo(AutomataModuleDef moduleDef, QualityCategory quality, Pawn pawn)
         {
             _coreInfo = new AutomataCoreInfo();

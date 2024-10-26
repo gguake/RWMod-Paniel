@@ -20,7 +20,19 @@ namespace ModuleAutomata
 
         public override void OnUninstallFromPawn(Pawn pawn, AutomataModulePartDef partDef, AutomataModuleSpec spec)
         {
-            throw new System.NotImplementedException();
+            foreach (var moduleDef in partDef.ModuleDefs.Where(def => def.worker is AutomataModuleWorker_ImplantHediff))
+            {
+                var worker = (AutomataModuleWorker_ImplantHediff)moduleDef.worker;
+                foreach (var qh in worker.hediffs)
+                {
+                    var hediff = pawn.health.hediffSet.GetFirstHediffOfDef(qh.hediff);
+                    if (hediff != null)
+                    {
+                        pawn.health.RemoveHediff(hediff);
+                        break;
+                    }
+                }
+            }
         }
 
         public override AutomataModuleSpec TryGetModuleSpecFromPawn(Pawn pawn, AutomataModulePartDef partDef, AutomataModuleDef moduleDef)

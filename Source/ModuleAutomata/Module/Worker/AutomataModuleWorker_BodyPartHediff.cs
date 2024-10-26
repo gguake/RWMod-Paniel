@@ -19,7 +19,6 @@ namespace ModuleAutomata
 
         public override void OnUninstallFromPawn(Pawn pawn, AutomataModulePartDef partDef, AutomataModuleSpec spec)
         {
-            throw new System.NotImplementedException();
         }
 
         public override AutomataModuleSpec TryGetModuleSpecFromPawn(Pawn pawn, AutomataModulePartDef partDef, AutomataModuleDef moduleDef)

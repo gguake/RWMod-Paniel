@@ -60,10 +60,17 @@ namespace ModuleAutomata
                 targetPawn.SetFaction(Faction.OfPlayer);
 
                 _building.GetDirectlyHeldThings().TryAdd(targetPawn);
+
+                Messages.Message(PNLocale.PN_MessageAssembleNewAutomataComplete.Translate(targetPawn.Name.ToStringShort), targetPawn, MessageTypeDefOf.PositiveEvent);
+            }
+            else
+            {
+                Messages.Message(PNLocale.PN_MessageModifyAutomataComplete.Translate(targetPawn.Name.ToStringShort), targetPawn, MessageTypeDefOf.PositiveEvent);
             }
 
             _plan.ApplyPawn(targetPawn);
             targetPawn.Drawer.renderer.SetAllGraphicsDirty();
+
         }
     }
 }

@@ -33,6 +33,9 @@ namespace ModuleAutomata
 
         public const string PN_DialogFloatMenuOptionNoModuleCandidate = nameof(PN_DialogFloatMenuOptionNoModuleCandidate);
 
+        public const string PN_MessageAssembleNewAutomataComplete = nameof(PN_MessageAssembleNewAutomataComplete);
+        public const string PN_MessageModifyAutomataComplete = nameof(PN_MessageModifyAutomataComplete);
+
         public const string PN_JobFailReasonNoIngredients = nameof(PN_JobFailReasonNoIngredients);
 
         public static string MakeModuleLabel(Def moduleDef, QualityCategory? quality, ThingDef stuffDef)

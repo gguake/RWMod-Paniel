@@ -553,16 +553,24 @@ namespace ModuleAutomata
                     onSelectButtonClicked = () =>
                     {
                         _tmpFloatMenuOptions.Clear();
-                        foreach (var candidateSpec in modulePartDef.ModuleDefs
+                        foreach (var tuple in modulePartDef.ModuleDefs
                             .SelectMany(def => def.GetCandidateSpecsFromMap(_building.Map))
-                            .OrderBy(spec => (spec.moduleDef.uiOrder, spec.Stuff?.shortHash ?? 0, (int)spec.Quality)))
+                            .OrderBy(t => (t.spec.moduleDef.uiOrder, t.spec.Stuff?.shortHash ?? 0, (int)t.spec.Quality)))
                         {
-                            _tmpFloatMenuOptions.Add(new FloatMenuOption(candidateSpec.Label, () =>
+                            Log.Message($"{tuple.spec.Label} {tuple.spec.Quality} {tuple.spec.Quality} {tuple.count} {_plan.AllModulesPlan.Where(v => v.spec.Equals(tuple.spec)).Count()}");
+
+                            // 같은 재료를 공유하는 경우 중복 선택 방지
+                            if (tuple.count <= _plan.AllModulesPlan.Where(v => v.spec.Equals(tuple.spec)).Count())
+                            {
+                                continue;
+                            }
+
+                            _tmpFloatMenuOptions.Add(new FloatMenuOption(tuple.spec.Label, () =>
                             {
                                 _plan[modulePartDef] = new AutomataModuleModificationPlan()
                                 {
                                     plan = AutomataModuleModificationPlanType.Replace,
-                                    spec = candidateSpec,
+                                    spec = tuple.spec,
                                 };
 
                                 RefreshModuleUI();

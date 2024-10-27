@@ -29,6 +29,8 @@ namespace ModuleAutomata
         public int hairAddonIndex;
         public HeadTypeDef headType;
 
+        public IEnumerable<AutomataModuleModificationPlan> AllModulesPlan => _plans.Values;
+
         public int TotalWorkAmount => _plans
             .Where(kv => kv.Value.plan == AutomataModuleModificationPlanType.Replace && kv.Value.spec != null)
             .Sum(kv => kv.Value.spec.moduleDef.installWorkAmount);

@@ -24,17 +24,21 @@ namespace ModuleAutomata
 
         public AutomataModuleWorker worker;
 
-        public IEnumerable<AutomataModuleSpec> GetCandidateSpecsFromMap(Map map)
+        private Dictionary<(QualityCategory?, ThingDef), int> _tmpCandidateSet = new Dictionary<(QualityCategory?, ThingDef), int>();
+        public IEnumerable<(AutomataModuleSpec spec, int count)> GetCandidateSpecsFromMap(Map map)
         {
+            _tmpCandidateSet.Clear();
+
             if (isCore)
             {
                 foreach (var thing in map.listerThings.ThingsOfDef(mainIngredientDef))
                 {
-                    yield return new AutomataModuleSpec_Core()
+                    yield return (new AutomataModuleSpec_Core()
                     {
                         moduleDef = this,
                         thing = thing,
-                    };
+
+                    }, thing.stackCount);
                 }
             }
             else
@@ -44,26 +48,38 @@ namespace ModuleAutomata
                     if (affectedByStuff)
                     {
                         var things = map.listerThings.ThingsOfDef(mainIngredientDef);
-                        foreach (var tuple in things.Select(v => (v.TryGetComp<CompQuality>().Quality, v.Stuff)).Distinct())
+
+                        foreach (var group in things.Where(v => v.HasComp<CompQuality>()).GroupBy(v => (v.TryGetComp<CompQuality>().Quality, v.Stuff)))
                         {
-                            yield return new AutomataModuleSpec_AnyOfThing()
+                            _tmpCandidateSet.Add(group.Key, group.Count());
+                        }
+
+                        foreach (var kv in _tmpCandidateSet)
+                        {
+                            yield return (new AutomataModuleSpec_AnyOfThing()
                             {
                                 moduleDef = this,
-                                quality = tuple.Quality,
-                                stuffDef = tuple.Stuff,
-                            };
+                                quality = kv.Key.Item1,
+                                stuffDef = kv.Key.Item2,
+                            }, kv.Value);
                         }
                     }
                     else
                     {
                         var things = map.listerThings.ThingsOfDef(mainIngredientDef);
-                        foreach (var quality in things.Select(v => v.TryGetComp<CompQuality>().Quality).Distinct())
+
+                        foreach (var group in things.Where(v => v.HasComp<CompQuality>()).GroupBy(v => (v.TryGetComp<CompQuality>().Quality, (ThingDef)null)))
                         {
-                            yield return new AutomataModuleSpec_AnyOfThing()
+                            _tmpCandidateSet.Add(group.Key, group.Count());
+                        }
+
+                        foreach (var kv in _tmpCandidateSet)
+                        {
+                            yield return (new AutomataModuleSpec_AnyOfThing()
                             {
                                 moduleDef = this,
-                                quality = quality
-                            };
+                                quality = kv.Key.Item1,
+                            }, kv.Value);
                         }
                     }
                 }
@@ -72,24 +88,30 @@ namespace ModuleAutomata
                     if (affectedByStuff)
                     {
                         var things = map.listerThings.ThingsOfDef(mainIngredientDef);
-                        foreach (var stuff in things.Select(v => v.Stuff).Distinct())
+
+                        foreach (var group in things.Where(v => v.Stuff != null).GroupBy(v => ((QualityCategory?)null, v.Stuff)))
                         {
-                            yield return new AutomataModuleSpec_AnyOfThing()
+                            _tmpCandidateSet.Add(group.Key, group.Count());
+                        }
+
+                        foreach (var kv in _tmpCandidateSet)
+                        {
+                            yield return (new AutomataModuleSpec_AnyOfThing()
                             {
                                 moduleDef = this,
-                                stuffDef = stuff
-                            };
+                                stuffDef = kv.Key.Item2,
+
+                            }, kv.Value);
                         }
                     }
                     else
                     {
-                        if (map.listerThings.AnyThingWithDef(mainIngredientDef))
+                        var things = map.listerThings.ThingsOfDef(mainIngredientDef);
+
+                        yield return (new AutomataModuleSpec_AnyOfThing()
                         {
-                            yield return new AutomataModuleSpec_AnyOfThing()
-                            {
-                                moduleDef = this,
-                            };
-                        }
+                            moduleDef = this,
+                        }, things.Sum(v => v.stackCount));
                     }
                 }
             }

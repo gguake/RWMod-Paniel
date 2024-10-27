@@ -16,6 +16,11 @@ namespace ModuleAutomata
 
         public float lastWorkAmount = -1;
 
+        public AutomataAssembleBill(Building_AutomataAssembler building)
+        {
+            _building = building;
+        }
+
         public AutomataAssembleBill(Building_AutomataAssembler building, AutomataModificationPlan plan, Pawn pawn = null)
         {
             _building = building;

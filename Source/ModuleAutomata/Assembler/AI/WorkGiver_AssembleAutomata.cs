@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System.Linq;
 using Verse;
 using Verse.AI;
 
@@ -37,7 +38,7 @@ namespace ModuleAutomata
                 return false;
             }
 
-            if (building.RequiredIngredients.Count > 0 || building.RequiredPawn != null)
+            if (building.RequiredIngredients.Count() > 0 || building.RequiredPawn != null)
             {
                 return false;
             }
@@ -52,7 +53,7 @@ namespace ModuleAutomata
             var bill = building.Bill;
             if (bill == null) { return null; }
 
-            if (building.RequiredIngredients.Count > 0 || building.RequiredPawn != null)
+            if (building.RequiredIngredients.Count() > 0 || building.RequiredPawn != null)
             {
                 return null;
             }

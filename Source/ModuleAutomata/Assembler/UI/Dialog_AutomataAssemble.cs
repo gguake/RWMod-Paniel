@@ -557,8 +557,6 @@ namespace ModuleAutomata
                             .SelectMany(def => def.GetCandidateSpecsFromMap(_building.Map))
                             .OrderBy(t => (t.spec.moduleDef.uiOrder, t.spec.Stuff?.shortHash ?? 0, (int)t.spec.Quality)))
                         {
-                            Log.Message($"{tuple.spec.Label} {tuple.spec.Quality} {tuple.spec.Quality} {tuple.count} {_plan.AllModulesPlan.Where(v => v.spec.Equals(tuple.spec)).Count()}");
-
                             // 같은 재료를 공유하는 경우 중복 선택 방지
                             if (tuple.count <= _plan.AllModulesPlan.Where(v => v.spec.Equals(tuple.spec)).Count())
                             {

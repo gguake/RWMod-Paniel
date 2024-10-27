@@ -29,37 +29,28 @@ namespace ModuleAutomata
             }
         }
 
-        private bool _requiredIngredientCacheDirty = true;
-        private Dictionary<AutomataModuleIngredientInfo, int> _requiredIngredientsCache = new Dictionary<AutomataModuleIngredientInfo, int>();
-        public IReadOnlyDictionary<AutomataModuleIngredientInfo, int> RequiredIngredients
+        public IEnumerable<(AutomataModuleIngredientInfo info, int count)> RequiredIngredients
         {
             get
             {
-                if (_bill == null) { return null; }
-                if (_requiredIngredientCacheDirty)
+                if (_bill == null) { yield break; }
+
+                foreach (var tuple in _bill.Plan.TotalIngredients)
                 {
-                    _requiredIngredientsCache.Clear();
-                    foreach (var tuple in _bill.Plan.TotalIngredients)
+                    var ingredientInfo = tuple.info;
+                    var requiredCount = tuple.count;
+
+                    var innerThing = _innerContainer.FirstOrDefault(thing => ingredientInfo.Match(thing));
+                    if (innerThing != null)
                     {
-                        var ingredientInfo = tuple.info;
-                        var requiredCount = tuple.count;
-
-                        var innerThing = _innerContainer.FirstOrDefault(thing => ingredientInfo.Match(thing));
-                        if (innerThing != null)
-                        {
-                            requiredCount -= innerThing.stackCount;
-                        }
-
-                        if (requiredCount > 0)
-                        {
-                            _requiredIngredientsCache.Add(ingredientInfo, requiredCount);
-                        }
+                        requiredCount -= innerThing.stackCount;
                     }
 
-                    _requiredIngredientCacheDirty = false;
+                    if (requiredCount > 0)
+                    {
+                        yield return (ingredientInfo, requiredCount);
+                    }
                 }
-
-                return _requiredIngredientsCache;
             }
         }
 
@@ -119,7 +110,6 @@ namespace ModuleAutomata
                         EjectContents();
 
                         _bill = null;
-                        _requiredIngredientCacheDirty = true;
                     };
                     yield return commandCancel;
                 }
@@ -151,10 +141,10 @@ namespace ModuleAutomata
             {
                 sb.AppendInNewLine("WorkLeft".Translate() + ": " + _bill.lastWorkAmount.ToStringWorkAmount());
 
-                foreach (var kv in RequiredIngredients)
+                foreach (var tuple in RequiredIngredients)
                 {
-                    var totalCount = _bill.Plan.GetIngredientCount(kv.Key);
-                    sb.AppendInNewLine($"{kv.Key.Label}: {totalCount - kv.Value} / {totalCount}");
+                    var totalCount = _bill.Plan.GetIngredientCount(tuple.info);
+                    sb.AppendInNewLine($"{tuple.info.Label}: {totalCount - tuple.count} / {totalCount}");
                 }
             }
 
@@ -212,8 +202,6 @@ namespace ModuleAutomata
                 _innerContainer.TryDropAll(Position, Map, ThingPlaceMode.Near);
                 return;
             }
-
-            _requiredIngredientCacheDirty = true;
         }
 
         public void CompleteBill()
@@ -239,8 +227,6 @@ namespace ModuleAutomata
                 Find.WindowStack.Add(new Dialog_AutomataAssemble(this, (plan) =>
                 {
                     _bill = new AutomataAssembleBill(this, plan);
-
-                    _requiredIngredientCacheDirty = true;
                 }));
             }
             else
@@ -248,8 +234,6 @@ namespace ModuleAutomata
                 Find.WindowStack.Add(new Dialog_AutomataAssemble(this, targetPawn, (plan) =>
                 {
                     _bill = new AutomataAssembleBill(this, plan, targetPawn);
-
-                    _requiredIngredientCacheDirty = true;
                 }));
             }
         }

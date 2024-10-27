@@ -39,7 +39,7 @@ namespace ModuleAutomata
                 return false;
             }
 
-            if (building.RequiredIngredients.Count == 0)
+            if (building.RequiredIngredients.Count() == 0)
             {
                 return false;
             }
@@ -61,7 +61,7 @@ namespace ModuleAutomata
             var bill = building.Bill;
             if (bill == null) { return null; }
 
-            if (building.RequiredIngredients.Count == 0) { return null; }
+            if (building.RequiredIngredients.Count() == 0) { return null; }
 
             var tc = FindIngredients(pawn, building);
             if (tc.Thing == null) { return null; }
@@ -85,7 +85,7 @@ namespace ModuleAutomata
 
                     foreach (var kv in building.RequiredIngredients)
                     {
-                        if (kv.Key.Match(thing))
+                        if (kv.info.Match(thing))
                         {
                             return true;
                         }
@@ -100,7 +100,7 @@ namespace ModuleAutomata
             }
             else
             {
-                var requiredCount = building.RequiredIngredients.FirstOrDefault(v => v.Key.Match(found)).Value;
+                var requiredCount = building.RequiredIngredients.FirstOrDefault(v => v.info.Match(found)).count;
                 return new ThingCount(found, Mathf.Min(found.stackCount, requiredCount));
             }
         }

@@ -49,7 +49,7 @@ namespace ModuleAutomata
         public override void Notify_DuplicatedFrom(Pawn source)
         {
             var sourceComp = source.GetComp<CompAutomataCore>();
-            _coreInfo = sourceComp._coreInfo.Clone();
+            _coreInfo = sourceComp._coreInfo?.Clone();
         }
     }
 }
